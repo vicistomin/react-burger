@@ -8,7 +8,6 @@ import BurgerConstructor from '../burger-constructor/burger-constructor'
 import BurgerIngredients from '../burger-ingredients/burger-ingredients'
 
 function App() {
-  console.log(testData);
   return (
     <>
       <AppHeader />

@@ -1,0 +1,31 @@
+.menu_list_item {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    border-radius: var(--common-border-radius-s);
+    text-decoration: none;
+}
+
+/* TODO: rewrite this */
+li:nth-of-type(n+2) .menu_list_item {
+    margin-right: 0;
+}
+
+.menu_list_item_icon {
+    /* not sure, it fixes +4px of empty space on bottom of icon, maybe it's better to just write:
+    height: 24px; */
+    display: inherit;
+}
+
+/* TODO: Rewrite hover/active appearances as React component states? */
+.menu_list_item_active .menu_list_item_text {
+    color: var(--text-primary-color);
+}
+
+.menu_list_item:hover .menu_list_item_text {
+    color: var(--text-primary-color);
+}
+
+.menu_list_item:hover .menu_list_item_icon svg {
+    fill: var(--text-primary-color);
+}
