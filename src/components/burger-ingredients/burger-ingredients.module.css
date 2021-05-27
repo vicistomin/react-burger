@@ -1,0 +1,4 @@
+.tab_selector {
+    display: flex;
+    justify-content: flex-end;
+}

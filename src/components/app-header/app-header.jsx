@@ -1,9 +1,8 @@
 import appHeaderStyles from './app-header.module.css';
 // importing components from project
-import MenuItem from '../menu-item/menu-item.jsx'
+import MenuItem from '../menu-item/menu-item';
 // importing components from library
-import { Logo } from '@ya.praktikum/react-developer-burger-ui-components'
-import { BurgerIcon, ListIcon, ProfileIcon } from '@ya.praktikum/react-developer-burger-ui-components'
+import { Logo, BurgerIcon, ListIcon, ProfileIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 
 
 // Header

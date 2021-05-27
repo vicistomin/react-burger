@@ -1,0 +1,5 @@
+.burger_ingredients_list {
+    list-style-type: none;
+    display: flex;
+    flex-wrap: wrap;
+}
