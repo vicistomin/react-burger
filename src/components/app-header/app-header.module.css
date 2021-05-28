@@ -4,11 +4,11 @@
     flex-wrap: nowrap;
     align-items: center;
     justify-content: center;
+    list-style-type: none;
 }
 
 .menu_list {
     composes: menu_container;
-    list-style-type: none;
     margin: 0;
     padding: 0;
     flex-basis: 1280px;
@@ -16,6 +16,7 @@
 
 .menu_list_left {
     composes: menu_container;
+    padding: 0;
     flex-basis: 40%;
     justify-content: flex-start;
 }

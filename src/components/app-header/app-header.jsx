@@ -14,17 +14,17 @@ function AppHeader() {
             <nav className={appHeaderStyles.menu_container}>
                 {/* TODO: make MenuList component for wrapping MenuItem components and Logo */}
                 <ul className={appHeaderStyles.menu_list}>
-                    <li className={appHeaderStyles.menu_list_left}>
+                    <ul className={appHeaderStyles.menu_list_left}>
                         {/* TODO: reimplement active/hover/inactive link and icon colors */}
                         <MenuItem icon={<BurgerIcon type="primary" />} text="Конструктор" link="#" active/>
                         <MenuItem icon={<ListIcon type="secondary" />} text="Лента заказов" link="#" />
-                    </li>
+                    </ul>
                     <li className={appHeaderStyles.menu_list_center}>
                         <Logo />
                     </li>
-                    <li className={appHeaderStyles.menu_list_right}>
+                    <span className={appHeaderStyles.menu_list_right}>
                         <MenuItem icon={<ProfileIcon type="secondary" />} text="Личный кабинет" link="#" />
-                    </li>
+                    </span>
                 </ul>
             </nav>
         </header>
