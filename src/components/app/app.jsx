@@ -16,7 +16,7 @@ function App() {
           <BurgerIngredients items={testData}/>
         </section>
         <section className={appStyles.container_right + ' ml-5'}>
-          <BurgerConstructor />
+          <BurgerConstructor items={testData} />
         </section>
       </div>
     </>

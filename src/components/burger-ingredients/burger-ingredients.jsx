@@ -32,7 +32,4 @@ function BurgerIngredients(props) {
     );
 }
 
-
-// <Counter count={1} size="default" />
-
 export default BurgerIngredients;

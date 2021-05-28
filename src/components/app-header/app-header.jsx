@@ -4,10 +4,6 @@ import MenuItem from '../menu-item/menu-item';
 // importing components from library
 import { Logo, BurgerIcon, ListIcon, ProfileIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 
-
-// Header
-//   Menu?
-//     Menu-item
 function AppHeader() {
     return(
         <header>
