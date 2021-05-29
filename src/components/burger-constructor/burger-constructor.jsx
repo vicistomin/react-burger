@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import burgerConstructorStyles from './burger-constructor.module.css';
 // importing components from library
 import { ConstructorElement, DragIcon, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -55,5 +56,28 @@ function BurgerConstructor(props) {
         </>
     );
 }
+
+BurgerConstructor.propTypes = {
+    topItem: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        price: PropTypes.number.isRequired,
+        image: PropTypes.string.isRequired        
+    }),
+
+    // the middle ingredients may be empty
+    middleItems: PropTypes.arrayOf(PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        price: PropTypes.number.isRequired,
+        image: PropTypes.string.isRequired,
+        _id: PropTypes.string.isRequired 
+    })),
+
+    middleItems: PropTypes.object,
+    bottomItem: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        price: PropTypes.number.isRequired,
+        image: PropTypes.string.isRequired        
+    })
+};
 
 export default BurgerConstructor;

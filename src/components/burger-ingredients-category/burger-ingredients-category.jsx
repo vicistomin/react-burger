@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import burgerIngredientsCategoryStyles from './burger-ingredients-category.module.css';
 // importing components from project
 import BurgerIngredientsCard from '../burger-ingredients-card/burger-ingredients-card';
@@ -15,5 +16,15 @@ function BurgerIngredientsCategory(props) {
         </section>
     );
 }
+
+BurgerIngredientsCategory.propTypes = {
+    items: PropTypes.arrayOf(PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        price: PropTypes.number.isRequired,
+        image: PropTypes.string.isRequired,
+        __v: PropTypes.number.isRequired,
+        _id: PropTypes.string.isRequired
+    }).isRequired).isRequired
+};
 
 export default BurgerIngredientsCategory;

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import burgerIngredientsStyles from './burger-ingredients.module.css';
 // importing components from project
 import BurgerIngredientsCategory from '../burger-ingredients-category/burger-ingredients-category';
@@ -31,5 +32,14 @@ function BurgerIngredients(props) {
         </>
     );
 }
+
+BurgerIngredients.propTypes = {
+    // TODO: check propTypes of other inner elements of items object?
+    
+    // type property is required for categorization of items
+    items: PropTypes.arrayOf(PropTypes.shape({
+        type: PropTypes.string.isRequired
+    }).isRequired).isRequired
+};
 
 export default BurgerIngredients;
