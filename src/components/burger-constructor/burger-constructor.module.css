@@ -1,10 +1,15 @@
-.burger_constructor_list{
+.burger_constructor_list {
     list-style-type: none;
     padding-left: 0;
     display: flex;
     flex-direction: column;
     gap: 10px;
     align-items: stretch;
+}
+
+/* bg color of elements as in Figma */
+.burger_constructor_list li div {
+    background: var(--background);
 }
 
 .burger_constructor_draggable_list {
@@ -46,7 +51,7 @@
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
 }
 
 .burger_constructor_drag_icon {
@@ -66,13 +71,11 @@
     height: auto;
 }
 
-/* .constructor-element__row {
-    align-items: center;
-}
-*/
-
-.burger_constructor_list .constructor-element__text {
-    /* ?!! оne-line text issues */
-    min-width: 225px;
-    /* flex-basis: 260px; */
+/* it's not good, but correct selector doesn't work on library components:
+.burger_constructor_list .constructor-element__text { */
+.burger_constructor_list > li > div > span > span:first-of-type {
+    /* оne-line ingredient name positioning issues */
+    min-height: 48px;
+    /* TODO: rewrite for responsivity @ <1280px ! */
+    width: 254px;
 } 

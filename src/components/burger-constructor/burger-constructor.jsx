@@ -40,7 +40,7 @@ function BurgerConstructor(props) {
                                 />
                 </li>
             </ul>
-            <div className={burgerConstructorStyles.burger_constructor_order + ' mb-10'}>
+            <div className={burgerConstructorStyles.burger_constructor_order + ' mr-4 mb-10'}>
                 <p className="text text_type_digits-medium">
                         {props.topItem.price + 
                         props.middleItems.reduce((acc, p) => acc + p.price, 0) +
@@ -72,7 +72,6 @@ BurgerConstructor.propTypes = {
         _id: PropTypes.string.isRequired 
     })),
 
-    middleItems: PropTypes.object,
     bottomItem: PropTypes.shape({
         name: PropTypes.string.isRequired,
         price: PropTypes.number.isRequired,

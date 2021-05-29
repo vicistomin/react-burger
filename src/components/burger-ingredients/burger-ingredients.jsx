@@ -34,7 +34,8 @@ function BurgerIngredients(props) {
 }
 
 BurgerIngredients.propTypes = {
-    // TODO: check propTypes of other inner elements of items object?
+    // TODO: check here propTypes of other elements of items object?
+    // (they already will be checked in inner components)
     
     // type property is required for categorization of items
     items: PropTypes.arrayOf(PropTypes.shape({
