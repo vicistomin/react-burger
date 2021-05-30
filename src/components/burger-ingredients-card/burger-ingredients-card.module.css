@@ -8,11 +8,6 @@
     position: relative;
 }
 
-.ingredient_card_link {
-    text-decoration: none;
-    color: var(--text-primary-color);
-}
-
 .ingredient_price {
     display: flex;
     align-items: center;
