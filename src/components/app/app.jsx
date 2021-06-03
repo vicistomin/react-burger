@@ -4,6 +4,9 @@ import appStyles from './app.module.css';
 import AppHeader from '../app-header/app-header';
 import BurgerConstructor from '../burger-constructor/burger-constructor.jsx';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
+import Modal from '../modal/modal';
+import OrderDetails from '../order-details/order-details';
+import IngredientDetails from '../ingredient-details/ingredient-details';
 
 const API_URL = 'https://norma.nomoreparties.space/api/ingredients';
 
@@ -32,6 +35,38 @@ function App() {
     // };
   }, []);
 
+    const [showOrderModal, toggleOrderModal] = useState(false)
+    const [showIngredientModal, toggleIngredientModal] = useState(false)
+
+    const closeModal = () => {
+      // TODO: different funcs/conditions for different modals?
+      toggleOrderModal(false);
+      toggleIngredientModal(false);
+    };
+
+    const openOrderModal = () => {
+      toggleOrderModal(true);
+    };
+    
+    const openIngredientModal = () => {
+      toggleIngredientModal(true);
+    };   
+    const orderModal = (
+      <Modal 
+        header={null}
+        closeModal={closeModal}>
+          <OrderDetails />
+      </Modal>      
+    );
+
+    const ingredientModal = (
+      <Modal 
+        header='Детали ингредиента'
+        closeModal={closeModal}>
+          <IngredientDetails />
+      </Modal>   
+    );
+
     // TODO: implement interactive selection of buns (top/bottom)
     // !!! Buns can be only be of one type
     // (user can't choose different buns for top and bottom)
@@ -39,17 +74,17 @@ function App() {
     // define hardcoded arrays of ingredients from the data from API:
     const bunType = state.data.filter(item => item.type === 'bun')[0];
     const middleItems = state.data.filter(item => (item.type === 'sauce' || item.type === 'main')).slice(4, 12);
-
+    
   return (
     <>
       <AppHeader />
       {( !state.loading && state.success ?
         <div className={appStyles.container}>
           <section className={appStyles.container_left + ' mr-5'}>
-            <BurgerIngredients items={state.data}/>
+            <BurgerIngredients items={state.data} openModal={openIngredientModal} />
           </section>
           <section className={appStyles.container_right + ' ml-5'}>
-            <BurgerConstructor bunType={bunType} middleItems={middleItems} />
+            <BurgerConstructor bunType={bunType} middleItems={middleItems} openModal={openOrderModal} />
           </section>
         </div>
       : (state.loading && !state.success ?
@@ -60,6 +95,8 @@ function App() {
             Ошибка загрузки</h2>
       )
       )}
+        {showOrderModal && orderModal}
+        {showIngredientModal && ingredientModal}
     </>
   );
 }

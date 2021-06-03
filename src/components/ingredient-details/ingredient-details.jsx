@@ -1,8 +1,11 @@
-import appHeaderStyles from './app-header.module.css';
+import ingredientDetailsStyles from './ingredient-details.module.css';
 
 function IngredientDetails() {
     return(
-            null
+        <>
+          <p>Modal contents</p>
+          <p>Ingredient Details</p>
+        </>
     );
 }
 

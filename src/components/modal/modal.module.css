@@ -1,0 +1,26 @@
+.modal_container {
+    composes: card_box_shadow from global;
+    composes: flex_column from global;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    box-sizing: border-box;
+    width: 720px;
+    
+    background: var(--background);
+    border: 1px solid rgba(76, 76, 255, 0.2);
+    border-radius: 40px;
+}
+
+.modal_header {
+    align-self: flex-start;
+}
+
+.close_icon {
+    position: absolute;
+    top: calc(var(--offset-base-size) * 15);
+    right: calc(var(--offset-base-size) * 10);
+}

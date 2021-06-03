@@ -2,7 +2,10 @@ import orderDetailsStyles from './order-details.module.css';
 
 function OrderDetails() {
     return(
-            null
+        <>
+          <p>Modal contents</p>
+          <p>Order Details</p>
+        </>
     );
 }
 

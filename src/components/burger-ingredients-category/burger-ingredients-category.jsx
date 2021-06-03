@@ -19,6 +19,7 @@ function BurgerIngredientsCategory(props) {
                             image={item.image} 
                             value={item.__v} 
                             key={item._id}
+                            openModal={props.openModal}
                         />)}
                 </ul>
             : <h3 className='text text_type_main-default text_color_inactive pb-6'>

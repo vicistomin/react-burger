@@ -1,10 +1,28 @@
+import ReactDOM from 'react-dom';
 import modalStyles from './modal.module.css';
+// importing components from project
+import ModalOverlay from '../modal-overlay/modal-overlay';
 // importing components from library
 import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 
-function Modal() {
-    return(
-            null
+const modalRoot = document.getElementById('modal-root');
+
+// TODO: Close modal with the "Esc" key
+function Modal({ children, header, closeModal }) {
+    return ReactDOM.createPortal(
+        <>
+            <ModalOverlay closeModal={closeModal} />
+            <div className={modalStyles.modal_container + ' pl-10 pt-10 pr-10 pb-15'}>
+                <h3 className={modalStyles.modal_header + ' text text_type_main-large'}>
+                    {header}
+                </h3>
+                <span className={modalStyles.close_icon}>
+                    <CloseIcon onClick={closeModal} />
+                </span>
+                {children}
+            </div>
+        </>, 
+        modalRoot
     );
 }
 

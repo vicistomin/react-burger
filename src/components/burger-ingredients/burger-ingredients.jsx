@@ -14,20 +14,44 @@ function BurgerIngredients(props) {
                 Соберите бургер
             </h1>
             <div className={burgerIngredientsStyles.tab_selector}>
-                <Tab value="bun" active={current === 'bun'} onClick={setCurrent}>
+                <Tab 
+                    value="bun" 
+                    active={current === 'bun'} 
+                    onClick={setCurrent}
+                >
                     Булки
                 </Tab>
-                <Tab value="sauce" active={current === 'sauce'} onClick={setCurrent}>
+                <Tab 
+                    value="sauce" 
+                    active={current === 'sauce'} 
+                    onClick={setCurrent}
+                >
                     Соусы
                 </Tab>
-                <Tab value="main" active={current === 'main'} onClick={setCurrent}>
+                <Tab 
+                    value="main" 
+                    active={current === 'main'} 
+                    onClick={setCurrent}
+                >
                     Начинки
                 </Tab>
             </div>
             <div className={burgerIngredientsStyles.scroll_container}>
-                <BurgerIngredientsCategory heading="Булки" items={props.items.filter(item => item.type === 'bun')} />
-                <BurgerIngredientsCategory heading="Соусы" items={props.items.filter(item => item.type === 'sauce')} />
-                <BurgerIngredientsCategory heading="Начинки" items={props.items.filter(item => item.type === 'main')} />
+                <BurgerIngredientsCategory 
+                    heading="Булки" 
+                    items={props.items.filter(item => item.type === 'bun')} 
+                    openModal={props.openModal}
+                />
+                <BurgerIngredientsCategory 
+                    heading="Соусы" 
+                    items={props.items.filter(item => item.type === 'sauce')} 
+                    openModal={props.openModal}
+                />
+                <BurgerIngredientsCategory 
+                    heading="Начинки" 
+                    items={props.items.filter(item => item.type === 'main')} 
+                    openModal={props.openModal}
+                />
             </div>
         </>
     );

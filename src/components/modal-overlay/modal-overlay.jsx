@@ -1,8 +1,11 @@
 import modalOverlayStyles from './modal-overlay.module.css';
 
-function ModalOverlay() {
+function ModalOverlay({ closeModal }) {
     return(
-            null
+            <div 
+                className={modalOverlayStyles.modal_overlay}
+                onClick={closeModal}>
+            </div>
     );
 }
 

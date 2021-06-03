@@ -61,7 +61,7 @@ function BurgerConstructor(props) {
                 <span className='ml-2 mr-10'>
                     <CurrencyIcon type="primary" />
                 </span>
-                <Button type="primary" size="medium">
+                <Button type="primary" size="medium" onClick={props.openModal}>
                         Оформить заказ
                 </Button>
             </div>
