@@ -2,3 +2,48 @@ body {
   box-sizing: border-box;
   margin: 0;
 }
+
+:global .flex_row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+:global .flex_column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+:global .not_a_list {
+  list-style-type: none;
+  padding-left: 0;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+:global .scroll {
+  overflow-y: auto;
+  scrollbar-color: #2F2F37 #8585AD;
+  scrollbar-width: thin;
+}
+
+@-moz-document url-prefix() {
+  :global .scroll {
+      scrollbar-color: #8585AD #2F2F37;
+  }
+}
+
+:global .scroll::-webkit-scrollbar {
+  width: calc(var(--offset-base-size) * 2);
+}
+
+:global .scroll::-webkit-scrollbar-track {
+  background: #2F2F37;
+}
+
+:global .scroll::-webkit-scrollbar-thumb {
+  background: #8585AD;
+}

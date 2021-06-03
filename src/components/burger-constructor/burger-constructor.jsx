@@ -20,7 +20,8 @@ function BurgerConstructor(props) {
                 {(props.middleItems.length > 0 ?
                     <ul className={burgerConstructorStyles.burger_constructor_draggable_list + ' pr-2'} key="middle_items">
                         {props.middleItems.map((item, index) => (
-                            <li key={item._id + '_' + index}>
+                            <li className={burgerConstructorStyles.burger_constructor_draggable_list_item}
+                                key={item._id + '_' + index}>
                                 <span className={burgerConstructorStyles.burger_constructor_drag_icon}>
                                     <DragIcon type='primary' />
                                 </span>
