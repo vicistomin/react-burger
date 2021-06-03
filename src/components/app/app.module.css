@@ -6,3 +6,9 @@
 .container_left, .container_right {
     flex-basis: 600px;
 }
+
+.fullscreen_message {
+    position: relative;
+    top: 40vh;
+    text-align: center;
+}

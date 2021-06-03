@@ -4,6 +4,7 @@ import burgerConstructorStyles from './burger-constructor.module.css';
 import { ConstructorElement, DragIcon, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 
 function BurgerConstructor(props) {
+
     return(
         <>
             <ul className={burgerConstructorStyles.burger_constructor_list + ' ml-4 mt-25 mb-10 pr-4'}>
@@ -11,9 +12,9 @@ function BurgerConstructor(props) {
                     <ConstructorElement 
                                     type='top'
                                     isLocked={true}
-                                    text={props.topItem.name + ' (верх)'}
-                                    thumbnail={props.topItem.image}
-                                    price={props.topItem.price}
+                                    text={props.bunType.name + ' (верх)'}
+                                    thumbnail={props.bunType.image}
+                                    price={props.bunType.price}
                                 />
                 </li>
                 {/* when inner items aren't chosen, show warning message */}
@@ -43,17 +44,19 @@ function BurgerConstructor(props) {
                     <ConstructorElement 
                                     isLocked={true}
                                     type='bottom'
-                                    text={props.bottomItem.name + ' (низ)'}
-                                    thumbnail={props.bottomItem.image}
-                                    price={props.bottomItem.price}
+                                    text={props.bunType.name + ' (низ)'}
+                                    thumbnail={props.bunType.image}
+                                    price={props.bunType.price}
                                 />
                 </li>
             </ul>
             <div className={burgerConstructorStyles.burger_constructor_order + ' mr-4 mb-10'}>
                 <p className="text text_type_digits-medium">
-                        {props.topItem.price + 
-                        props.middleItems.reduce((acc, p) => acc + p.price, 0) +
-                        props.bottomItem.price}
+                        {
+                            // buns can be only of one type so there are 2 buns:
+                            props.bunType.price * 2 + 
+                            props.middleItems.reduce((acc, p) => acc + p.price, 0)
+                        }
                 </p>
                 <span className='ml-2 mr-10'>
                     <CurrencyIcon type="primary" />
@@ -67,7 +70,7 @@ function BurgerConstructor(props) {
 }
 
 BurgerConstructor.propTypes = {
-    topItem: PropTypes.shape({
+    bunType: PropTypes.shape({
         name: PropTypes.string.isRequired,
         price: PropTypes.number.isRequired,
         image: PropTypes.string.isRequired        
@@ -81,11 +84,6 @@ BurgerConstructor.propTypes = {
         _id: PropTypes.string.isRequired 
     })),
 
-    bottomItem: PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        price: PropTypes.number.isRequired,
-        image: PropTypes.string.isRequired        
-    })
 };
 
 export default BurgerConstructor;
