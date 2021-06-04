@@ -46,7 +46,10 @@ function Modal({ children, header, closeModal, fancyCloseIcon=false }) {
 }
 
 Modal.propTypes = {
-    // TODO: check propTypes!
+    children: PropTypes.element.isRequired,
+    header: PropTypes.string,
+    closeModal: PropTypes.func.isRequired,
+    fancyCloseIcon: PropTypes.bool
 };
 
 export default Modal;

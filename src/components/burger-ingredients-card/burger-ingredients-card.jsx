@@ -25,7 +25,7 @@ function BurgerIngredientsCard(props) {
 }
 
 BurgerIngredientsCard.propTypes = {
-    id: PropTypes.number.isRequired,
+    id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     value: PropTypes.number.isRequired,
     price: PropTypes.number.isRequired,

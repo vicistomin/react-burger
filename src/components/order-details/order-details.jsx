@@ -29,7 +29,9 @@ function OrderDetails(props) {
 }
 
 OrderDetails.propTypes = {
-    // TODO: check propTypes!
+    // TODO: orderId will be a number
+    orderId: PropTypes.string.isRequired,
+    closeModal: PropTypes.func
 };
 
 export default OrderDetails;
