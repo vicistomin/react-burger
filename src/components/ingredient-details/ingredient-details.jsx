@@ -5,44 +5,44 @@ function IngredientDetails(props) {
     return(
         <div className={ingredientDetailsStyles.ingredient_details_container}>
              <img 
-                src='https://code.s3.yandex.net/react/code/bun-02-large.png'
-                alt={props.name}
-                title={props.name}
+                src={props.item.image_large}
+                alt={props.item.name}
+                title={props.item.name}
             />           
-            <h4 className={ingredientDetailsStyles.ingredient_name + ' text text_type_main-medium mt-4 mb-8'}>
-                {props.name}
+            <h4 className='text text_type_main-medium mt-4 mb-8'>
+                {props.item.name}
             </h4>
             <ul className={ingredientDetailsStyles.ingredient_nutrition_list}>
-                <li>
+                <li className={ingredientDetailsStyles.ingredient_nutrition_list_item}>
                     <p className="text text_type_main-default text_color_inactive">
                         Калории, ккал
                     </p>
                     <p className="text text_type_digits-default text_color_inactive">
-                        {props.calories}
+                        {props.item.calories}
                     </p>
                 </li>
-                <li>
+                <li className={ingredientDetailsStyles.ingredient_nutrition_list_item}>
                     <p className="text text_type_main-default text_color_inactive">
                         Белки, г
                     </p>
                     <p className="text text_type_digits-default text_color_inactive">
-                        {props.proteins}
+                        {props.item.proteins}
                     </p>
                 </li>
-                <li>
+                <li className={ingredientDetailsStyles.ingredient_nutrition_list_item}>
                     <p className="text text_type_main-default text_color_inactive">
                         Жиры, г
                     </p>
                     <p className="text text_type_digits-default text_color_inactive">
-                        {props.fat}
+                        {props.item.fat}
                     </p>
                 </li>
-                <li>
+                <li className={ingredientDetailsStyles.ingredient_nutrition_list_item}>
                     <p className="text text_type_main-default text_color_inactive">
                         Углеводы, г
                     </p>
                     <p className="text text_type_digits-default text_color_inactive">
-                        {props.carbohydrates}
+                        {props.item.carbohydrates}
                     </p>
                 </li>
             </ul>

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import appStyles from './app.module.css';
 // importing components from project
 import AppHeader from '../app-header/app-header';
@@ -48,10 +48,6 @@ function App() {
     const openOrderModal = () => {
       toggleOrderModal(true);
     };
-    
-    const openIngredientModal = () => {
-      toggleIngredientModal(true);
-    };
 
     // TODO: replace hardcoded values
     const [orderId, setOrderId] = useState('034536');
@@ -68,6 +64,15 @@ function App() {
       )}, [orderId]
       );
 
+    const [selectedItem, setSelectedItem] = useState([]);
+
+    // is useCallback needed here?
+    const openIngredientModal = useCallback((clickedItem) => {
+      toggleIngredientModal(true);
+      setSelectedItem(state.data.filter(item => (item._id === clickedItem))[0]);
+    }, [state.data]
+    );
+
     const ingredientModal = useMemo(() => {
       return (
       <Modal 
@@ -75,11 +80,10 @@ function App() {
         closeModal={closeModal}>
           <IngredientDetails 
             // TODO: Get data from clicked item!
-            name='123'
-            calories={123}
+            item={selectedItem}
           />
       </Modal>  
-      )}, []
+      )}, [selectedItem]
     );
 
     // TODO: implement interactive selection of buns (top/bottom)

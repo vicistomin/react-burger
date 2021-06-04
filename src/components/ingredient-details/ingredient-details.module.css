@@ -4,10 +4,6 @@
     width: 520px;
 }
 
-.ingredient_name {
-    
-}
-
 .ingredient_nutrition_list {
     composes: flex_row from global;
     composes: not_a_list from global;
@@ -16,4 +12,9 @@
     width: 520px;
     /* ? */
     column-gap: 20px;
+}
+
+.ingredient_nutrition_list_item {
+    composes: flex_column from global;
+    row-gap: 8px;
 }
