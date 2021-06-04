@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import modalStyles from './modal.module.css';
 // importing components from project
@@ -7,8 +8,23 @@ import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 
 const modalRoot = document.getElementById('modal-root');
 
-// TODO: Close modal with the "Esc" key
-function Modal({ children, header, closeModal }) {
+function Modal({ children, header, closeModal, fancyCloseIcon=false }) {
+    
+    // closing modals with the "Esc" key:
+    const handleEscKey = (e) => {
+        if (e.key === 'Escape') 
+            closeModal();
+        e.stopImmediatePropagation();
+    }
+
+    // FIXME: for some reason keydown EventListener won't work with modalRoot or divs in modal body
+    useEffect(() => {
+        document.addEventListener('keydown', handleEscKey);
+        return () => {
+            document.removeEventListener('keydown', handleEscKey);
+        };
+    }, []); 
+
     return ReactDOM.createPortal(
         <>
             <ModalOverlay closeModal={closeModal} />
@@ -16,7 +32,9 @@ function Modal({ children, header, closeModal }) {
                 <h3 className={modalStyles.modal_header + ' text text_type_main-large'}>
                     {header}
                 </h3>
-                <span className={modalStyles.close_icon}>
+                <span className={modalStyles.close_icon 
+                    // adding box-shadow only in OrderDetailsModal (as in Figma)
+                    + (fancyCloseIcon ? ' ' + modalStyles.fancy_icon : '')}>
                     <CloseIcon onClick={closeModal} />
                 </span>
                 {children}

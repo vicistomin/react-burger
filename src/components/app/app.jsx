@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import appStyles from './app.module.css';
 // importing components from project
 import AppHeader from '../app-header/app-header';
@@ -22,7 +22,7 @@ function App() {
   useEffect(() => {
     // getting data from API
     const getData = () => {
-      setState({...state, loading: true})
+      setState({...state, loading: true, success: false})
       return fetch(API_URL)
         .then(res => res.ok ? res.json() : setState({ ...state, loading: false, success: false }))
         .then(data => setState({ data: data.data, loading: false, success: true }))
@@ -30,9 +30,10 @@ function App() {
     }
 
     getData();
-    // return () => {
-    //   TODO: cleanup?
-    // };
+    return () => {
+    //   TODO: additional cleanup?
+        setState({...state, loading: true, success: false})
+    };
   }, []);
 
     const [showOrderModal, toggleOrderModal] = useState(false)
@@ -50,21 +51,31 @@ function App() {
     
     const openIngredientModal = () => {
       toggleIngredientModal(true);
-    };   
-    const orderModal = (
+    };
+
+    // TODO: replace hardcoded values
+    const [orderId, setOrderId] = useState('034536');
+
+    // TODO: decide what's better in this case - useMemo, useCallback or just plain function?
+    const orderModal = useMemo(() => {
+    return (
       <Modal 
         header={null}
-        closeModal={closeModal}>
-          <OrderDetails />
-      </Modal>      
-    );
+        closeModal={closeModal}
+        fancyCloseIcon>
+          <OrderDetails orderId={orderId}  />
+      </Modal>
+      )}, [orderId]
+      );
 
-    const ingredientModal = (
+    const ingredientModal = useMemo(() => {
+      return (
       <Modal 
         header='Детали ингредиента'
         closeModal={closeModal}>
           <IngredientDetails />
-      </Modal>   
+      </Modal>  
+      )}, []
     );
 
     // TODO: implement interactive selection of buns (top/bottom)
