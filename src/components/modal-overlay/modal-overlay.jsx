@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import modalOverlayStyles from './modal-overlay.module.css';
 
 function ModalOverlay({ closeModal }) {
@@ -8,5 +9,9 @@ function ModalOverlay({ closeModal }) {
             </div>
     );
 }
+
+ModalOverlay.propTypes = {
+    // TODO: check propTypes!
+};
 
 export default ModalOverlay;

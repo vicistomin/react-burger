@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import orderDetailsStyles from './order-details.module.css';
 import orderAcceptedImage from '../../images/order-accepted.gif'
 
@@ -26,5 +27,9 @@ function OrderDetails(props) {
         </div>
     );
 }
+
+OrderDetails.propTypes = {
+    // TODO: check propTypes!
+};
 
 export default OrderDetails;

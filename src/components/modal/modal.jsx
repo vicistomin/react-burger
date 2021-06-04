@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import modalStyles from './modal.module.css';
@@ -43,5 +44,9 @@ function Modal({ children, header, closeModal, fancyCloseIcon=false }) {
         modalRoot
     );
 }
+
+Modal.propTypes = {
+    // TODO: check propTypes!
+};
 
 export default Modal;

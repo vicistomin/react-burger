@@ -73,7 +73,11 @@ function App() {
       <Modal 
         header='Детали ингредиента'
         closeModal={closeModal}>
-          <IngredientDetails />
+          <IngredientDetails 
+            // TODO: Get data from clicked item!
+            name='123'
+            calories={123}
+          />
       </Modal>  
       )}, []
     );
