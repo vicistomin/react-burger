@@ -5,12 +5,12 @@ import { Counter, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-c
 
 function BurgerIngredientsCard(props) {
 
-    const returnIngredientName = () => {
+    const openIngredientDetailsModal = () => {
         props.openModal(props.id);
     }
 
     return(
-        <li className={burgerIngredientsCardStyles.ingredient_card} onClick={returnIngredientName}>
+        <li className={burgerIngredientsCardStyles.ingredient_card} onClick={openIngredientDetailsModal}>
             {props.value ? <Counter count={props.value}/> : null}
             <img src={props.image} alt={props.name} title={props.name} className="ml-4 mr-4"/>
                 <div className={burgerIngredientsCardStyles.ingredient_price + ' mt-1 mb-1 '}>

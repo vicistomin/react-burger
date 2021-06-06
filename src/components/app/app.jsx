@@ -12,41 +12,54 @@ const API_URL = 'https://norma.nomoreparties.space/api/ingredients';
 
 function App() {
 
-  const [state, setState] = useState({
-    data: [],
-    loading: true,
-    success: false
+  const [ingredientsData, setIngredientsData] = useState({
+    items: [],
+    // TODO: perhaps these 3 boolean loading state vars should be rewritten to 1 var with current loading state
+    // e.g. loadingState = 'loading' || 'error' || 'success'
+    // after all, in this case only one boolean at a time can have 'true' value
+    isLoading: false,
+    hasLoaded: false,
+    hasError: false
   });
   
 
   useEffect(() => {
     // getting data from API
-    const getData = () => {
-      setState({...state, loading: true, success: false})
+    const getIngredientsData = () => {
+      setIngredientsData({...ingredientsData, isLoading: true, hasError: false, hasLoaded: false})
       return fetch(API_URL)
-        .then(res => res.ok ? res.json() : setState({ ...state, loading: false, success: false }))
-        .then(data => setState({ data: data.data, loading: false, success: true }))
-        .catch(error => setState({ ...state, loading: false, success: false }))
-    }
+        .then(res => {
+          if (!res.ok) {
+            // we don't need to set state vars here as we will do that in catch
+            res.reject(res.statusText);
 
-    getData();
-    return () => {
-    //   TODO: additional cleanup?
-        setState({...state, loading: true, success: false})
-    };
+            // as an option we may throw an Error directly instead of reject:
+            // throw Error(res.statusText);
+            }
+          return res.json();
+          })
+        .then(json => {
+          let {data} = json;
+          setIngredientsData({ ...ingredientsData, items: data, isLoading: false, hasLoaded: true, hasError: false })
+        })
+        .catch((error) => {
+          console.log(error);
+          setIngredientsData({ ...ingredientsData, isLoading: false, hasError: true, hasLoaded: false })
+    })}
+    getIngredientsData();
   }, []);
 
-    const [showOrderModal, toggleOrderModal] = useState(false)
-    const [showIngredientModal, toggleIngredientModal] = useState(false)
+    const [isOrderModalOpen, setIsOrderModalOpen] = useState(false)
+    const [isIngredientModalOpen, setIsIngredientModalOpen] = useState(false)
 
-    const closeModal = () => {
+    const closeAllModals = () => {
       // TODO: different funcs/conditions for different modals?
-      toggleOrderModal(false);
-      toggleIngredientModal(false);
+      setIsOrderModalOpen(false);
+      setIsIngredientModalOpen(false);
     };
 
     const openOrderModal = () => {
-      toggleOrderModal(true);
+      setIsOrderModalOpen(true);
     };
 
     // TODO: replace hardcoded values
@@ -57,7 +70,7 @@ function App() {
     return (
       <Modal 
         header={null}
-        closeModal={closeModal}
+        closeModal={closeAllModals}
         fancyCloseIcon>
           <OrderDetails orderId={orderId}  />
       </Modal>
@@ -68,18 +81,17 @@ function App() {
 
     // is useCallback needed here?
     const openIngredientModal = useCallback((clickedItem) => {
-      toggleIngredientModal(true);
-      setSelectedItem(state.data.filter(item => (item._id === clickedItem))[0]);
-    }, [state.data]
+      setIsIngredientModalOpen(true);
+      setSelectedItem(ingredientsData.items.filter(item => (item._id === clickedItem))[0]);
+    }, [ingredientsData.items]
     );
 
     const ingredientModal = useMemo(() => {
       return (
       <Modal 
         header='Детали ингредиента'
-        closeModal={closeModal}>
-          <IngredientDetails 
-            // TODO: Get data from clicked item!
+        closeModal={closeAllModals}>
+          <IngredientDetails
             item={selectedItem}
           />
       </Modal>  
@@ -91,31 +103,44 @@ function App() {
     // (user can't choose different buns for top and bottom)
 
     // define hardcoded arrays of ingredients from the data from API:
-    const bunType = state.data.filter(item => item.type === 'bun')[0];
-    const middleItems = state.data.filter(item => (item.type === 'sauce' || item.type === 'main')).slice(4, 12);
+    const bunItem = ingredientsData.items.filter(item => item.type === 'bun')[0];
+    const middleItems = ingredientsData.items.filter(item => (item.type === 'sauce' || item.type === 'main')).slice(4, 12);
     
   return (
     <>
       <AppHeader />
-      {( !state.loading && state.success ?
-        <div className={appStyles.container}>
-          <section className={appStyles.container_left + ' mr-5'}>
-            <BurgerIngredients items={state.data} openModal={openIngredientModal} />
-          </section>
-          <section className={appStyles.container_right + ' ml-5'}>
-            <BurgerConstructor bunType={bunType} middleItems={middleItems} openModal={openOrderModal} />
-          </section>
-        </div>
-      : (state.loading && !state.success ?
-        <h2 className={appStyles.fullscreen_message + ' text text_type_main-large text_color_inactive'}>
-          Загрузка...</h2>
-        :
-          <h2 className={appStyles.fullscreen_message + ' text text_type_main-large text_color_inactive'}>
-            Ошибка загрузки</h2>
-      )
-      )}
-        {showOrderModal && orderModal}
-        {showIngredientModal && ingredientModal}
+        {
+          ingredientsData.hasError && 
+          !ingredientsData.isLoading && 
+          !ingredientsData.hasLoaded &&
+            <h2 className={appStyles.fullscreen_message + ' text text_type_main-large text_color_inactive'}>
+              Ошибка загрузки
+            </h2>
+        }
+        {
+          ingredientsData.isLoading && 
+          !ingredientsData.hasError && 
+          !ingredientsData.hasLoaded &&
+            <h2 className={appStyles.fullscreen_message + ' text text_type_main-large text_color_inactive'}>
+              Загрузка...
+            </h2>
+        }
+        {
+          ingredientsData.hasLoaded && 
+          !ingredientsData.hasError && 
+          !ingredientsData.isLoading &&
+            <div className={appStyles.container}>
+              <section className={appStyles.container_left + ' mr-5'}>
+                <BurgerIngredients items={ingredientsData.items} openModal={openIngredientModal} />
+              </section>
+              <section className={appStyles.container_right + ' ml-5'}>
+                <BurgerConstructor bunItem={bunItem} middleItems={middleItems} openModal={openOrderModal} />
+              </section>
+            </div>
+        }
+        
+        {isOrderModalOpen && orderModal}
+        {isIngredientModalOpen && ingredientModal}
     </>
   );
 }

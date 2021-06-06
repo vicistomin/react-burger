@@ -12,9 +12,9 @@ function BurgerConstructor(props) {
                     <ConstructorElement 
                                     type='top'
                                     isLocked={true}
-                                    text={props.bunType.name + ' (верх)'}
-                                    thumbnail={props.bunType.image}
-                                    price={props.bunType.price}
+                                    text={props.bunItem.name + ' (верх)'}
+                                    thumbnail={props.bunItem.image}
+                                    price={props.bunItem.price}
                                 />
                 </li>
                 {/* when inner items aren't chosen, show warning message */}
@@ -44,9 +44,9 @@ function BurgerConstructor(props) {
                     <ConstructorElement 
                                     isLocked={true}
                                     type='bottom'
-                                    text={props.bunType.name + ' (низ)'}
-                                    thumbnail={props.bunType.image}
-                                    price={props.bunType.price}
+                                    text={props.bunItem.name + ' (низ)'}
+                                    thumbnail={props.bunItem.image}
+                                    price={props.bunItem.price}
                                 />
                 </li>
             </ul>
@@ -54,7 +54,7 @@ function BurgerConstructor(props) {
                 <p className="text text_type_digits-medium">
                         {
                             // buns can be only of one type so there are 2 buns:
-                            props.bunType.price * 2 + 
+                            props.bunItem.price * 2 + 
                             props.middleItems.reduce((acc, p) => acc + p.price, 0)
                         }
                 </p>
@@ -70,7 +70,7 @@ function BurgerConstructor(props) {
 }
 
 BurgerConstructor.propTypes = {
-    bunType: PropTypes.shape({
+    bunItem: PropTypes.shape({
         name: PropTypes.string.isRequired,
         price: PropTypes.number.isRequired,
         image: PropTypes.string.isRequired        
