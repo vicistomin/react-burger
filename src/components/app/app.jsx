@@ -21,7 +21,13 @@ function App() {
     hasLoaded: false,
     hasError: false
   });
-  
+  const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
+  const [isIngredientModalOpen, setIsIngredientModalOpen] = useState(false);
+
+  // TODO: replace hardcoded values
+  const [orderId, setOrderId] = useState('034536');
+
+  const [selectedItem, setSelectedItem] = useState([]);
 
   useEffect(() => {
     // getting data from API
@@ -49,9 +55,6 @@ function App() {
     getIngredientsData();
   }, []);
 
-    const [isOrderModalOpen, setIsOrderModalOpen] = useState(false)
-    const [isIngredientModalOpen, setIsIngredientModalOpen] = useState(false)
-
     const closeAllModals = () => {
       // TODO: different funcs/conditions for different modals?
       setIsOrderModalOpen(false);
@@ -61,9 +64,6 @@ function App() {
     const openOrderModal = () => {
       setIsOrderModalOpen(true);
     };
-
-    // TODO: replace hardcoded values
-    const [orderId, setOrderId] = useState('034536');
 
     // TODO: decide what's better in this case - useMemo, useCallback or just plain function?
     const orderModal = useMemo(() => {
@@ -76,8 +76,6 @@ function App() {
       </Modal>
       )}, [orderId]
       );
-
-    const [selectedItem, setSelectedItem] = useState([]);
 
     // is useCallback needed here?
     const openIngredientModal = useCallback((clickedItem) => {
