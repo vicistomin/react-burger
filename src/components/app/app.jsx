@@ -65,35 +65,11 @@ function App() {
       setIsOrderModalOpen(true);
     };
 
-    // TODO: decide what's better in this case - useMemo, useCallback or just plain function?
-    const orderModal = useMemo(() => {
-    return (
-      <Modal 
-        header={null}
-        closeModal={closeAllModals}
-        fancyCloseIcon>
-          <OrderDetails orderId={orderId}  />
-      </Modal>
-      )}, [orderId]
-      );
-
     // is useCallback needed here?
     const openIngredientModal = useCallback((clickedItem) => {
       setIsIngredientModalOpen(true);
       setSelectedItem(ingredientsData.items.filter(item => (item._id === clickedItem))[0]);
     }, [ingredientsData.items]
-    );
-
-    const ingredientModal = useMemo(() => {
-      return (
-      <Modal 
-        header='Детали ингредиента'
-        closeModal={closeAllModals}>
-          <IngredientDetails
-            item={selectedItem}
-          />
-      </Modal>  
-      )}, [selectedItem]
     );
 
     // TODO: implement interactive selection of buns (top/bottom)
@@ -110,23 +86,23 @@ function App() {
         {
           ingredientsData.hasError && 
           !ingredientsData.isLoading && 
-          !ingredientsData.hasLoaded &&
+          !ingredientsData.hasLoaded && (
             <h2 className={appStyles.fullscreen_message + ' text text_type_main-large text_color_inactive'}>
               Ошибка загрузки
             </h2>
-        }
+        )}
         {
           ingredientsData.isLoading && 
           !ingredientsData.hasError && 
-          !ingredientsData.hasLoaded &&
+          !ingredientsData.hasLoaded && (
             <h2 className={appStyles.fullscreen_message + ' text text_type_main-large text_color_inactive'}>
               Загрузка...
             </h2>
-        }
+        )}
         {
           ingredientsData.hasLoaded && 
           !ingredientsData.hasError && 
-          !ingredientsData.isLoading &&
+          !ingredientsData.isLoading && (
             <div className={appStyles.container}>
               <section className={appStyles.container_left + ' mr-5'}>
                 <BurgerIngredients items={ingredientsData.items} openModal={openIngredientModal} />
@@ -135,10 +111,24 @@ function App() {
                 <BurgerConstructor bunItem={bunItem} middleItems={middleItems} openModal={openOrderModal} />
               </section>
             </div>
-        }
-        
-        {isOrderModalOpen && orderModal}
-        {isIngredientModalOpen && ingredientModal}
+        )}
+        {
+          isOrderModalOpen && (
+            <Modal 
+              header={null}
+              closeModal={closeAllModals}
+              fancyCloseIcon >
+                <OrderDetails orderId={orderId} />
+            </Modal>
+        )}
+        {
+          isIngredientModalOpen && (
+            <Modal 
+              header='Детали ингредиента'
+              closeModal={closeAllModals} >
+                <IngredientDetails item={selectedItem} />
+            </Modal> 
+        )}
     </>
   );
 }
