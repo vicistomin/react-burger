@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import appStyles from './app.module.css';
 // importing components from project
 import AppHeader from '../app-header/app-header';
@@ -115,7 +115,7 @@ function App() {
             <Modal 
               header={null}
               closeModal={closeAllModals}
-              fancyCloseIcon >
+              isFancyCloseIcon >
                 <OrderDetails orderId={orderId} />
             </Modal>
         )}

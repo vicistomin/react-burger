@@ -9,7 +9,7 @@ import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 
 const modalRoot = document.getElementById('modal-root');
 
-function Modal({ children, header, closeModal, fancyCloseIcon=false }) {
+function Modal({ children, header, closeModal, isFancyCloseIcon=false }) {
     
     // closing modals with the "Esc" key:
     const handleEscKey = (e) => {
@@ -33,9 +33,8 @@ function Modal({ children, header, closeModal, fancyCloseIcon=false }) {
                 <h3 className={modalStyles.modal_header + ' text text_type_main-large'}>
                     {header}
                 </h3>
-                <span className={modalStyles.close_icon 
-                    // adding box-shadow only in OrderDetailsModal (as in Figma)
-                    + (fancyCloseIcon ? ' ' + modalStyles.fancy_icon : '')}>
+                {/* adding box-shadow only in OrderDetailsModal (as in Figma) */}
+                <span className={ `${modalStyles.close_icon} ${isFancyCloseIcon ? modalStyles.fancy_icon : null}` } >
                     <CloseIcon onClick={closeModal} />
                 </span>
                 {children}
