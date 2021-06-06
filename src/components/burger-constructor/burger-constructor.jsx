@@ -22,7 +22,10 @@ function BurgerConstructor(props) {
                     <ul className={burgerConstructorStyles.burger_constructor_draggable_list + ' pr-2'} key="middle_items">
                         {props.middleItems.map((item, index) => (
                             <li className={burgerConstructorStyles.burger_constructor_draggable_list_item}
-                                key={item._id + '_' + index}>
+                                // TODO: can there be more than one inner ingredient of a same type?
+                                // if yes - then key should have random generated addition to '_id'
+                                // or maybe some kind of hash
+                                key={item._id}>
                                 <span className={burgerConstructorStyles.burger_constructor_drag_icon}>
                                     <DragIcon type='primary' />
                                 </span>
