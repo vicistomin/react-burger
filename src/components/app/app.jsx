@@ -56,7 +56,6 @@ function App() {
   }, []);
 
     const closeAllModals = () => {
-      // TODO: different funcs/conditions for different modals?
       setIsOrderModalOpen(false);
       setIsIngredientModalOpen(false);
     };
@@ -65,11 +64,10 @@ function App() {
       setIsOrderModalOpen(true);
     };
 
-    // is useCallback needed here?
     const openIngredientModal = useCallback((clickedItem) => {
+      setSelectedItem(clickedItem);
       setIsIngredientModalOpen(true);
-      setSelectedItem(ingredientsData.items.filter(item => (item._id === clickedItem))[0]);
-    }, [ingredientsData.items]
+    }, []
     );
 
     // TODO: implement interactive selection of buns (top/bottom)

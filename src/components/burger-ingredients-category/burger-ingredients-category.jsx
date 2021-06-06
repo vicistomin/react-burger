@@ -14,11 +14,7 @@ function BurgerIngredientsCategory(props) {
                 <ul className={burgerIngredientsCategoryStyles.burger_ingredients_list + ' ml-4 mt-6 mr-2 mb-10'}>
                     {props.items.map((item) => 
                         <BurgerIngredientsCard 
-                            id={item._id}
-                            name={item.name} 
-                            price={item.price} 
-                            image={item.image} 
-                            value={item.__v} 
+                            item={item} 
                             key={item._id}
                             openModal={props.openModal}
                         />)}
@@ -31,13 +27,16 @@ function BurgerIngredientsCategory(props) {
 }
 
 BurgerIngredientsCategory.propTypes = {
-    items: PropTypes.arrayOf(PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        price: PropTypes.number.isRequired,
-        image: PropTypes.string.isRequired,
-        __v: PropTypes.number.isRequired,
-        _id: PropTypes.string.isRequired
-    }).isRequired).isRequired
+    items: PropTypes.arrayOf(
+        PropTypes.shape({
+            name: PropTypes.string.isRequired,
+            price: PropTypes.number.isRequired,
+            image: PropTypes.string.isRequired,
+            __v: PropTypes.number.isRequired,
+            _id: PropTypes.string.isRequired
+        }).isRequired        
+    ).isRequired,
+    openModal: PropTypes.func.isRequired
 };
 
 export default BurgerIngredientsCategory;

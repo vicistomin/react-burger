@@ -6,30 +6,33 @@ import { Counter, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-c
 function BurgerIngredientsCard(props) {
 
     const openIngredientDetailsModal = () => {
-        props.openModal(props.id);
+        props.openModal(props.item)
     }
 
     return(
         <li className={burgerIngredientsCardStyles.ingredient_card} onClick={openIngredientDetailsModal}>
-            {props.value ? <Counter count={props.value}/> : null}
-            <img src={props.image} alt={props.name} title={props.name} className="ml-4 mr-4"/>
+            {props.item.value ? <Counter count={props.item.value}/> : null}
+            <img src={props.item.image} alt={props.item.name} title={props.item.name} className="ml-4 mr-4"/>
                 <div className={burgerIngredientsCardStyles.ingredient_price + ' mt-1 mb-1 '}>
-                    <p className='pr-2 text text_type_digits-default'>{props.price}</p>
+                    <p className='pr-2 text text_type_digits-default'>{props.item.price}</p>
                     <CurrencyIcon />
                 </div>
             <p className={burgerIngredientsCardStyles.ingredient_name + ' text text_type_main-default'}>
-                {props.name}
+                {props.item.name}
             </p>
         </li>
     );
 }
 
 BurgerIngredientsCard.propTypes = {
-    id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    value: PropTypes.number.isRequired,
-    price: PropTypes.number.isRequired,
-    image: PropTypes.string.isRequired
+    item: PropTypes.shape({
+        _id: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+        __v: PropTypes.number.isRequired,
+        price: PropTypes.number.isRequired,
+        image: PropTypes.string.isRequired
+    }).isRequired,
+    openModal: PropTypes.func.isRequired
 };
 
 export default BurgerIngredientsCard;
