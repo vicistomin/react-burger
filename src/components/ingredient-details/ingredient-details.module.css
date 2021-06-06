@@ -1,13 +1,10 @@
 .ingredient_details_container {
     composes: flex_column from global;
-
     width: 520px;
 }
 
 .ingredient_nutrition_list {
     composes: flex_row from global;
-    composes: not_a_list from global;
-
     justify-content: space-between;
     width: 520px;
     /* ? */

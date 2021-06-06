@@ -1,5 +1,4 @@
 .burger_ingredients_list {
-    composes: not_a_list from global;
     display: grid;
     grid-template-columns: auto auto;
     column-gap: calc(var(--offset-base-size) * 6);

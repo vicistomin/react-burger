@@ -1,20 +1,17 @@
 .menu_container {
     composes: flex_row from global;
-    composes: not_a_list from global;
     composes: card_box_shadow from global;
     background: var(--background);
 }
 
 .menu_list {
     composes: flex_row from global;
-    composes: not_a_list from global;
     margin: 0;
     flex-basis: 1280px;
 }
 
 .menu_list_left {
     composes: flex_row from global;
-    composes: not_a_list from global;
     flex-basis: 40%;
     justify-content: flex-start;
 }

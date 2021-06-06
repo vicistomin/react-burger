@@ -1,6 +1,5 @@
 .burger_constructor_list {
     composes: flex_column from global;
-    composes: not_a_list from global;
     gap: 10px;
     align-items: stretch;
 }
