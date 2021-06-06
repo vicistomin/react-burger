@@ -17,7 +17,7 @@ function OrderDetails(props) {
                 src={orderAcceptedImage + '?v=' + Math.floor(Math.random()*100)}
                 alt="Заказ принят"
                 title="Заказ принят"
-                height="120px"
+                height="120"
             />
             <p className='text text_type_main-default mt-15 mb-2'>
                 Ваш заказ начали готовить

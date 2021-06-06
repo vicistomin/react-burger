@@ -17,32 +17,33 @@ function BurgerConstructor(props) {
                                     price={props.bunItem.price}
                                 />
                 </li>
-                {/* when inner items aren't chosen, show warning message */}
-                {(props.middleItems.length > 0 ?
-                    <ul className={burgerConstructorStyles.burger_constructor_draggable_list + ' pr-2'} key="middle_items">
-                        {props.middleItems.map((item, index) => (
-                            <li className={burgerConstructorStyles.burger_constructor_draggable_list_item}
-                                // TODO: can there be more than one inner ingredient of a same type?
-                                // if yes - then key should have random generated addition to '_id'
-                                // or maybe some kind of hash
-                                key={item._id}>
-                                <span className={burgerConstructorStyles.burger_constructor_drag_icon}>
-                                    <DragIcon type='primary' />
-                                </span>
-                                <ConstructorElement 
-                                    text={item.name}
-                                    thumbnail={item.image}
-                                    price={item.price}
-                                    />
-                            </li>
-                        ))}
-                    </ul>
-                : 
-                    <h3 className={burgerConstructorStyles.warningText + ' text text_type_main-default text_color_inactive pt-6 pb-6'}>
-                        Добавьте ингредиенты
-                    </h3>
-                )}
-
+                <li>
+                    {/* when inner items aren't chosen, show warning message */}
+                    {(props.middleItems.length > 0 ?
+                        <ul className={burgerConstructorStyles.burger_constructor_draggable_list + ' pr-2'} key="middle_items">
+                            {props.middleItems.map((item, index) => (
+                                <li className={burgerConstructorStyles.burger_constructor_draggable_list_item}
+                                    // TODO: can there be more than one inner ingredient of a same type?
+                                    // if yes - then key should have random generated addition to '_id'
+                                    // or maybe some kind of hash
+                                    key={item._id}>
+                                    <span className={burgerConstructorStyles.burger_constructor_drag_icon}>
+                                        <DragIcon type='primary' />
+                                    </span>
+                                    <ConstructorElement 
+                                        text={item.name}
+                                        thumbnail={item.image}
+                                        price={item.price}
+                                        />
+                                </li>
+                            ))}
+                        </ul>
+                    : 
+                        <h3 className={burgerConstructorStyles.warningText + ' text text_type_main-default text_color_inactive pt-6 pb-6'}>
+                            Добавьте ингредиенты
+                        </h3>
+                    )}
+                </li>
                 <li className='pl-8' key="bottom_bun">
                     <ConstructorElement 
                                     isLocked={true}

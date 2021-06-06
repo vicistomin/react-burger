@@ -11,8 +11,11 @@
 }
 
 .menu_list_left {
-    composes: flex_row from global;
     flex-basis: 40%;
+}
+
+.menu_list_left_items {
+    composes: flex_row from global;
     justify-content: flex-start;
 }
 
