@@ -11,9 +11,10 @@ function OrderDetails(props) {
             <p className='text text_type_main-medium mt-8 mb-15'>
                 идентификатор заказа
             </p>
-            {/* gif image will be played only once */}
             <img 
-                src={orderAcceptedImage}
+                // gif image will be played only once (not in loop)
+                // random parameter at the end of gif url makes it play every time modal is open 
+                src={orderAcceptedImage + '?v=' + Math.floor(Math.random()*100)}
                 alt="Заказ принят"
                 title="Заказ принят"
                 height="120px"
@@ -29,9 +30,11 @@ function OrderDetails(props) {
 }
 
 OrderDetails.propTypes = {
-    // TODO: orderId will be a number
-    orderId: PropTypes.string.isRequired,
-    closeModal: PropTypes.func
+    // orderId can be a number
+    orderId: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number
+    ]).isRequired
 };
 
 export default OrderDetails;
