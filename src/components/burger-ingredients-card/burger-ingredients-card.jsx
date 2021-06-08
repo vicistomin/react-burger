@@ -10,7 +10,7 @@ function BurgerIngredientsCard(props) {
     }
 
     return(
-        <li className={burgerIngredientsCardStyles.ingredient_card} onClick={handleIngredientClick}>
+        <div className={burgerIngredientsCardStyles.ingredient_card} onClick={handleIngredientClick}>
             {props.item.value ? <Counter count={props.item.value}/> : null}
             <img src={props.item.image} alt={props.item.name} title={props.item.name} className="ml-4 mr-4"/>
                 <div className={burgerIngredientsCardStyles.ingredient_price + ' mt-1 mb-1 '}>
@@ -20,7 +20,7 @@ function BurgerIngredientsCard(props) {
             <p className={burgerIngredientsCardStyles.ingredient_name + ' text text_type_main-default'}>
                 {props.item.name}
             </p>
-        </li>
+        </div>
     );
 }
 

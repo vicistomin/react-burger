@@ -12,12 +12,15 @@ function BurgerIngredientsCategory(props) {
             {/* when items aren't received, show 'Empty category' nessage */}
             {(props.items.length > 0 ? 
                 <ul className={burgerIngredientsCategoryStyles.burger_ingredients_list + ' ml-4 mt-6 mr-2 mb-10'}>
-                    {props.items.map((item) => 
-                        <BurgerIngredientsCard 
-                            item={item} 
-                            key={item._id}
-                            onIngredientClick={props.onIngredientClick}
-                        />)}
+                    {props.items.map((item) => (
+                        <li>
+                            <BurgerIngredientsCard 
+                                item={item} 
+                                key={item._id}
+                                onIngredientClick={props.onIngredientClick}
+                            />
+                        </li>
+                    ))}
                 </ul>
             : <h3 className='text text_type_main-default text_color_inactive pb-6'>
                         Категория пуста
