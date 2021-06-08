@@ -1,11 +1,14 @@
 .container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
+    composes: flex_row from global;
     align-items: flex-start;
-    justify-content: center;
 }
 
 .container_left, .container_right {
     flex-basis: 600px;
+}
+
+.fullscreen_message {
+    position: relative;
+    top: 40vh;
+    text-align: center;
 }

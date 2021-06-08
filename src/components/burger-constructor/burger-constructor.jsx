@@ -4,6 +4,7 @@ import burgerConstructorStyles from './burger-constructor.module.css';
 import { ConstructorElement, DragIcon, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 
 function BurgerConstructor(props) {
+
     return(
         <>
             <ul className={burgerConstructorStyles.burger_constructor_list + ' ml-4 mt-25 mb-10 pr-4'}>
@@ -11,45 +12,60 @@ function BurgerConstructor(props) {
                     <ConstructorElement 
                                     type='top'
                                     isLocked={true}
-                                    text={props.topItem.name + ' (верх)'}
-                                    thumbnail={props.topItem.image}
-                                    price={props.topItem.price}
+                                    text={props.bunItem.name + ' (верх)'}
+                                    thumbnail={props.bunItem.image}
+                                    price={props.bunItem.price}
                                 />
                 </li>
-                <ul className={burgerConstructorStyles.burger_constructor_draggable_list + ' pr-2'} key="middle_items">
-                    {props.middleItems.map((item, index) => (
-                        <li key={item._id + '_' + index}>
-                            <span className={burgerConstructorStyles.burger_constructor_drag_icon}>
-                                <DragIcon type='primary' />
-                            </span>
-                            <ConstructorElement 
-                                text={item.name}
-                                thumbnail={item.image}
-                                price={item.price}
-                                />
-                        </li>
-                    ))}
-                </ul>
+                <li>
+                    {/* when inner items aren't chosen, show warning message */}
+                    {(props.middleItems.length > 0 ?
+                        <ul className={burgerConstructorStyles.burger_constructor_draggable_list + ' pr-2'} key="middle_items">
+                            {props.middleItems.map((item, index) => (
+                                <li className={burgerConstructorStyles.burger_constructor_draggable_list_item}
+                                    // TODO: can there be more than one inner ingredient of a same type?
+                                    // if yes - then key should have random generated addition to '_id'
+                                    // or maybe some kind of hash
+                                    key={item._id}>
+                                    <span className={burgerConstructorStyles.burger_constructor_drag_icon}>
+                                        <DragIcon type='primary' />
+                                    </span>
+                                    <ConstructorElement 
+                                        text={item.name}
+                                        thumbnail={item.image}
+                                        price={item.price}
+                                        />
+                                </li>
+                            ))}
+                        </ul>
+                    : 
+                        <h3 className={burgerConstructorStyles.warningText + ' text text_type_main-default text_color_inactive pt-6 pb-6'}>
+                            Добавьте ингредиенты
+                        </h3>
+                    )}
+                </li>
                 <li className='pl-8' key="bottom_bun">
                     <ConstructorElement 
                                     isLocked={true}
                                     type='bottom'
-                                    text={props.bottomItem.name + ' (низ)'}
-                                    thumbnail={props.bottomItem.image}
-                                    price={props.bottomItem.price}
+                                    text={props.bunItem.name + ' (низ)'}
+                                    thumbnail={props.bunItem.image}
+                                    price={props.bunItem.price}
                                 />
                 </li>
             </ul>
             <div className={burgerConstructorStyles.burger_constructor_order + ' mr-4 mb-10'}>
                 <p className="text text_type_digits-medium">
-                        {props.topItem.price + 
-                        props.middleItems.reduce((acc, p) => acc + p.price, 0) +
-                        props.bottomItem.price}
+                        {
+                            // buns can be only of one type so there are 2 buns:
+                            props.bunItem.price * 2 + 
+                            props.middleItems.reduce((acc, p) => acc + p.price, 0)
+                        }
                 </p>
                 <span className='ml-2 mr-10'>
                     <CurrencyIcon type="primary" />
                 </span>
-                <Button type="primary" size="medium">
+                <Button type="primary" size="medium" onClick={props.onOrderButtonClick}>
                         Оформить заказ
                 </Button>
             </div>
@@ -58,7 +74,7 @@ function BurgerConstructor(props) {
 }
 
 BurgerConstructor.propTypes = {
-    topItem: PropTypes.shape({
+    bunItem: PropTypes.shape({
         name: PropTypes.string.isRequired,
         price: PropTypes.number.isRequired,
         image: PropTypes.string.isRequired        
@@ -72,11 +88,6 @@ BurgerConstructor.propTypes = {
         _id: PropTypes.string.isRequired 
     })),
 
-    bottomItem: PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        price: PropTypes.number.isRequired,
-        image: PropTypes.string.isRequired        
-    })
 };
 
 export default BurgerConstructor;
