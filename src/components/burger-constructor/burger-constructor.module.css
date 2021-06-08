@@ -46,9 +46,7 @@
     height: auto;
 }
 
-/* it's not good, but correct selector doesn't work on library components:
-.burger_constructor_list .constructor-element__text { */
-.burger_constructor_list > li > div > span > span:first-of-type {
+:global(.constructor-element__text) {
     /* оne-line ingredient name positioning issues */
     min-height: 48px;
     /* TODO: rewrite for responsivity @ <1280px ! */
