@@ -44,8 +44,8 @@ function App() {
             }
           return res.json();
           })
-        .then(json => {
-          let {data} = json;
+        // it's a better way to destructurize the data object from API:
+        .then(({data}) => {
           setIngredientsData({ ...ingredientsData, items: data, isLoading: false, hasLoaded: true, hasError: false })
         })
         .catch((error) => {
