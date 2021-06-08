@@ -103,10 +103,10 @@ function App() {
           !ingredientsData.isLoading && (
             <div className={appStyles.container}>
               <section className={appStyles.container_left + ' mr-5'}>
-                <BurgerIngredients items={ingredientsData.items} openModal={openIngredientModal} />
+                <BurgerIngredients items={ingredientsData.items} onIngredientClick={openIngredientModal} />
               </section>
               <section className={appStyles.container_right + ' ml-5'}>
-                <BurgerConstructor bunItem={bunItem} middleItems={middleItems} openModal={openOrderModal} />
+                <BurgerConstructor bunItem={bunItem} middleItems={middleItems} onOrderButtonClick={openOrderModal} />
               </section>
             </div>
         )}

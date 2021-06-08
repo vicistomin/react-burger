@@ -40,17 +40,17 @@ function BurgerIngredients(props) {
                 <BurgerIngredientsCategory 
                     heading="Булки" 
                     items={props.items.filter(item => item.type === 'bun')} 
-                    openModal={props.openModal}
+                    onIngredientClick={props.onIngredientClick}
                 />
                 <BurgerIngredientsCategory 
                     heading="Соусы" 
                     items={props.items.filter(item => item.type === 'sauce')} 
-                    openModal={props.openModal}
+                    onIngredientClick={props.onIngredientClick}
                 />
                 <BurgerIngredientsCategory 
                     heading="Начинки" 
                     items={props.items.filter(item => item.type === 'main')} 
-                    openModal={props.openModal}
+                    onIngredientClick={props.onIngredientClick}
                 />
             </div>
         </>

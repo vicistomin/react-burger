@@ -16,7 +16,7 @@ function BurgerIngredientsCategory(props) {
                         <BurgerIngredientsCard 
                             item={item} 
                             key={item._id}
-                            openModal={props.openModal}
+                            onIngredientClick={props.onIngredientClick}
                         />)}
                 </ul>
             : <h3 className='text text_type_main-default text_color_inactive pb-6'>
