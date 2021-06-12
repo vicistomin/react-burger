@@ -12,6 +12,10 @@ import { ConstructorDataContext, OrderContext } from '../../utils/constructorCon
 const API_URL = 'https://norma.nomoreparties.space/api/ingredients';
 const ORDER_API_URL = 'https://norma.nomoreparties.space/api/orders';
 
+// TODO: remove random generation of ingredients on step-2
+const randomFirstIngredient = Math.floor(Math.random() * 12);
+const randomLastIngredient = Math.floor(Math.random() * 6) + 1 + randomFirstIngredient;
+
 function App() {
 
   const [ingredientsData, setIngredientsData] = useState({
@@ -65,7 +69,8 @@ function App() {
 
     // define hardcoded arrays of ingredients from the data from API:
     const bunItem = ingredientsData.items.filter(item => item.type === 'bun')[0];
-    const middleItems = ingredientsData.items.filter(item => (item.type === 'sauce' || item.type === 'main')).slice(4, 12);
+    const middleItems = ingredientsData.items.filter(item => 
+      (item.type === 'sauce' || item.type === 'main')).slice(randomFirstIngredient, randomLastIngredient);
 
     const openOrderModal = () => {
       const items = [bunItem._id];
