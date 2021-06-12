@@ -59,19 +59,26 @@ function App() {
       setIsIngredientModalOpen(false);
     };
 
-    // TODO:get real items id
-    const items = {
-      "ingredients": ["60c1226586769e0026ffd074","60c1226586769e0026ffd07a"]
-    };
+    // TODO: implement interactive selection of buns (top/bottom)
+    // !!! Buns can be only be of one type
+    // (user can't choose different buns for top and bottom)
+
+    // define hardcoded arrays of ingredients from the data from API:
+    const bunItem = ingredientsData.items.filter(item => item.type === 'bun')[0];
+    const middleItems = ingredientsData.items.filter(item => (item.type === 'sauce' || item.type === 'main')).slice(4, 12);
 
     const openOrderModal = () => {
+      const items = [bunItem._id];
+      middleItems.map(item => items.push(item._id));
       // get new order ID from API:
       fetch(ORDER_API_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(items)
+        body: JSON.stringify({
+          "ingredients": items
+        })
       })
       .then(res => {
         if (!res.ok && res.status !== 400) {
@@ -102,14 +109,6 @@ function App() {
     }, []
     );
 
-    // TODO: implement interactive selection of buns (top/bottom)
-    // !!! Buns can be only be of one type
-    // (user can't choose different buns for top and bottom)
-
-    // define hardcoded arrays of ingredients from the data from API:
-    const bunItem = ingredientsData.items.filter(item => item.type === 'bun')[0];
-    const middleItems = ingredientsData.items.filter(item => (item.type === 'sauce' || item.type === 'main')).slice(4, 12);
-    
   return (
     <>
       <AppHeader />
