@@ -1,5 +1,4 @@
 import { useContext } from 'react';
-import PropTypes from 'prop-types';
 import orderDetailsStyles from './order-details.module.css';
 import orderAcceptedImage from '../../images/order-accepted.gif'
 import { OrderContext } from '../../utils/constructorContext';
@@ -32,15 +31,5 @@ function OrderDetails() {
         </div>
     );
 }
-
-OrderDetails.contextTypes  = {
-
-        // orderId can be a number
-        orderId: PropTypes.oneOfType([
-            PropTypes.string,
-            PropTypes.number
-        ]).isRequired
-
-};
 
 export default OrderDetails;
