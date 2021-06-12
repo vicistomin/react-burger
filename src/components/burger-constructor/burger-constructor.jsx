@@ -1,12 +1,25 @@
-import { useContext } from 'react';
+import { useContext, useReducer, useEffect } from 'react';
 import burgerConstructorStyles from './burger-constructor.module.css';
 // importing components from library
 import { ConstructorElement, DragIcon, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { ConstructorDataContext } from '../../utils/constructorContext';
 
+const initialTotalState = { total: 0 };
+
+function totalPriceReducer(totalPriceState, items) {
+    // buns can be only of one type so there are 2 buns:
+    const newTotal = items.bunItem.price * 2 + items.middleItems.reduce((acc, p) => acc + p.price, 0)
+    return { total: newTotal }
+}
+
 function BurgerConstructor() {
 
     const { bunItem, middleItems, onOrderButtonClick } = useContext(ConstructorDataContext);
+    const [totalPriceState, totalPriceDispatch] = useReducer(totalPriceReducer, initialTotalState);
+
+    useEffect(() => {
+        totalPriceDispatch({ bunItem, middleItems });
+    }, [bunItem, middleItems]);
 
     return(
         <>
@@ -59,11 +72,7 @@ function BurgerConstructor() {
             </ul>
             <div className={burgerConstructorStyles.burger_constructor_order + ' mr-4 mb-10'}>
                 <p className="text text_type_digits-medium">
-                        {
-                            // buns can be only of one type so there are 2 buns:
-                            bunItem.price * 2 + 
-                            middleItems.reduce((acc, p) => acc + p.price, 0)
-                        }
+                    {totalPriceState.total}
                 </p>
                 <span className='ml-2 mr-10'>
                     <CurrencyIcon type="primary" />
