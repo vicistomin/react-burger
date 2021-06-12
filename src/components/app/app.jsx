@@ -10,6 +10,7 @@ import IngredientDetails from '../ingredient-details/ingredient-details';
 import { ConstructorDataContext, OrderContext } from '../../utils/constructorContext';
 
 const API_URL = 'https://norma.nomoreparties.space/api/ingredients';
+const ORDER_API_URL = 'https://norma.nomoreparties.space/api/orders';
 
 function App() {
 
@@ -24,10 +25,7 @@ function App() {
   });
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
   const [isIngredientModalOpen, setIsIngredientModalOpen] = useState(false);
-
-  // TODO: replace hardcoded values
-  const [orderId, setOrderId] = useState('034536');
-
+  const [orderData, setOrderData] = useState({});
   const [selectedItem, setSelectedItem] = useState([]);
 
   useEffect(() => {
@@ -61,8 +59,41 @@ function App() {
       setIsIngredientModalOpen(false);
     };
 
+    // TODO:get real items id
+    const items = {
+      "ingredients": ["60c1226586769e0026ffd074","60c1226586769e0026ffd07a"]
+    };
+
     const openOrderModal = () => {
-      setIsOrderModalOpen(true);
+      // get new order ID from API:
+      fetch(ORDER_API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(items)
+      })
+      .then(res => {
+        if (!res.ok && res.status !== 400) {
+          throw Error(res.statusText);
+          }
+        return res.json();
+        })
+      .then((data) => {
+        if (data.success)
+          setOrderData({ name: data.name, id: data.order.number, success: data.success });
+        else {
+          setOrderData({ success: data.success });
+          throw Error(data.message);
+        }
+      })
+      // show modal only after fetch is done so it won't show old data if it's open again:
+      .then(() => setIsOrderModalOpen(true))
+      .catch((error) => {
+        console.log(error);
+        // we'll show OrderDetail modal to user anyway to let him see the error message in it
+        setIsOrderModalOpen(true);
+      })
     };
 
     const openIngredientModal = useCallback((clickedItem) => {
@@ -119,7 +150,7 @@ function App() {
               header={null}
               closeModal={closeAllModals}
               isFancyCloseIcon >
-              <OrderContext.Provider value={{ orderId }}>
+              <OrderContext.Provider value={{ orderData }}>
                 <OrderDetails />
               </OrderContext.Provider>
             </Modal>
