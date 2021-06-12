@@ -26,7 +26,6 @@ function BurgerIngredientsCard(props) {
 
 BurgerIngredientsCard.propTypes = {
     item: PropTypes.shape({
-        _id: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired,
         __v: PropTypes.number.isRequired,
         price: PropTypes.number.isRequired,

@@ -13,10 +13,9 @@ function BurgerIngredientsCategory(props) {
             {(props.items.length > 0 ? 
                 <ul className={burgerIngredientsCategoryStyles.burger_ingredients_list + ' ml-4 mt-6 mr-2 mb-10'}>
                     {props.items.map((item) => (
-                        <li>
-                            <BurgerIngredientsCard 
-                                item={item} 
-                                key={item._id}
+                        <li key={item._id}>
+                            <BurgerIngredientsCard
+                                item={item}
                                 onIngredientClick={props.onIngredientClick}
                             />
                         </li>
@@ -39,7 +38,7 @@ BurgerIngredientsCategory.propTypes = {
             _id: PropTypes.string.isRequired
         }).isRequired        
     ).isRequired,
-    openModal: PropTypes.func.isRequired
+    onIngredientClick: PropTypes.func.isRequired
 };
 
 export default BurgerIngredientsCategory;
