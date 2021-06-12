@@ -7,6 +7,7 @@ import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
 import IngredientDetails from '../ingredient-details/ingredient-details';
+import { ConstructorDataContext, OrderContext } from '../../utils/constructorContext';
 
 const API_URL = 'https://norma.nomoreparties.space/api/ingredients';
 
@@ -106,7 +107,9 @@ function App() {
                 <BurgerIngredients items={ingredientsData.items} onIngredientClick={openIngredientModal} />
               </section>
               <section className={appStyles.container_right + ' ml-5'}>
-                <BurgerConstructor bunItem={bunItem} middleItems={middleItems} onOrderButtonClick={openOrderModal} />
+                <ConstructorDataContext.Provider value={{ bunItem, middleItems, onOrderButtonClick: openOrderModal }}>
+                  <BurgerConstructor />
+                </ConstructorDataContext.Provider>
               </section>
             </div>
         )}
@@ -116,7 +119,9 @@ function App() {
               header={null}
               closeModal={closeAllModals}
               isFancyCloseIcon >
-                <OrderDetails orderId={orderId} />
+              <OrderContext.Provider value={{ orderId }}>
+                <OrderDetails />
+              </OrderContext.Provider>
             </Modal>
         )}
         {

@@ -1,9 +1,13 @@
+import { useContext } from 'react';
 import PropTypes from 'prop-types';
 import burgerConstructorStyles from './burger-constructor.module.css';
 // importing components from library
 import { ConstructorElement, DragIcon, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
+import { ConstructorDataContext } from '../../utils/constructorContext';
 
-function BurgerConstructor(props) {
+function BurgerConstructor() {
+
+    const { bunItem, middleItems, onOrderButtonClick } = useContext(ConstructorDataContext);
 
     return(
         <>
@@ -12,16 +16,16 @@ function BurgerConstructor(props) {
                     <ConstructorElement 
                                     type='top'
                                     isLocked={true}
-                                    text={props.bunItem.name + ' (верх)'}
-                                    thumbnail={props.bunItem.image}
-                                    price={props.bunItem.price}
+                                    text={bunItem.name + ' (верх)'}
+                                    thumbnail={bunItem.image}
+                                    price={bunItem.price}
                                 />
                 </li>
                 <li>
                     {/* when inner items aren't chosen, show warning message */}
-                    {(props.middleItems.length > 0 ?
+                    {(middleItems.length > 0 ?
                         <ul className={burgerConstructorStyles.burger_constructor_draggable_list + ' pr-2'} key="middle_items">
-                            {props.middleItems.map((item, index) => (
+                            {middleItems.map((item, index) => (
                                 <li className={burgerConstructorStyles.burger_constructor_draggable_list_item}
                                     // TODO: can there be more than one inner ingredient of a same type?
                                     // if yes - then key should have random generated addition to '_id'
@@ -48,9 +52,9 @@ function BurgerConstructor(props) {
                     <ConstructorElement 
                                     isLocked={true}
                                     type='bottom'
-                                    text={props.bunItem.name + ' (низ)'}
-                                    thumbnail={props.bunItem.image}
-                                    price={props.bunItem.price}
+                                    text={bunItem.name + ' (низ)'}
+                                    thumbnail={bunItem.image}
+                                    price={bunItem.price}
                                 />
                 </li>
             </ul>
@@ -58,14 +62,14 @@ function BurgerConstructor(props) {
                 <p className="text text_type_digits-medium">
                         {
                             // buns can be only of one type so there are 2 buns:
-                            props.bunItem.price * 2 + 
-                            props.middleItems.reduce((acc, p) => acc + p.price, 0)
+                            bunItem.price * 2 + 
+                            middleItems.reduce((acc, p) => acc + p.price, 0)
                         }
                 </p>
                 <span className='ml-2 mr-10'>
                     <CurrencyIcon type="primary" />
                 </span>
-                <Button type="primary" size="medium" onClick={props.onOrderButtonClick}>
+                <Button type="primary" size="medium" onClick={onOrderButtonClick}>
                         Оформить заказ
                 </Button>
             </div>
