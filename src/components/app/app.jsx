@@ -99,11 +99,12 @@ function App() {
           throw Error(data.message);
         }
       })
-      // show modal only after fetch is done so it won't show old data if it's open again:
-      .then(() => setIsOrderModalOpen(true))
       .catch((error) => {
         console.log(error);
-        // we'll show OrderDetail modal to user anyway to let him see the error message in it
+      })
+      // show modal only after fetch is done so it won't show old data if it's open again:
+      // in case of error we'll show OrderDetail modal to user anyway to let him see the error message in it
+      .finally(() => {
         setIsOrderModalOpen(true);
       })
     };
