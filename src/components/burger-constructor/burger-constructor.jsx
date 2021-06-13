@@ -24,7 +24,7 @@ function BurgerConstructor() {
     return(
         <>
             <ul className={burgerConstructorStyles.burger_constructor_list + ' ml-4 mt-25 mb-10 pr-4'}>
-                <li className='pl-8' key="top_bun">
+                <li className='pl-8'>
                     <ConstructorElement 
                                     type='top'
                                     isLocked={true}
@@ -60,7 +60,7 @@ function BurgerConstructor() {
                         </h3>
                     )}
                 </li>
-                <li className='pl-8' key="bottom_bun">
+                <li className='pl-8'>
                     <ConstructorElement 
                                     isLocked={true}
                                     type='bottom'
