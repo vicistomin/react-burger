@@ -1,12 +1,15 @@
+import { useContext } from 'react';
 import PropTypes from 'prop-types';
 import burgerIngredientsCardStyles from './burger-ingredients-card.module.css';
 // importing components from library
 import { Counter, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import { BurgerContext } from '../../utils/burger-context';
 
 function BurgerIngredientsCard(props) {
+    const { onIngredientClick } = useContext(BurgerContext);
 
     const handleIngredientClick = () => {
-        props.onIngredientClick(props.item)
+        onIngredientClick(props.item)
     }
 
     return(

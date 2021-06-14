@@ -4,6 +4,7 @@ import burgerIngredientsCategoryStyles from './burger-ingredients-category.modul
 import BurgerIngredientsCard from '../burger-ingredients-card/burger-ingredients-card';
 
 function BurgerIngredientsCategory(props) {
+
     return(
         <section>
             <h2 className="text text_type_main-medium mt-10 mb-6">
@@ -16,7 +17,6 @@ function BurgerIngredientsCategory(props) {
                         <BurgerIngredientsCard
                             key={item._id}
                             item={item}
-                            onIngredientClick={props.onIngredientClick}
                         />
                     ))}
                 </ul>

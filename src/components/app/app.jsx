@@ -7,7 +7,7 @@ import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
 import IngredientDetails from '../ingredient-details/ingredient-details';
-import { ConstructorDataContext, OrderContext } from '../../utils/constructorContext';
+import { BurgerContext, OrderContext } from '../../utils/burger-context';
 
 const API_URL = 'https://norma.nomoreparties.space/api/ingredients';
 const ORDER_API_URL = 'https://norma.nomoreparties.space/api/orders';
@@ -71,6 +71,10 @@ function App() {
     const bunItem = ingredientsData.items.filter(item => item.type === 'bun')[0];
     const middleItems = ingredientsData.items.filter(item => 
       (item.type === 'sauce' || item.type === 'main')).slice(randomFirstIngredient, randomLastIngredient);
+    const orderedItems = {
+      bunItem,
+      middleItems
+    }
 
     const openOrderModal = () => {
       const items = [bunItem._id];
@@ -138,16 +142,21 @@ function App() {
           ingredientsData.hasLoaded && 
           !ingredientsData.hasError && 
           !ingredientsData.isLoading && (
-            <div className={appStyles.container}>
-              <section className={appStyles.container_left + ' mr-5'}>
-                <BurgerIngredients items={ingredientsData.items} onIngredientClick={openIngredientModal} />
-              </section>
-              <section className={appStyles.container_right + ' ml-5'}>
-                <ConstructorDataContext.Provider value={{ bunItem, middleItems, onOrderButtonClick: openOrderModal }}>
+            <BurgerContext.Provider value={{ 
+              items: ingredientsData.items,
+              orderedItems,
+              onOrderButtonClick: openOrderModal,
+              onIngredientClick: openIngredientModal 
+            }}>
+              <div className={appStyles.container}>
+                <section className={appStyles.container_left + ' mr-5'}>
+                  <BurgerIngredients />
+                </section>
+                <section className={appStyles.container_right + ' ml-5'}>
                   <BurgerConstructor />
-                </ConstructorDataContext.Provider>
-              </section>
-            </div>
+                </section>
+              </div>
+            </BurgerContext.Provider>
         )}
         {
           isOrderModalOpen && (

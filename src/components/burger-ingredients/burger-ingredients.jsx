@@ -1,13 +1,16 @@
-import React from 'react';
+import { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import burgerIngredientsStyles from './burger-ingredients.module.css';
 // importing components from project
 import BurgerIngredientsCategory from '../burger-ingredients-category/burger-ingredients-category';
 // importing components from library
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
+import { BurgerContext } from '../../utils/burger-context';
 
-function BurgerIngredients(props) {
-    const [current, setCurrent] = React.useState('bun')
+function BurgerIngredients() {
+    const [current, setCurrent] = useState('bun')
+    const { items } = useContext(BurgerContext);
+
     return(
         <>
             <h1 className="text text_type_main-large mt-10 mb-5">
@@ -39,18 +42,15 @@ function BurgerIngredients(props) {
             <div className={burgerIngredientsStyles.scroll_container}>
                 <BurgerIngredientsCategory 
                     heading="Булки" 
-                    items={props.items.filter(item => item.type === 'bun')} 
-                    onIngredientClick={props.onIngredientClick}
+                    items={items.filter(item => item.type === 'bun')}
                 />
                 <BurgerIngredientsCategory 
                     heading="Соусы" 
-                    items={props.items.filter(item => item.type === 'sauce')} 
-                    onIngredientClick={props.onIngredientClick}
+                    items={items.filter(item => item.type === 'sauce')}
                 />
                 <BurgerIngredientsCategory 
                     heading="Начинки" 
-                    items={props.items.filter(item => item.type === 'main')} 
-                    onIngredientClick={props.onIngredientClick}
+                    items={items.filter(item => item.type === 'main')}
                 />
             </div>
         </>
