@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import orderDetailsStyles from './order-details.module.css';
 import orderAcceptedImage from '../../images/order-accepted.gif'
 
@@ -40,5 +41,12 @@ function OrderDetails({ orderData }) {
         </div>
     );
 }
+
+OrderDetails.propTypes = {
+    orderData: PropTypes.shape({
+        success: PropTypes.bool.isRequired,
+        id: PropTypes.number
+    }).isRequired
+};
 
 export default OrderDetails;

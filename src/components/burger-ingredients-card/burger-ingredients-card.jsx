@@ -32,11 +32,10 @@ function BurgerIngredientsCard(props) {
 BurgerIngredientsCard.propTypes = {
     item: PropTypes.shape({
         name: PropTypes.string.isRequired,
-        __v: PropTypes.number.isRequired,
+        value: PropTypes.number,
         price: PropTypes.number.isRequired,
         image: PropTypes.string.isRequired
-    }).isRequired,
-    onIngredientClick: PropTypes.func.isRequired
+    }).isRequired
 };
 
 export default BurgerIngredientsCard;

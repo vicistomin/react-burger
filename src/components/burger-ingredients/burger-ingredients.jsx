@@ -1,5 +1,4 @@
 import { useState, useContext } from 'react';
-import PropTypes from 'prop-types';
 import burgerIngredientsStyles from './burger-ingredients.module.css';
 // importing components from project
 import BurgerIngredientsCategory from '../burger-ingredients-category/burger-ingredients-category';
@@ -56,15 +55,5 @@ function BurgerIngredients() {
         </>
     );
 }
-
-BurgerIngredients.propTypes = {
-    // TODO: check here propTypes of other elements of items object?
-    // (they already will be checked in inner components)
-    
-    // type property is required for categorization of items
-    items: PropTypes.arrayOf(PropTypes.shape({
-        type: PropTypes.string.isRequired
-    }).isRequired).isRequired
-};
 
 export default BurgerIngredients;

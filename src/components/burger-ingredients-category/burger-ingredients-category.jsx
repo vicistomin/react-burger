@@ -28,6 +28,7 @@ function BurgerIngredientsCategory(props) {
 }
 
 BurgerIngredientsCategory.propTypes = {
+    heading: PropTypes.string.isRequired,
     items: PropTypes.arrayOf(
         PropTypes.shape({
             name: PropTypes.string.isRequired,
@@ -36,8 +37,7 @@ BurgerIngredientsCategory.propTypes = {
             __v: PropTypes.number.isRequired,
             _id: PropTypes.string.isRequired
         }).isRequired        
-    ).isRequired,
-    onIngredientClick: PropTypes.func.isRequired
+    ).isRequired
 };
 
 export default BurgerIngredientsCategory;
