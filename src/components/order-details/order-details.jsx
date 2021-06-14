@@ -1,11 +1,7 @@
-import { useContext } from 'react';
 import orderDetailsStyles from './order-details.module.css';
 import orderAcceptedImage from '../../images/order-accepted.gif'
-import { OrderContext } from '../../utils/burger-context';
 
-function OrderDetails() {
-    const { orderData } = useContext(OrderContext);
-
+function OrderDetails({ orderData }) {
     return(
         <div className={orderDetailsStyles.order_details_container + ' mt-20 mb-15'}>
             {orderData.success ? (

@@ -7,7 +7,7 @@ import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
 import IngredientDetails from '../ingredient-details/ingredient-details';
-import { BurgerContext, OrderContext } from '../../utils/burger-context';
+import { BurgerContext } from '../../utils/burger-context';
 
 const API_URL = 'https://norma.nomoreparties.space/api/ingredients';
 const ORDER_API_URL = 'https://norma.nomoreparties.space/api/orders';
@@ -164,9 +164,7 @@ function App() {
               header={null}
               closeModal={closeAllModals}
               isFancyCloseIcon >
-              <OrderContext.Provider value={{ orderData }}>
-                <OrderDetails />
-              </OrderContext.Provider>
+                <OrderDetails orderData={orderData} />
             </Modal>
         )}
         {
