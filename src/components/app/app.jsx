@@ -7,8 +7,14 @@ import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
 import IngredientDetails from '../ingredient-details/ingredient-details';
+import { BurgerContext } from '../../utils/burger-context';
 
 const API_URL = 'https://norma.nomoreparties.space/api/ingredients';
+const ORDER_API_URL = 'https://norma.nomoreparties.space/api/orders';
+
+// TODO: remove random generation of ingredients on step-2
+const randomFirstIngredient = Math.floor(Math.random() * 12);
+const randomLastIngredient = Math.floor(Math.random() * 6) + 1 + randomFirstIngredient;
 
 function App() {
 
@@ -23,10 +29,7 @@ function App() {
   });
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
   const [isIngredientModalOpen, setIsIngredientModalOpen] = useState(false);
-
-  // TODO: replace hardcoded values
-  const [orderId, setOrderId] = useState('034536');
-
+  const [orderData, setOrderData] = useState({});
   const [selectedItem, setSelectedItem] = useState([]);
 
   useEffect(() => {
@@ -60,8 +63,54 @@ function App() {
       setIsIngredientModalOpen(false);
     };
 
+    // TODO: implement interactive selection of buns (top/bottom)
+    // !!! Buns can be only be of one type
+    // (user can't choose different buns for top and bottom)
+
+    // define hardcoded arrays of ingredients from the data from API:
+    const bunItem = ingredientsData.items.filter(item => item.type === 'bun')[0];
+    const middleItems = ingredientsData.items.filter(item => 
+      (item.type === 'sauce' || item.type === 'main')).slice(randomFirstIngredient, randomLastIngredient);
+    const orderedItems = {
+      bunItem,
+      middleItems
+    }
+
     const openOrderModal = () => {
-      setIsOrderModalOpen(true);
+      const items = [bunItem._id];
+      middleItems.map(item => items.push(item._id));
+      // get new order ID from API:
+      fetch(ORDER_API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          "ingredients": items
+        })
+      })
+      .then(res => {
+        if (!res.ok && res.status !== 400) {
+          throw Error(res.statusText);
+          }
+        return res.json();
+        })
+      .then((data) => {
+        if (data.success)
+          setOrderData({ name: data.name, id: data.order.number, success: data.success });
+        else {
+          setOrderData({ success: data.success });
+          throw Error(data.message);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      // show modal only after fetch is done so it won't show old data if it's open again:
+      // in case of error we'll show OrderDetail modal to user anyway to let him see the error message in it
+      .finally(() => {
+        setIsOrderModalOpen(true);
+      })
     };
 
     const openIngredientModal = useCallback((clickedItem) => {
@@ -70,14 +119,6 @@ function App() {
     }, []
     );
 
-    // TODO: implement interactive selection of buns (top/bottom)
-    // !!! Buns can be only be of one type
-    // (user can't choose different buns for top and bottom)
-
-    // define hardcoded arrays of ingredients from the data from API:
-    const bunItem = ingredientsData.items.filter(item => item.type === 'bun')[0];
-    const middleItems = ingredientsData.items.filter(item => (item.type === 'sauce' || item.type === 'main')).slice(4, 12);
-    
   return (
     <>
       <AppHeader />
@@ -101,14 +142,21 @@ function App() {
           ingredientsData.hasLoaded && 
           !ingredientsData.hasError && 
           !ingredientsData.isLoading && (
-            <div className={appStyles.container}>
-              <section className={appStyles.container_left + ' mr-5'}>
-                <BurgerIngredients items={ingredientsData.items} onIngredientClick={openIngredientModal} />
-              </section>
-              <section className={appStyles.container_right + ' ml-5'}>
-                <BurgerConstructor bunItem={bunItem} middleItems={middleItems} onOrderButtonClick={openOrderModal} />
-              </section>
-            </div>
+            <BurgerContext.Provider value={{ 
+              items: ingredientsData.items,
+              orderedItems,
+              onOrderButtonClick: openOrderModal,
+              onIngredientClick: openIngredientModal 
+            }}>
+              <div className={appStyles.container}>
+                <section className={appStyles.container_left + ' mr-5'}>
+                  <BurgerIngredients />
+                </section>
+                <section className={appStyles.container_right + ' ml-5'}>
+                  <BurgerConstructor />
+                </section>
+              </div>
+            </BurgerContext.Provider>
         )}
         {
           isOrderModalOpen && (
@@ -116,7 +164,7 @@ function App() {
               header={null}
               closeModal={closeAllModals}
               isFancyCloseIcon >
-                <OrderDetails orderId={orderId} />
+                <OrderDetails orderData={orderData} />
             </Modal>
         )}
         {
