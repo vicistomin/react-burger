@@ -8,6 +8,7 @@ const initialState = {
   items: [],
   itemsRequest: false,
   itemsFailed: false,
+  itemsSuccess: false,
   constructorItems: {},
   currentIngredient: {},
   order: {}
@@ -18,20 +19,23 @@ export const itemsReducer = (state = initialState, action) => {
     case GET_ITEMS_REQUEST: {
       return {
         ...state,
+        itemsRequest: true,
         itemsFailed: false,
-        itemsRequest: true
+        itemsSuccess: false,
       };
     }
     case GET_ITEMS_FAILED: {
       return {
         ...state,
         itemsFailed: true,
-        itemsRequest: false
+        itemsRequest: false,
+        itemsSuccess: false,
       };
     }
     case GET_ITEMS_SUCCESS: {
       return {
         ...state,
+        itemsSuccess: true,
         itemsRequest: false,
         itemsFailed: false,
         items: action.items
