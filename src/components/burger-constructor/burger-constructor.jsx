@@ -1,8 +1,10 @@
 import { useContext, useReducer, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import burgerConstructorStyles from './burger-constructor.module.css';
 // importing components from library
 import { ConstructorElement, DragIcon, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { BurgerContext } from '../../utils/burger-context';
+import { placeOrder } from '../../services/slices/order';
 
 const initialTotalState = { total: 0 };
 
@@ -13,9 +15,18 @@ function totalPriceReducer(totalPriceState, items) {
 }
 
 function BurgerConstructor() {
+    const dispatch = useDispatch();
 
-    const { orderedItems, onOrderButtonClick } = useContext(BurgerContext);
+    const { orderedItems } = useContext(BurgerContext);
     const [totalPriceState, totalPriceDispatch] = useReducer(totalPriceReducer, initialTotalState);
+
+    const onOrderButtonClick = () => {
+        const items = [orderedItems.bunItem._id];
+        orderedItems.middleItems.map(item => items.push(item._id));
+        // get new order ID from API:
+        dispatch(placeOrder(items));
+      };
+
 
     useEffect(() => {
         totalPriceDispatch( orderedItems );

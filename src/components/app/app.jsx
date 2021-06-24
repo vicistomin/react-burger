@@ -11,7 +11,8 @@ import { BurgerContext } from '../../utils/burger-context';
 import { useSelector, useDispatch } from "react-redux";
 // import slices and their functions
 import { getItems } from '../../services/slices/items';
-import { orderSlice, placeOrder } from '../../services/slices/order';
+import { orderSlice } from '../../services/slices/order';
+import { ingredientSlice } from '../../services/slices/ingredient';
 
 // TODO: remove random generation of ingredients on step-2
 const randomFirstIngredient = Math.floor(Math.random() * 12);
@@ -20,6 +21,7 @@ const randomLastIngredient = Math.floor(Math.random() * 6) + 1 + randomFirstIngr
 function App() {
   const dispatch = useDispatch();
   const { closeOrderModal } = orderSlice.actions;
+  const { closeIngredientModal } = ingredientSlice.actions;
 
   const { 
     items,
@@ -37,8 +39,12 @@ function App() {
     state => state.order
   );
 
-  const [isIngredientModalOpen, setIsIngredientModalOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState([]);
+  const { 
+    selectedIngredient,
+    isIngredientModalOpen
+  } = useSelector(
+    state => state.ingredient
+  );
 
   useEffect(() => {
     dispatch(getItems())
@@ -46,7 +52,7 @@ function App() {
 
     const closeAllModals = () => {
       dispatch(closeOrderModal());
-      setIsIngredientModalOpen(false);
+      dispatch(closeIngredientModal());
     };
 
     // TODO: implement interactive selection of buns (top/bottom)
@@ -61,19 +67,6 @@ function App() {
       bunItem,
       middleItems
     }
-
-    const openOrderModal = () => {
-      const items = [bunItem._id];
-      middleItems.map(item => items.push(item._id));
-      // get new order ID from API:
-      dispatch(placeOrder(items));
-    };
-
-    const openIngredientModal = useCallback((clickedItem) => {
-      setSelectedItem(clickedItem);
-      setIsIngredientModalOpen(true);
-    }, []
-    );
 
   return (
     <>
@@ -100,9 +93,7 @@ function App() {
           !itemsRequest && (
             <BurgerContext.Provider value={{ 
               items: items,
-              orderedItems,
-              onOrderButtonClick: openOrderModal,
-              onIngredientClick: openIngredientModal 
+              orderedItems 
             }}>
               <div className={appStyles.container}>
                 <section className={appStyles.container_left + ' mr-5'}>
@@ -128,7 +119,7 @@ function App() {
             <Modal 
               header='Детали ингредиента'
               closeModal={closeAllModals} >
-                <IngredientDetails item={selectedItem} />
+                <IngredientDetails item={selectedIngredient} />
             </Modal> 
         )}
     </>
