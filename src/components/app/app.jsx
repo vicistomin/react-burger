@@ -9,9 +9,9 @@ import OrderDetails from '../order-details/order-details';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 import { BurgerContext } from '../../utils/burger-context';
 import { useSelector, useDispatch } from "react-redux";
-import { getItems } from '../../services/actions';
-
-const ORDER_API_URL = 'https://norma.nomoreparties.space/api/orders';
+// import slices and their functions
+import { getItems } from '../../services/slices/items';
+import { orderSlice, placeOrder } from '../../services/slices/order';
 
 // TODO: remove random generation of ingredients on step-2
 const randomFirstIngredient = Math.floor(Math.random() * 12);
@@ -19,22 +19,33 @@ const randomLastIngredient = Math.floor(Math.random() * 6) + 1 + randomFirstIngr
 
 function App() {
   const dispatch = useDispatch();
+  const { closeOrderModal } = orderSlice.actions;
 
-  const { items, itemsRequest, itemsSuccess, itemsFailed } = useSelector(
+  const { 
+    items,
+    itemsRequest,
+    itemsSuccess,
+    itemsFailed
+  } = useSelector(
     state => state.items
   );
-  const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
+
+  const { 
+    orderData,
+    isOrderModalOpen
+  } = useSelector(
+    state => state.order
+  );
+
   const [isIngredientModalOpen, setIsIngredientModalOpen] = useState(false);
-  const [orderData, setOrderData] = useState({});
   const [selectedItem, setSelectedItem] = useState([]);
 
-
   useEffect(() => {
-    dispatch(getItems());
+    dispatch(getItems())
   }, [dispatch]);
 
     const closeAllModals = () => {
-      setIsOrderModalOpen(false);
+      dispatch(closeOrderModal());
       setIsIngredientModalOpen(false);
     };
 
@@ -55,37 +66,7 @@ function App() {
       const items = [bunItem._id];
       middleItems.map(item => items.push(item._id));
       // get new order ID from API:
-      fetch(ORDER_API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          "ingredients": items
-        })
-      })
-      .then(res => {
-        if (!res.ok && res.status !== 400) {
-          throw Error(res.statusText);
-          }
-        return res.json();
-        })
-      .then((data) => {
-        if (data.success)
-          setOrderData({ name: data.name, id: data.order.number, success: data.success });
-        else {
-          setOrderData({ success: data.success });
-          throw Error(data.message);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-      // show modal only after fetch is done so it won't show old data if it's open again:
-      // in case of error we'll show OrderDetail modal to user anyway to let him see the error message in it
-      .finally(() => {
-        setIsOrderModalOpen(true);
-      })
+      dispatch(placeOrder(items));
     };
 
     const openIngredientModal = useCallback((clickedItem) => {
