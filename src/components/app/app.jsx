@@ -7,7 +7,6 @@ import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
 import IngredientDetails from '../ingredient-details/ingredient-details';
-import { BurgerContext } from '../../utils/burger-context';
 import { useSelector, useDispatch } from "react-redux";
 // import slices and their functions
 import { getItems } from '../../services/slices/items';
@@ -74,18 +73,14 @@ function App() {
           itemsSuccess && 
           !itemsFailed && 
           !itemsRequest && (
-            <BurgerContext.Provider value={{ 
-              items: items
-            }}>
-              <div className={appStyles.container}>
-                <section className={appStyles.container_left + ' mr-5'}>
-                  <BurgerIngredients />
-                </section>
-                <section className={appStyles.container_right + ' ml-5'}>
-                  <BurgerConstructor />
-                </section>
-              </div>
-            </BurgerContext.Provider>
+            <div className={appStyles.container}>
+              <section className={appStyles.container_left + ' mr-5'}>
+                <BurgerIngredients />
+              </section>
+              <section className={appStyles.container_right + ' ml-5'}>
+                <BurgerConstructor />
+              </section>
+            </div>
         )}
         {
           isOrderModalOpen && (
