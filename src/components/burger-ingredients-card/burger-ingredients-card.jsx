@@ -1,4 +1,5 @@
 import { useDispatch } from 'react-redux';
+import { useDrag } from 'react-dnd';
 import PropTypes from 'prop-types';
 import burgerIngredientsCardStyles from './burger-ingredients-card.module.css';
 // importing components from library
@@ -13,9 +14,22 @@ function BurgerIngredientsCard(props) {
         dispatch(openIngredientModal(props.item));
     }
 
+    const [{opacity}, dragRef] = useDrag({
+        type: props.item.type,
+        item: props.item._id,
+        collect: monitor => ({
+          opacity: monitor.isDragging() ? 0.5 : 1
+        })
+      });
+    
     return(
         <li>
-            <div className={burgerIngredientsCardStyles.ingredient_card} onClick={handleIngredientClick}>
+            <div 
+                className={burgerIngredientsCardStyles.ingredient_card} 
+                onClick={handleIngredientClick} 
+                ref={dragRef}
+                style={{opacity}}
+            >
                 {props.item.__v ? <Counter count={props.item.__v}/> : null}
                 <img src={props.item.image} alt={props.item.name} title={props.item.name} className="ml-4 mr-4"/>
                     <div className={burgerIngredientsCardStyles.ingredient_price + ' mt-1 mb-1 '}>

@@ -12,6 +12,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { getItems } from '../../services/slices/items';
 import { orderSlice } from '../../services/slices/order';
 import { ingredientSlice } from '../../services/slices/ingredient';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider } from 'react-dnd';
 
 function App() {
   const dispatch = useDispatch();
@@ -74,12 +76,14 @@ function App() {
           !itemsFailed && 
           !itemsRequest && (
             <div className={appStyles.container}>
-              <section className={appStyles.container_left + ' mr-5'}>
-                <BurgerIngredients />
-              </section>
-              <section className={appStyles.container_right + ' ml-5'}>
-                <BurgerConstructor />
-              </section>
+              <DndProvider backend={HTML5Backend}>
+                <section className={appStyles.container_left + ' mr-5'}>
+                  <BurgerIngredients />
+                </section>
+                <section className={appStyles.container_right + ' ml-5'}>
+                  <BurgerConstructor />
+                </section>
+              </DndProvider>
             </div>
         )}
         {
