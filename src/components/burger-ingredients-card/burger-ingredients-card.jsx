@@ -16,7 +16,7 @@ function BurgerIngredientsCard(props) {
 
     const [{opacity}, dragRef] = useDrag({
         type: props.item.type,
-        item: props.item._id,
+        item: props.item,
         collect: monitor => ({
           opacity: monitor.isDragging() ? 0.5 : 1
         })
@@ -47,7 +47,8 @@ function BurgerIngredientsCard(props) {
 BurgerIngredientsCard.propTypes = {
     item: PropTypes.shape({
         name: PropTypes.string.isRequired,
-        __v: PropTypes.number,
+        __v: PropTypes.number.isRequired,
+        type: PropTypes.string.isRequired,
         price: PropTypes.number.isRequired,
         image: PropTypes.string.isRequired
     }).isRequired

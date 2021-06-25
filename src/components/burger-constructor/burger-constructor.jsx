@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useDrag, useDrop } from 'react-dnd';
 import burgerConstructorStyles from './burger-constructor.module.css';
 // importing components from library
 import { ConstructorElement, DragIcon, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -28,16 +29,37 @@ function BurgerConstructor() {
     // recalculating total price
     useEffect(() => {
         dispatch(calcTotalPrice());
-    }, [dispatch]);
+    }, [dispatch, bunItem, middleItems]);
 
     const generateItemHash = () => (
         Math.floor(Math.random() * 10000)
     );
 
+    // FIXME: One drop ref isn't working with 2 li elements (top and bottom)
+    const [{isTopBunHover}, dropTopBunTarget] = useDrop({
+        accept: 'bun',
+        drop(bunItem) {
+            dispatch(setBunItem(bunItem));
+        },
+        collect: monitor => ({
+            isBunHover: monitor.isOver(),
+        })
+      });
+    
+    const [{isBottomBunHover}, dropBottomBunTarget] = useDrop({
+        accept: 'bun',
+        drop(bunItem) {
+            dispatch(setBunItem(bunItem));
+        },
+        collect: monitor => ({
+            isBunHover: monitor.isOver(),
+        })
+      });
+
     return(
         <>
             <ul className={burgerConstructorStyles.burger_constructor_list + ' ml-4 mt-25 mb-10 pr-4'}>
-                <li className='pl-8'>
+                <li className='pl-8' ref={dropTopBunTarget}>
                     {bunItem.name ? (
                         <ConstructorElement 
                             type='top'
@@ -84,7 +106,7 @@ function BurgerConstructor() {
                         </h3>
                     )}
                 </li>
-                <li className='pl-8'>
+                <li className='pl-8' ref={dropBottomBunTarget}>
                     {bunItem.name ? (
                         <ConstructorElement 
                             isLocked={true}
