@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useEffect } from 'react';
 import appStyles from './app.module.css';
 // importing components from project
 import AppHeader from '../app-header/app-header';
@@ -19,7 +19,6 @@ function App() {
   const { closeIngredientModal } = ingredientSlice.actions;
 
   const { 
-    items,
     itemsRequest,
     itemsSuccess,
     itemsFailed
@@ -41,6 +40,7 @@ function App() {
     state => state.ingredient
   );
 
+  // TODO: move API call for getting items into BurgerIngredients component
   useEffect(() => {
     dispatch(getItems())
   }, [dispatch]);
