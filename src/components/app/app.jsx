@@ -14,10 +14,6 @@ import { getItems } from '../../services/slices/items';
 import { orderSlice } from '../../services/slices/order';
 import { ingredientSlice } from '../../services/slices/ingredient';
 
-// TODO: remove random generation of ingredients on step-2
-const randomFirstIngredient = Math.floor(Math.random() * 12);
-const randomLastIngredient = Math.floor(Math.random() * 6) + 1 + randomFirstIngredient;
-
 function App() {
   const dispatch = useDispatch();
   const { closeOrderModal } = orderSlice.actions;
@@ -55,19 +51,6 @@ function App() {
       dispatch(closeIngredientModal());
     };
 
-    // TODO: implement interactive selection of buns (top/bottom)
-    // !!! Buns can be only be of one type
-    // (user can't choose different buns for top and bottom)
-
-    // define hardcoded arrays of ingredients from the data from API:
-    const bunItem = items.filter(item => item.type === 'bun')[0];
-    const middleItems = items.filter(item => 
-      (item.type === 'sauce' || item.type === 'main')).slice(randomFirstIngredient, randomLastIngredient);
-    const orderedItems = {
-      bunItem,
-      middleItems
-    }
-
   return (
     <>
       <AppHeader />
@@ -92,8 +75,7 @@ function App() {
           !itemsFailed && 
           !itemsRequest && (
             <BurgerContext.Provider value={{ 
-              items: items,
-              orderedItems 
+              items: items
             }}>
               <div className={appStyles.container}>
                 <section className={appStyles.container_left + ' mr-5'}>
