@@ -15,10 +15,14 @@ export const burgerConstructorSlice = createSlice({
       state.middleItems = action.payload;
     },
     calcTotalPrice(state) {
-      // buns can be only of one type so there are 2 buns:
-      state.totalPrice = state.bunItem.price * 2 + state.middleItems.reduce(
-        (acc, p) => acc + p.price, 0
-      )
+      state.bunItem.name ? (
+        // buns can be only of one type so there are 2 buns:
+        state.totalPrice = state.bunItem.price * 2 + state.middleItems.reduce(
+          (acc, p) => acc + p.price, 0
+        )
+      ) : (
+        state.totalPrice = 0
+      );
     }
   }
 }) 

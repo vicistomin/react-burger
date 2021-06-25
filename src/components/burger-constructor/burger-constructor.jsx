@@ -19,13 +19,13 @@ function BurgerConstructor() {
     // (user can't choose different buns for top and bottom)
 
     // define hardcoded arrays of ingredients from the data from API:
-    useEffect(() => {
-        dispatch(setBunItem(items.filter(item => item.type === 'bun')[0]));
-        dispatch(setMiddleItems(items.filter(item => 
-            (item.type === 'sauce' || item.type === 'main'))
-                .slice(0, 0)
-        ));
-      }, [dispatch]);
+    // useEffect(() => {
+    //     dispatch(setBunItem(items.filter(item => item.type === 'bun')[0]));
+    //     dispatch(setMiddleItems(items.filter(item => 
+    //         (item.type === 'sauce' || item.type === 'main'))
+    //             .slice(0, 5)
+    //     ));
+    //   }, [dispatch]);
 
     const onOrderButtonClick = () => {
         const items = [bunItem._id];
@@ -47,13 +47,21 @@ function BurgerConstructor() {
         <>
             <ul className={burgerConstructorStyles.burger_constructor_list + ' ml-4 mt-25 mb-10 pr-4'}>
                 <li className='pl-8'>
-                    <ConstructorElement 
-                                    type='top'
-                                    isLocked={true}
-                                    text={bunItem.name + ' (верх)'}
-                                    thumbnail={bunItem.image}
-                                    price={bunItem.price}
-                                />
+                    {bunItem.name ? (
+                        <ConstructorElement 
+                            type='top'
+                            isLocked={true}
+                            text={bunItem.name + ' (верх)'}
+                            thumbnail={bunItem.image}
+                            price={bunItem.price}
+                        />
+                    ) : (
+                        <div 
+                            className='constructor-element constructor-element_pos_top'
+                            style={{width: '100%'}}
+                        >
+                        </div>
+                    )}
                 </li>
                 <li>
                     {/* when inner items aren't chosen, show warning message */}
@@ -77,28 +85,49 @@ function BurgerConstructor() {
                         </ul>
                     : 
                         <h3 className={burgerConstructorStyles.warningText + ' text text_type_main-default text_color_inactive pt-6 pb-6'}>
-                            Добавьте ингредиенты
+                            {totalPrice === 0 ? (
+                                'Добавьте булку и ингредиенты'
+                            ) : (
+                                bunItem.name ? (
+                                    'Добавьте ингредиенты'
+                                ) : (
+                                    'Добавьте булку'
+                                )
+                            )}
                         </h3>
                     )}
                 </li>
                 <li className='pl-8'>
-                    <ConstructorElement 
-                                    isLocked={true}
-                                    type='bottom'
-                                    text={bunItem.name + ' (низ)'}
-                                    thumbnail={bunItem.image}
-                                    price={bunItem.price}
-                                />
+                    {bunItem.name ? (
+                        <ConstructorElement 
+                            isLocked={true}
+                            type='bottom'
+                            text={bunItem.name + ' (низ)'}
+                            thumbnail={bunItem.image}
+                            price={bunItem.price}
+                        />
+                    ) : (
+                        <div 
+                            className='constructor-element constructor-element_pos_bottom'
+                            style={{width: '100%'}}
+                        >
+                        </div>
+                    )}
                 </li>
             </ul>
-            <div className={burgerConstructorStyles.burger_constructor_order + ' mr-4 mb-10'}>
-                <p className="text text_type_digits-medium">
+            <div style={!bunItem.name ? {opacity: 0.5} : null}
+            className={burgerConstructorStyles.burger_constructor_order + ' mr-4 mb-10'}>
+                <p className='text text_type_digits-medium'>
                     {totalPrice}
                 </p>
                 <span className='ml-2 mr-10'>
-                    <CurrencyIcon type="primary" />
+                    <CurrencyIcon type='primary' />
                 </span>
-                <Button type="primary" size="medium" onClick={onOrderButtonClick}>
+                <Button 
+                    type="primary"
+                    size="medium"
+                    onClick={bunItem.name ? onOrderButtonClick : null}
+                >
                         Оформить заказ
                 </Button>
             </div>
