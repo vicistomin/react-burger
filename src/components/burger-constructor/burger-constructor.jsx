@@ -6,10 +6,6 @@ import { ConstructorElement, DragIcon, CurrencyIcon, Button } from '@ya.praktiku
 import { placeOrder } from '../../services/slices/order';
 import { burgerConstructorSlice } from '../../services/slices/burger-constructor';
 
-// TODO: remove random generation of ingredients on step-2
-const randomFirstIngredient = Math.floor(Math.random() * 12);
-const randomLastIngredient = Math.floor(Math.random() * 6) + 1 + randomFirstIngredient;
-
 function BurgerConstructor() {
     const dispatch = useDispatch();
 
@@ -27,7 +23,7 @@ function BurgerConstructor() {
         dispatch(setBunItem(items.filter(item => item.type === 'bun')[0]));
         dispatch(setMiddleItems(items.filter(item => 
             (item.type === 'sauce' || item.type === 'main'))
-                .slice(randomFirstIngredient, randomLastIngredient)
+                .slice(0, 0)
         ));
       }, [dispatch]);
 
@@ -42,6 +38,10 @@ function BurgerConstructor() {
     useEffect(() => {
         dispatch(calcTotalPrice());
     }, [dispatch]);
+
+    const generateItemHash = () => (
+        Math.floor(Math.random() * 10000)
+    );
 
     return(
         <>
@@ -61,10 +61,9 @@ function BurgerConstructor() {
                         <ul className={burgerConstructorStyles.burger_constructor_draggable_list + ' pr-2'} key="middle_items">
                             {middleItems.map((item, index) => (
                                 <li className={burgerConstructorStyles.burger_constructor_draggable_list_item}
-                                    // TODO: can there be more than one inner ingredient of a same type?
-                                    // if yes - then key should have random generated addition to '_id'
-                                    // or maybe some kind of hash
-                                    key={item._id}>
+                                   // key should have random generated hash or timestamp added to '_id'
+                                   key={item._id+generateItemHash()}
+                                >
                                     <span className={burgerConstructorStyles.burger_constructor_drag_icon}>
                                         <DragIcon type='primary' />
                                     </span>
@@ -72,7 +71,7 @@ function BurgerConstructor() {
                                         text={item.name}
                                         thumbnail={item.image}
                                         price={item.price}
-                                        />
+                                    />
                                 </li>
                             ))}
                         </ul>
