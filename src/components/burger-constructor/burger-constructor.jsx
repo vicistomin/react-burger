@@ -18,15 +18,6 @@ function BurgerConstructor() {
     // !!! Buns can be only be of one type
     // (user can't choose different buns for top and bottom)
 
-    // define hardcoded arrays of ingredients from the data from API:
-    // useEffect(() => {
-    //     dispatch(setBunItem(items.filter(item => item.type === 'bun')[0]));
-    //     dispatch(setMiddleItems(items.filter(item => 
-    //         (item.type === 'sauce' || item.type === 'main'))
-    //             .slice(0, 5)
-    //     ));
-    //   }, [dispatch]);
-
     const onOrderButtonClick = () => {
         const items = [bunItem._id];
         middleItems.map(item => items.push(item._id));
@@ -88,11 +79,7 @@ function BurgerConstructor() {
                             {totalPrice === 0 ? (
                                 'Добавьте булку и ингредиенты'
                             ) : (
-                                bunItem.name ? (
-                                    'Добавьте ингредиенты'
-                                ) : (
-                                    'Добавьте булку'
-                                )
+                                'Добавьте ингредиенты'
                             )}
                         </h3>
                     )}
