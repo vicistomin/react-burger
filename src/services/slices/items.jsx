@@ -9,7 +9,7 @@ export const getItems = () => {
       .then(res => {
         if (!res.ok) {
           // we don't need to set state vars here as we will do that in catch
-          res.reject(res.statusText);
+          throw Error(res.statusText);
         }
         return res.json();
       })
