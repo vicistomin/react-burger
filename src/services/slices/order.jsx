@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { ORDER_API_URL } from "../constants";
+import { burgerConstructorSlice } from './burger-constructor';
 
 export const placeOrder = (items) => {
   return dispatch => {
@@ -39,6 +40,9 @@ export const placeOrder = (items) => {
       // in case of error we'll show OrderDetail modal to user anyway to let him see the error message in it
       .finally(() => {
         dispatch(orderSlice.actions.openOrderModal())
+        // clearing ordered ingredients from BurgerConstructor
+        dispatch(burgerConstructorSlice.actions.setBunItem({}));
+        dispatch(burgerConstructorSlice.actions.setMiddleItems([]));
       })
   }
 }
