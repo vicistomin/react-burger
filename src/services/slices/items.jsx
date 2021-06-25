@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import { ITEMS_API_URL } from "../constants";
 
 export const getItems = () => {
-  return async dispatch => {
+  return dispatch => {
     dispatch(itemsSlice.actions.request());
     // getting data from API
     fetch(ITEMS_API_URL)  

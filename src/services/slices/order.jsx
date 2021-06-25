@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import { ORDER_API_URL } from "../constants";
 
 export const placeOrder = (items) => {
-  return async dispatch => {
+  return dispatch => {
     dispatch(orderSlice.actions.request());
     // get new order ID from API:
     fetch(ORDER_API_URL, {
