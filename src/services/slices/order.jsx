@@ -42,7 +42,7 @@ export const placeOrder = (items) => {
         dispatch(orderSlice.actions.openOrderModal())
         // clearing ordered ingredients from BurgerConstructor
         dispatch(burgerConstructorSlice.actions.setBunItem({}));
-        dispatch(burgerConstructorSlice.actions.setMiddleItems([]));
+        dispatch(burgerConstructorSlice.actions.clearMiddleItems([]));
       })
   }
 }

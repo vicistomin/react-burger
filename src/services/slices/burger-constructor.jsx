@@ -11,8 +11,14 @@ export const burgerConstructorSlice = createSlice({
     setBunItem(state, action) {
       state.bunItem = action.payload;
     },
-    setMiddleItems(state, action) {
-      state.middleItems = action.payload;
+    addMiddleItems(state, action) {
+      state.middleItems = [
+        ...state.middleItems,
+        action.payload
+      ];
+    },
+    clearMiddleItems(state) {
+      state.middleItems = [];
     },
     calcTotalPrice(state) {
       state.bunItem.name ? (
@@ -20,8 +26,11 @@ export const burgerConstructorSlice = createSlice({
         state.totalPrice = state.bunItem.price * 2 + state.middleItems.reduce(
           (acc, p) => acc + p.price, 0
         )
-      ) : (
-        state.totalPrice = 0
+      ) : ( state.middleItems.length ? (
+        state.totalPrice = state.middleItems.reduce((acc, p) => acc + p.price, 0)
+        ) : (
+          state.totalPrice = 0
+        )
       );
     }
   }

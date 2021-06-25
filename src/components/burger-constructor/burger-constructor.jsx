@@ -9,15 +9,9 @@ import { burgerConstructorSlice } from '../../services/slices/burger-constructor
 
 function BurgerConstructor() {
     const dispatch = useDispatch();
-
-    // TODO: delete this when DnD will be implemented:
     const { items } = useSelector(state => state.items);
-    const { setBunItem, setMiddleItems, calcTotalPrice } = burgerConstructorSlice.actions
+    const { setBunItem, addMiddleItems, calcTotalPrice } = burgerConstructorSlice.actions
     const { bunItem, middleItems, totalPrice } = useSelector(state => state.burgerConstructor);
-
-    // TODO: implement interactive selection of buns (top/bottom)
-    // !!! Buns can be only be of one type
-    // (user can't choose different buns for top and bottom)
 
     const onOrderButtonClick = () => {
         const items = [bunItem._id];
@@ -29,12 +23,14 @@ function BurgerConstructor() {
     // recalculating total price
     useEffect(() => {
         dispatch(calcTotalPrice());
-    }, [dispatch, bunItem, middleItems]);
+    }, [dispatch, bunItem, middleItems, calcTotalPrice]);
 
     const generateItemHash = () => (
         Math.floor(Math.random() * 10000)
     );
 
+    // Buns can be only be of one type
+    // (user can't choose different buns for top and bottom)
     // FIXME: One drop ref isn't working with 2 li elements (top and bottom)
     const [{isTopBunHover}, dropTopBunTarget] = useDrop({
         accept: 'bun',
@@ -42,7 +38,7 @@ function BurgerConstructor() {
             dispatch(setBunItem(bunItem));
         },
         collect: monitor => ({
-            isBunHover: monitor.isOver(),
+            isTopBunHover: monitor.isOver(),
         })
       });
     
@@ -52,7 +48,18 @@ function BurgerConstructor() {
             dispatch(setBunItem(bunItem));
         },
         collect: monitor => ({
-            isBunHover: monitor.isOver(),
+            isBottomBunHover: monitor.isOver(),
+        })
+      });
+    
+    const [{isMiddleItemsHover}, dropMiddleItemsTarget] = useDrop({
+        // ???
+        accept: ['sauce', 'main'],
+        drop(MiddleItem) {
+            dispatch(addMiddleItems(MiddleItem));
+        },
+        collect: monitor => ({
+            isMiddleItemsHover: monitor.isOver(),
         })
       });
 
@@ -76,10 +83,13 @@ function BurgerConstructor() {
                         </div>
                     )}
                 </li>
-                <li>
+                <li ref={dropMiddleItemsTarget}>
                     {/* when inner items aren't chosen, show warning message */}
                     {(middleItems.length > 0 ?
-                        <ul className={burgerConstructorStyles.burger_constructor_draggable_list + ' pr-2'} key="middle_items">
+                        <ul 
+                            className={burgerConstructorStyles.burger_constructor_draggable_list + ' pr-2'}
+                            key='middle_items'
+                        >
                             {middleItems.map((item, index) => (
                                 <li className={burgerConstructorStyles.burger_constructor_draggable_list_item}
                                    // key should have random generated hash or timestamp added to '_id'
