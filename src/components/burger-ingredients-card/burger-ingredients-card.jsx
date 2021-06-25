@@ -16,7 +16,7 @@ function BurgerIngredientsCard(props) {
     return(
         <li>
             <div className={burgerIngredientsCardStyles.ingredient_card} onClick={handleIngredientClick}>
-                {props.item.value ? <Counter count={props.item.value}/> : null}
+                {props.item.__v ? <Counter count={props.item.__v}/> : null}
                 <img src={props.item.image} alt={props.item.name} title={props.item.name} className="ml-4 mr-4"/>
                     <div className={burgerIngredientsCardStyles.ingredient_price + ' mt-1 mb-1 '}>
                         <p className='pr-2 text text_type_digits-default'>{props.item.price}</p>
@@ -33,7 +33,7 @@ function BurgerIngredientsCard(props) {
 BurgerIngredientsCard.propTypes = {
     item: PropTypes.shape({
         name: PropTypes.string.isRequired,
-        value: PropTypes.number,
+        __v: PropTypes.number,
         price: PropTypes.number.isRequired,
         image: PropTypes.string.isRequired
     }).isRequired
