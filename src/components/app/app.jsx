@@ -18,7 +18,7 @@ function App() {
   const { closeOrderModal } = orderSlice.actions;
   const { closeIngredientModal } = ingredientSlice.actions;
 
-  const { 
+  const {
     itemsRequest,
     itemsSuccess,
     itemsFailed
@@ -26,14 +26,14 @@ function App() {
     state => state.items
   );
 
-  const { 
+  const {
     orderData,
     isOrderModalOpen
   } = useSelector(
     state => state.order
   );
 
-  const { 
+  const {
     selectedIngredient,
     isIngredientModalOpen
   } = useSelector(

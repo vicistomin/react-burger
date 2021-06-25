@@ -19,7 +19,7 @@ export const getItems = () => {
       .catch((error) => {
         console.log(error);
         dispatch(itemsSlice.actions.failed());
-      })  
+      })
   }
 }
 
