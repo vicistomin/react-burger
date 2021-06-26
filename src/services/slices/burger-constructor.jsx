@@ -17,6 +17,9 @@ export const burgerConstructorSlice = createSlice({
         action.payload
       ];
     },
+    deleteMiddleItem(state, action) {
+      state.middleItems.splice(action.payload, 1)
+    },
     clearMiddleItems(state) {
       state.middleItems = [];
     },

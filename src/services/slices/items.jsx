@@ -48,11 +48,19 @@ export const itemsSlice = createSlice({
       state.itemsFailed = false;
       state.items = action.payload;
     },
-    setValue(state, action) {
+    increaseQuantityValue(state, action) {
       state.items = [...state.items].map(item =>
-        item._id === action.payload.itemId ? {
+        item._id === action.payload ? {
           ...item,
-          __v: action.payload.value
+          __v: ++item.__v
+        } : item
+      );
+    },
+    decreaseQuantityValue(state, action) {
+      state.items = [...state.items].map(item =>
+        item._id === action.payload ? {
+          ...item,
+          __v: --item.__v
         } : item
       );
     },

@@ -10,8 +10,8 @@ import { itemsSlice } from '../../services/slices/items';
 
 function BurgerConstructor() {
     const dispatch = useDispatch();
-    const { setValue } = itemsSlice.actions;
-    const { setBunItem, addMiddleItems, calcTotalPrice } = burgerConstructorSlice.actions
+    const { increaseQuantityValue, decreaseQuantityValue } = itemsSlice.actions;
+    const { setBunItem, addMiddleItems, deleteMiddleItem, calcTotalPrice } = burgerConstructorSlice.actions
     const { bunItem, middleItems, totalPrice } = useSelector(state => state.burgerConstructor);
 
     const onOrderButtonClick = () => {
@@ -30,15 +30,21 @@ function BurgerConstructor() {
         Math.floor(Math.random() * 10000)
     );
 
+    const handleBunItemDrop = (newBunItem) => {
+        dispatch(setBunItem(newBunItem));
+        dispatch(decreaseQuantityValue(bunItem._id));
+        dispatch(decreaseQuantityValue(bunItem._id));
+        dispatch(increaseQuantityValue(newBunItem._id));
+        dispatch(increaseQuantityValue(newBunItem._id));
+    };
+
     // Buns can be only be of one type
     // (user can't choose different buns for top and bottom)
     // FIXME: One drop ref isn't working with 2 li elements (top and bottom)
     const [{isTopBunHover}, dropTopBunTarget] = useDrop({
         accept: 'bun',
         drop(newBunItem) {
-            dispatch(setBunItem(newBunItem));
-            dispatch(setValue({itemId: bunItem._id, value: 0}));
-            dispatch(setValue({itemId: newBunItem._id, value: 2}));
+            handleBunItemDrop(newBunItem);
         },
         collect: monitor => ({
             isTopBunHover: monitor.isOver(),
@@ -48,9 +54,7 @@ function BurgerConstructor() {
     const [{isBottomBunHover}, dropBottomBunTarget] = useDrop({
         accept: 'bun',
         drop(newBunItem) {
-            dispatch(setBunItem(newBunItem));
-            dispatch(setValue({itemId: bunItem._id, value: 0}));
-            dispatch(setValue({itemId: newBunItem._id, value: 2}));
+            handleBunItemDrop(newBunItem);
         },
         collect: monitor => ({
             isBottomBunHover: monitor.isOver(),
@@ -60,16 +64,20 @@ function BurgerConstructor() {
     const [{isMiddleItemsHover}, dropMiddleItemsTarget] = useDrop({
         accept: ['sauce', 'main'],
         drop(MiddleItem) {
+            // MiddleItem.index = getNewMIddleItemIndex;
             dispatch(addMiddleItems(MiddleItem));
-            dispatch(setValue({
-                itemId: MiddleItem._id,
-                value: (MiddleItem.__v + 1)
-            }));
+            dispatch(increaseQuantityValue(MiddleItem._id));
         },
         collect: monitor => ({
             isMiddleItemsHover: monitor.isOver(),
         })
       });
+
+    // TODO: delete middle item
+    const handleMiddleItemDelete = (itemId, index) => {   
+        dispatch(deleteMiddleItem(index));
+        dispatch(decreaseQuantityValue(itemId));
+    };
 
     return(
         <>
@@ -110,6 +118,9 @@ function BurgerConstructor() {
                                         text={item.name}
                                         thumbnail={item.image}
                                         price={item.price}
+                                        handleClose={() => 
+                                            handleMiddleItemDelete(item._id, index)
+                                        }
                                     />
                                 </li>
                             ))}
