@@ -47,6 +47,20 @@ export const itemsSlice = createSlice({
       state.itemsRequest = false;
       state.itemsFailed = false;
       state.items = action.payload;
+    },
+    setValue(state, action) {
+      state.items = [...state.items].map(item =>
+        item._id === action.payload.itemId ? {
+          ...item,
+          __v: action.payload.value
+        } : item
+      );
+    },
+    clearValues(state) {
+      state.items = [...state.items].map(item => ({
+          ...item,
+          __v: 0
+      }));
     }
   }
 }) 

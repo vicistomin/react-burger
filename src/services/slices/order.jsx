@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { ORDER_API_URL } from "../constants";
 import { burgerConstructorSlice } from './burger-constructor';
+import { itemsSlice } from './items';
 
 export const placeOrder = (items) => {
   return dispatch => {
@@ -43,6 +44,7 @@ export const placeOrder = (items) => {
         // clearing ordered ingredients from BurgerConstructor
         dispatch(burgerConstructorSlice.actions.setBunItem({}));
         dispatch(burgerConstructorSlice.actions.clearMiddleItems([]));
+        dispatch(itemsSlice.actions.clearValues([]));
       })
   }
 }

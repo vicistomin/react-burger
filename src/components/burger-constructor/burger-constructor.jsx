@@ -6,10 +6,11 @@ import burgerConstructorStyles from './burger-constructor.module.css';
 import { ConstructorElement, DragIcon, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { placeOrder } from '../../services/slices/order';
 import { burgerConstructorSlice } from '../../services/slices/burger-constructor';
+import { itemsSlice } from '../../services/slices/items';
 
 function BurgerConstructor() {
     const dispatch = useDispatch();
-    const { items } = useSelector(state => state.items);
+    const { setValue } = itemsSlice.actions;
     const { setBunItem, addMiddleItems, calcTotalPrice } = burgerConstructorSlice.actions
     const { bunItem, middleItems, totalPrice } = useSelector(state => state.burgerConstructor);
 
@@ -34,8 +35,10 @@ function BurgerConstructor() {
     // FIXME: One drop ref isn't working with 2 li elements (top and bottom)
     const [{isTopBunHover}, dropTopBunTarget] = useDrop({
         accept: 'bun',
-        drop(bunItem) {
-            dispatch(setBunItem(bunItem));
+        drop(newBunItem) {
+            dispatch(setBunItem(newBunItem));
+            dispatch(setValue({itemId: bunItem._id, value: 0}));
+            dispatch(setValue({itemId: newBunItem._id, value: 2}));
         },
         collect: monitor => ({
             isTopBunHover: monitor.isOver(),
@@ -44,8 +47,10 @@ function BurgerConstructor() {
     
     const [{isBottomBunHover}, dropBottomBunTarget] = useDrop({
         accept: 'bun',
-        drop(bunItem) {
-            dispatch(setBunItem(bunItem));
+        drop(newBunItem) {
+            dispatch(setBunItem(newBunItem));
+            dispatch(setValue({itemId: bunItem._id, value: 0}));
+            dispatch(setValue({itemId: newBunItem._id, value: 2}));
         },
         collect: monitor => ({
             isBottomBunHover: monitor.isOver(),
@@ -53,10 +58,13 @@ function BurgerConstructor() {
       });
     
     const [{isMiddleItemsHover}, dropMiddleItemsTarget] = useDrop({
-        // ???
         accept: ['sauce', 'main'],
         drop(MiddleItem) {
             dispatch(addMiddleItems(MiddleItem));
+            dispatch(setValue({
+                itemId: MiddleItem._id,
+                value: (MiddleItem.__v + 1)
+            }));
         },
         collect: monitor => ({
             isMiddleItemsHover: monitor.isOver(),
