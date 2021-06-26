@@ -1,7 +1,8 @@
 .burger_constructor_list {
     composes: flex_column from global;
-    gap: 10px;
+    /* gap: 10px; */
     align-items: stretch;
+    /* justify-content: space-around; */
 }
 
 /* bg color of elements as in Figma */
@@ -22,17 +23,8 @@
     /* to calculate height of the scrollable container we exclude height of top and bottom parts of a page
     (for desktop it's 284px + 252px = 536px) */
     max-height: calc(100vh - 536px);
-}
 
-.burger_constructor_draggable_list_item {
-    composes: flex_row from global;
-    scroll-snap-align: start;
-    justify-content: flex-start;
-}
-
-.burger_constructor_drag_icon {
-    flex-shrink: 0;
-    margin-right: calc(var(--offset-base-size) * 2);
+    justify-content: flex-start; 
 }
 
 .burger_constructor_order {
@@ -55,4 +47,12 @@
 
 .warningText {
     text-align: center;
+}
+
+.emptyBun {
+    width: 100%;
+}
+
+.disabled {
+    opacity: 0.5;
 }

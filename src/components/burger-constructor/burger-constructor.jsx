@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useDrag, useDrop } from 'react-dnd';
+import { useDrop } from 'react-dnd';
 import burgerConstructorStyles from './burger-constructor.module.css';
 // importing components from library
-import { ConstructorElement, DragIcon, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
+import { ConstructorElement, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
+import DraggableConstructorElement from '../draggable-constructor-element/draggable-constructor-element';
 import { placeOrder } from '../../services/slices/order';
 import { burgerConstructorSlice } from '../../services/slices/burger-constructor';
 import { itemsSlice } from '../../services/slices/items';
@@ -26,10 +27,6 @@ function BurgerConstructor() {
         dispatch(calcTotalPrice());
     }, [dispatch, bunItem, middleItems, calcTotalPrice]);
 
-    const generateItemHash = () => (
-        Math.floor(Math.random() * 10000)
-    );
-
     const handleBunItemDrop = (newBunItem) => {
         dispatch(setBunItem(newBunItem));
         dispatch(decreaseQuantityValue(bunItem._id));
@@ -41,7 +38,7 @@ function BurgerConstructor() {
     // Buns can be only be of one type
     // (user can't choose different buns for top and bottom)
     // FIXME: One drop ref isn't working with 2 li elements (top and bottom)
-    const [{isTopBunHover}, dropTopBunTarget] = useDrop({
+    const [, dropTopBunTarget] = useDrop({
         accept: 'bun',
         drop(newBunItem) {
             handleBunItemDrop(newBunItem);
@@ -51,26 +48,20 @@ function BurgerConstructor() {
         })
       });
     
-    const [{isBottomBunHover}, dropBottomBunTarget] = useDrop({
+    const [, dropBottomBunTarget] = useDrop({
         accept: 'bun',
         drop(newBunItem) {
             handleBunItemDrop(newBunItem);
-        },
-        collect: monitor => ({
-            isBottomBunHover: monitor.isOver(),
-        })
+        }
       });
     
-    const [{isMiddleItemsHover}, dropMiddleItemsTarget] = useDrop({
+    const [, dropMiddleItemsTarget] = useDrop({
         accept: ['sauce', 'main'],
         drop(MiddleItem) {
-            // MiddleItem.index = getNewMIddleItemIndex;
+            // MiddleItem.index = getNewMiddleItemIndex;
             dispatch(addMiddleItems(MiddleItem));
             dispatch(increaseQuantityValue(MiddleItem._id));
-        },
-        collect: monitor => ({
-            isMiddleItemsHover: monitor.isOver(),
-        })
+        }
       });
 
     // TODO: delete middle item
@@ -78,6 +69,10 @@ function BurgerConstructor() {
         dispatch(deleteMiddleItem(index));
         dispatch(decreaseQuantityValue(itemId));
     };
+
+    const generateItemHash = () => (
+        Math.floor(Math.random() * 10000)
+    );
 
     return(
         <>
@@ -93,13 +88,16 @@ function BurgerConstructor() {
                         />
                     ) : (
                         <div 
-                            className='constructor-element constructor-element_pos_top'
-                            style={{width: '100%'}}
+                            className={
+                                burgerConstructorStyles.emptyBun +
+                                ' constructor-element constructor-element_pos_top'
+                            }
                         >
+                            &nbsp;
                         </div>
                     )}
                 </li>
-                <li ref={dropMiddleItemsTarget}>
+                <li>
                     {/* when inner items aren't chosen, show warning message */}
                     {(middleItems.length > 0 ?
                         <ul 
@@ -107,26 +105,21 @@ function BurgerConstructor() {
                             key='middle_items'
                         >
                             {middleItems.map((item, index) => (
-                                <li className={burgerConstructorStyles.burger_constructor_draggable_list_item}
-                                   // key should have random generated hash or timestamp added to '_id'
-                                   key={item._id+generateItemHash()}
-                                >
-                                    <span className={burgerConstructorStyles.burger_constructor_drag_icon}>
-                                        <DragIcon type='primary' />
-                                    </span>
-                                    <ConstructorElement 
-                                        text={item.name}
-                                        thumbnail={item.image}
-                                        price={item.price}
-                                        handleClose={() => 
-                                            handleMiddleItemDelete(item._id, index)
-                                        }
-                                    />
-                                </li>
+                                <DraggableConstructorElement 
+                                    item={item}
+                                    index={index}
+                                    handleItemDelete={handleMiddleItemDelete}
+                                    // key should have random generated hash or timestamp added to '_id'
+                                    key={item._id+generateItemHash()}
+                                />
                             ))}
                         </ul>
                     : 
-                        <h3 className={burgerConstructorStyles.warningText + ' text text_type_main-default text_color_inactive pt-6 pb-6'}>
+                        <h3 
+                            className={burgerConstructorStyles.warningText + 
+                            ' text text_type_main-default text_color_inactive pt-6 pb-6'}
+                            ref={dropMiddleItemsTarget}
+                        >
                             {totalPrice === 0 ? (
                                 'Добавьте булку и ингредиенты'
                             ) : (
@@ -146,15 +139,22 @@ function BurgerConstructor() {
                         />
                     ) : (
                         <div 
-                            className='constructor-element constructor-element_pos_bottom'
-                            style={{width: '100%'}}
+                            className={
+                                burgerConstructorStyles.emptyBun +
+                                ' constructor-element constructor-element_pos_bottom'
+                            }
                         >
+                            &nbsp;
                         </div>
                     )}
                 </li>
             </ul>
-            <div style={!bunItem.name ? {opacity: 0.5} : null}
-            className={burgerConstructorStyles.burger_constructor_order + ' mr-4 mb-10'}>
+            <div className={
+                    `${burgerConstructorStyles.burger_constructor_order}
+                    mr-4 mb-10
+                    ${!bunItem.name ? burgerConstructorStyles.disabled : null}`
+                }
+            >
                 <p className='text text_type_digits-medium'>
                     {totalPrice}
                 </p>

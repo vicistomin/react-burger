@@ -1,0 +1,25 @@
+
+.dropContainer {
+  scroll-snap-align: start;
+  min-height: 10px;
+  transition: min-height 0.2s ease-in-out 0.05s;
+}
+
+.dropContainerPushed {
+  min-height: 80px;
+  transition: min-height 0.2s ease-in-out 0.05s;
+}
+
+.drag_icon {
+  flex-shrink: 0;
+  margin-right: calc(var(--offset-base-size) * 2);
+}
+
+.draggable_list_item {
+  composes: flex_row from global;
+  justify-content: flex-start;
+}
+
+.hidden {
+  display: none;
+}
