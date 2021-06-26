@@ -12,7 +12,7 @@ import { itemsSlice } from '../../services/slices/items';
 function BurgerConstructor() {
     const dispatch = useDispatch();
     const { increaseQuantityValue, decreaseQuantityValue } = itemsSlice.actions;
-    const { setBunItem, addMiddleItems, deleteMiddleItem, calcTotalPrice } = burgerConstructorSlice.actions
+    const { setBunItem, addMiddleItem, calcTotalPrice } = burgerConstructorSlice.actions
     const { bunItem, middleItems, totalPrice } = useSelector(state => state.burgerConstructor);
 
     const onOrderButtonClick = () => {
@@ -37,15 +37,11 @@ function BurgerConstructor() {
 
     // Buns can be only be of one type
     // (user can't choose different buns for top and bottom)
-    // FIXME: One drop ref isn't working with 2 li elements (top and bottom)
     const [, dropTopBunTarget] = useDrop({
         accept: 'bun',
         drop(newBunItem) {
             handleBunItemDrop(newBunItem);
-        },
-        collect: monitor => ({
-            isTopBunHover: monitor.isOver(),
-        })
+        }
       });
     
     const [, dropBottomBunTarget] = useDrop({
@@ -55,20 +51,13 @@ function BurgerConstructor() {
         }
       });
     
-    const [, dropMiddleItemsTarget] = useDrop({
+    const [, dropMiddleItemTarget] = useDrop({
         accept: ['sauce', 'main'],
         drop(MiddleItem) {
-            // MiddleItem.index = getNewMiddleItemIndex;
-            dispatch(addMiddleItems(MiddleItem));
+            dispatch(addMiddleItem({index: 0, item: MiddleItem}));
             dispatch(increaseQuantityValue(MiddleItem._id));
         }
       });
-
-    // TODO: delete middle item
-    const handleMiddleItemDelete = (itemId, index) => {   
-        dispatch(deleteMiddleItem(index));
-        dispatch(decreaseQuantityValue(itemId));
-    };
 
     const generateItemHash = () => (
         Math.floor(Math.random() * 10000)
@@ -108,7 +97,6 @@ function BurgerConstructor() {
                                 <DraggableConstructorElement 
                                     item={item}
                                     index={index}
-                                    handleItemDelete={handleMiddleItemDelete}
                                     // key should have random generated hash or timestamp added to '_id'
                                     key={item._id+generateItemHash()}
                                 />
@@ -118,7 +106,7 @@ function BurgerConstructor() {
                         <h3 
                             className={burgerConstructorStyles.warningText + 
                             ' text text_type_main-default text_color_inactive pt-6 pb-6'}
-                            ref={dropMiddleItemsTarget}
+                            ref={dropMiddleItemTarget}
                         >
                             {totalPrice === 0 ? (
                                 'Добавьте булку и ингредиенты'

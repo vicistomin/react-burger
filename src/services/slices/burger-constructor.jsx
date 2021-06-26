@@ -11,11 +11,8 @@ export const burgerConstructorSlice = createSlice({
     setBunItem(state, action) {
       state.bunItem = action.payload;
     },
-    addMiddleItems(state, action) {
-      state.middleItems = [
-        ...state.middleItems,
-        action.payload
-      ];
+    addMiddleItem(state, action) {
+      state.middleItems.splice(action.payload.index, 0, action.payload.item);
     },
     deleteMiddleItem(state, action) {
       state.middleItems.splice(action.payload, 1)

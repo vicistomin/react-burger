@@ -1,22 +1,23 @@
 import { useDispatch } from 'react-redux';
 import { useDrag, useDrop } from 'react-dnd';
+import PropTypes from 'prop-types';
 import draggableConstructorElementStyles from './draggable-constructor-element.module.css';
 // importing components from library
 import { ConstructorElement, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { burgerConstructorSlice } from '../../services/slices/burger-constructor';
 import { itemsSlice } from '../../services/slices/items';
 
-function DraggableConstructorElement({ item, index, handleItemDelete }) {
+function DraggableConstructorElement({ item, index }) {
   const dispatch = useDispatch();
-  const { increaseQuantityValue } = itemsSlice.actions;
-  const { addMiddleItems } = burgerConstructorSlice.actions
+  const { increaseQuantityValue, decreaseQuantityValue } = itemsSlice.actions;
+  const { addMiddleItem, deleteMiddleItem } = burgerConstructorSlice.actions
 
   const [{isItemHover}, dropItemTarget] = useDrop({
       accept: ['sauce', 'main'],
-      drop(Item) {
-          // MiddleItem.index = getNewMiddleItemIndex;
-          dispatch(addMiddleItems(Item));
-          dispatch(increaseQuantityValue(Item._id));
+      drop(item, monitor) {
+          dispatch(addMiddleItem({index: index + 1, item}));
+          dispatch(increaseQuantityValue(item._id));
+          return ({index});
       },
       collect: monitor => ({
           isItemHover: monitor.isOver()
@@ -25,10 +26,10 @@ function DraggableConstructorElement({ item, index, handleItemDelete }) {
     
   const [{isFirstItemHover}, dropFirstItemTarget] = useDrop({
       accept: ['sauce', 'main'],
-      drop(Item) {
-          // MiddleItem.index = getNewMiddleItemIndex;
-          dispatch(addMiddleItems(Item));
-          dispatch(increaseQuantityValue(Item._id));
+      drop(item, monitor) {
+          dispatch(addMiddleItem({index: 0, item}));
+          dispatch(increaseQuantityValue(item._id));
+          return ({index});
       },
       collect: monitor => ({
           isFirstItemHover: monitor.isOver()
@@ -40,8 +41,23 @@ function DraggableConstructorElement({ item, index, handleItemDelete }) {
       item: item,
       collect: monitor => ({
           isItemDragging: monitor.isDragging()
-      })
+      }),
+      end(item, monitor) {
+        if(monitor.didDrop()) {
+          // comparing target index and source index to remove correct ingredient from array
+          monitor.getDropResult().index > index ? (
+            handleItemDelete(item._id, index)
+          ) : (
+            handleItemDelete(item._id, index + 1)
+          )
+        }
+      }
   });
+
+  const handleItemDelete = (itemId, index) => {   
+    dispatch(deleteMiddleItem(index));
+    dispatch(decreaseQuantityValue(itemId));
+};
 
   return (
       <>
@@ -89,3 +105,14 @@ function DraggableConstructorElement({ item, index, handleItemDelete }) {
 }
 
 export default DraggableConstructorElement
+
+DraggableConstructorElement.propTypes = {
+  item: PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      _id: PropTypes.string.isRequired,
+      type: PropTypes.string.isRequired,
+      price: PropTypes.number.isRequired,
+      image: PropTypes.string.isRequired
+  }).isRequired,
+  index: PropTypes.number.isRequired
+};
