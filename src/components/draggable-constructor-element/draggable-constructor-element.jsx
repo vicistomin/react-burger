@@ -1,4 +1,4 @@
-import { useRef, useCallback, useState } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useDrag, useDrop } from 'react-dnd';
 import PropTypes from 'prop-types';
@@ -17,31 +17,21 @@ function DraggableConstructorElement({ item, index }) {
   const [isItemHigher, setIsItemHigher] = useState(false);
   const [isItemLower, setIsItemLower] = useState(false);
 
-  const hoverOnItems = useCallback((dragIndex, hoverIndex) => {
-      setIsItemHigher(dragIndex > hoverIndex);
-      setIsItemLower(dragIndex < hoverIndex);
-  }, []);
-
-  const [{targetId, isItemHover}, dropItemTarget] = useDrop({
+  const [{targetId, isItemHover, offset}, dropItemTarget] = useDrop({
       accept: 'sortedIngredient',
       drop() {
           return ({index});
       },
-      hover(item) {
-        const dragIndex = item.index;
-        if (dragIndex !== index) {
-          hoverOnItems(dragIndex, index);
-        };
-      },
       collect: monitor => ({
           targetId: monitor.getHandlerId(),
-          isItemHover: monitor.isOver()
+          isItemHover: monitor.isOver(),
+          offset: monitor.getDifferenceFromInitialOffset()
       })
     });
 
   const [{sourceId, isItemDragging}, dragItemSource] = useDrag({
       type: 'sortedIngredient',
-      item: { item, index },
+      item: item,
       collect: monitor => ({
           sourceId: monitor.getHandlerId(),
           isItemDragging: monitor.isDragging()
@@ -61,6 +51,13 @@ function DraggableConstructorElement({ item, index }) {
     dispatch(deleteMiddleItem(index));
     dispatch(decreaseQuantityValue(itemId));
 };
+
+useEffect(() => {
+  if(!!offset) {
+    setIsItemHigher(offset.y < 0);
+    setIsItemLower(offset.y > 0);    
+  }
+}, [offset]);
 
 dragItemSource(dropItemTarget(dndItemRef))
 
