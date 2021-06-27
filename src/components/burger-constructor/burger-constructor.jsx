@@ -12,7 +12,7 @@ import { itemsSlice } from '../../services/slices/items';
 function BurgerConstructor() {
     const dispatch = useDispatch();
     const { increaseQuantityValue, decreaseQuantityValue } = itemsSlice.actions;
-    const { setBunItem, addMiddleItem, calcTotalPrice } = burgerConstructorSlice.actions
+    const { setBunItem, calcTotalPrice } = burgerConstructorSlice.actions
     const { bunItem, middleItems, totalPrice } = useSelector(state => state.burgerConstructor);
 
     const onOrderButtonClick = () => {
@@ -52,11 +52,7 @@ function BurgerConstructor() {
       });
     
     const [, dropMiddleItemTarget] = useDrop({
-        accept: ['sauce', 'main'],
-        drop(MiddleItem) {
-            dispatch(addMiddleItem({index: 0, item: MiddleItem}));
-            dispatch(increaseQuantityValue(MiddleItem._id));
-        }
+        accept: ['sauce', 'main']
       });
 
     const generateItemHash = () => (
@@ -67,7 +63,7 @@ function BurgerConstructor() {
         <>
             <ul className={burgerConstructorStyles.burger_constructor_list + ' ml-4 mt-25 mb-10 pr-4'}>
                 <li className='pl-8' ref={dropTopBunTarget}>
-                    {bunItem.name ? (
+                    {!!bunItem.name ? (
                         <ConstructorElement 
                             type='top'
                             isLocked={true}
@@ -86,7 +82,7 @@ function BurgerConstructor() {
                         </div>
                     )}
                 </li>
-                <li>
+                <li ref={dropMiddleItemTarget}>
                     {/* when inner items aren't chosen, show warning message */}
                     {(middleItems.length > 0 ?
                         <ul 
@@ -106,7 +102,7 @@ function BurgerConstructor() {
                         <h3 
                             className={burgerConstructorStyles.warningText + 
                             ' text text_type_main-default text_color_inactive pt-6 pb-6'}
-                            ref={dropMiddleItemTarget}
+                            
                         >
                             {totalPrice === 0 ? (
                                 'Добавьте булку и ингредиенты'
@@ -117,7 +113,7 @@ function BurgerConstructor() {
                     )}
                 </li>
                 <li className='pl-8' ref={dropBottomBunTarget}>
-                    {bunItem.name ? (
+                    {!!bunItem.name ? (
                         <ConstructorElement 
                             isLocked={true}
                             type='bottom'

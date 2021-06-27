@@ -12,16 +12,19 @@ export const burgerConstructorSlice = createSlice({
       state.bunItem = action.payload;
     },
     addMiddleItem(state, action) {
+      state.middleItems.push(action.payload);
+    },
+    sortMiddleItem(state, action) {
       state.middleItems.splice(action.payload.index, 0, action.payload.item);
     },
     deleteMiddleItem(state, action) {
-      state.middleItems.splice(action.payload, 1)
+      state.middleItems.splice(action.payload, 1);
     },
     clearMiddleItems(state) {
       state.middleItems = [];
     },
     calcTotalPrice(state) {
-      state.bunItem.name ? (
+      !!state.bunItem.name ? (
         // buns can be only of one type so there are 2 buns:
         state.totalPrice = state.bunItem.price * 2 + state.middleItems.reduce(
           (acc, p) => acc + p.price, 0

@@ -5,10 +5,14 @@ import burgerIngredientsCardStyles from './burger-ingredients-card.module.css';
 // importing components from library
 import { Counter, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { ingredientSlice } from '../../services/slices/ingredient';
+import { burgerConstructorSlice } from '../../services/slices/burger-constructor';
+import { itemsSlice } from '../../services/slices/items';
 
 function BurgerIngredientsCard(props) {
     const dispatch = useDispatch();
-    const { openIngredientModal } = ingredientSlice.actions
+    const { openIngredientModal } = ingredientSlice.actions;
+    const { increaseQuantityValue } = itemsSlice.actions;
+    const { addMiddleItem } = burgerConstructorSlice.actions
     
     const handleIngredientClick = () => {
         dispatch(openIngredientModal(props.item));
@@ -17,9 +21,19 @@ function BurgerIngredientsCard(props) {
     const [{opacity}, dragRef] = useDrag({
         type: props.item.type,
         item: props.item,
+        options: {
+            dropEffect: 'copy'
+        },
         collect: monitor => ({
           opacity: monitor.isDragging() ? 0.5 : 1
-        })
+        }),
+        end(item, monitor) {
+            // adding only new ingredients, not when reorder items in Constructor
+            if(monitor.didDrop() && monitor.getDropResult().dropEffect === 'copy') {
+                dispatch(addMiddleItem(item));
+                dispatch(increaseQuantityValue(item._id));
+            }
+        }
       });
     
     return(

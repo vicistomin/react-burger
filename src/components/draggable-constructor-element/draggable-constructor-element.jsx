@@ -10,12 +10,12 @@ import { itemsSlice } from '../../services/slices/items';
 function DraggableConstructorElement({ item, index }) {
   const dispatch = useDispatch();
   const { increaseQuantityValue, decreaseQuantityValue } = itemsSlice.actions;
-  const { addMiddleItem, deleteMiddleItem } = burgerConstructorSlice.actions
+  const { sortMiddleItem, deleteMiddleItem } = burgerConstructorSlice.actions
 
   const [{isItemHover}, dropItemTarget] = useDrop({
       accept: ['sauce', 'main'],
       drop(item, monitor) {
-          dispatch(addMiddleItem({index: index + 1, item}));
+          dispatch(sortMiddleItem({index: index + 1, item}));
           dispatch(increaseQuantityValue(item._id));
           return ({index});
       },
@@ -27,7 +27,7 @@ function DraggableConstructorElement({ item, index }) {
   const [{isFirstItemHover}, dropFirstItemTarget] = useDrop({
       accept: ['sauce', 'main'],
       drop(item, monitor) {
-          dispatch(addMiddleItem({index: 0, item}));
+          dispatch(sortMiddleItem({index: 0, item}));
           dispatch(increaseQuantityValue(item._id));
           return ({index});
       },
@@ -43,7 +43,9 @@ function DraggableConstructorElement({ item, index }) {
           isItemDragging: monitor.isDragging()
       }),
       end(item, monitor) {
-        if(monitor.didDrop()) {
+          console.log(monitor.getDropResult());
+        // reorder only, not for new ingredients
+        if(monitor.didDrop() && monitor.getDropResult().dropEffect === 'move') {
           // comparing target index and source index to remove correct ingredient from array
           monitor.getDropResult().index > index ? (
             handleItemDelete(item._id, index)
