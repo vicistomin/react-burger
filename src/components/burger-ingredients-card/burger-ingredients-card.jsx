@@ -21,15 +21,12 @@ function BurgerIngredientsCard(props) {
     const [{opacity}, dragRef] = useDrag({
         type: props.item.type,
         item: props.item,
-        options: {
-            dropEffect: 'copy'
-        },
         collect: monitor => ({
           opacity: monitor.isDragging() ? 0.5 : 1
         }),
         end(item, monitor) {
             // adding only new ingredients, not when reorder items in Constructor
-            if(monitor.didDrop() && monitor.getDropResult().dropEffect === 'copy') {
+            if(monitor.didDrop() && item.type !== 'bun') {
                 dispatch(addMiddleItem(item));
                 dispatch(increaseQuantityValue(item._id));
             }

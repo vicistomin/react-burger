@@ -1,3 +1,4 @@
+import { useRef, useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useDrag, useDrop } from 'react-dnd';
 import PropTypes from 'prop-types';
@@ -9,49 +10,49 @@ import { itemsSlice } from '../../services/slices/items';
 
 function DraggableConstructorElement({ item, index }) {
   const dispatch = useDispatch();
-  const { increaseQuantityValue, decreaseQuantityValue } = itemsSlice.actions;
-  const { sortMiddleItem, deleteMiddleItem } = burgerConstructorSlice.actions
+  const { decreaseQuantityValue } = itemsSlice.actions;
+  const { moveMiddleItem, deleteMiddleItem } = burgerConstructorSlice.actions
 
-  const [{isItemHover}, dropItemTarget] = useDrop({
-      accept: ['sauce', 'main'],
-      drop(item, monitor) {
-          dispatch(sortMiddleItem({index: index + 1, item}));
-          dispatch(increaseQuantityValue(item._id));
+  const dndItemRef = useRef();
+  const [isItemHigher, setIsItemHigher] = useState(false);
+  const [isItemLower, setIsItemLower] = useState(false);
+
+  const hoverOnItems = useCallback((dragIndex, hoverIndex) => {
+      setIsItemHigher(dragIndex > hoverIndex);
+      setIsItemLower(dragIndex < hoverIndex);
+  }, []);
+
+  const [{targetId, isItemHover}, dropItemTarget] = useDrop({
+      accept: 'sortedIngredient',
+      drop() {
           return ({index});
       },
+      hover(item) {
+        const dragIndex = item.index;
+        if (dragIndex !== index) {
+          hoverOnItems(dragIndex, index);
+        };
+      },
       collect: monitor => ({
+          targetId: monitor.getHandlerId(),
           isItemHover: monitor.isOver()
       })
     });
-    
-  const [{isFirstItemHover}, dropFirstItemTarget] = useDrop({
-      accept: ['sauce', 'main'],
-      drop(item, monitor) {
-          dispatch(sortMiddleItem({index: 0, item}));
-          dispatch(increaseQuantityValue(item._id));
-          return ({index});
-      },
-      collect: monitor => ({
-          isFirstItemHover: monitor.isOver()
-      })
-  });
 
-  const [{isItemDragging}, dragItemRef] = useDrag({
-      type: item.type,
-      item: item,
+  const [{sourceId, isItemDragging}, dragItemSource] = useDrag({
+      type: 'sortedIngredient',
+      item: { item, index },
       collect: monitor => ({
+          sourceId: monitor.getHandlerId(),
           isItemDragging: monitor.isDragging()
       }),
       end(item, monitor) {
-          console.log(monitor.getDropResult());
         // reorder only, not for new ingredients
-        if(monitor.didDrop() && monitor.getDropResult().dropEffect === 'move') {
-          // comparing target index and source index to remove correct ingredient from array
-          monitor.getDropResult().index > index ? (
-            handleItemDelete(item._id, index)
-          ) : (
-            handleItemDelete(item._id, index + 1)
-          )
+        if(monitor.didDrop()) {
+          dispatch(moveMiddleItem({
+            oldIndex: index,
+            newIndex: monitor.getDropResult().index
+          }));
         }
       }
   });
@@ -61,47 +62,36 @@ function DraggableConstructorElement({ item, index }) {
     dispatch(decreaseQuantityValue(itemId));
 };
 
+dragItemSource(dropItemTarget(dndItemRef))
+
   return (
       <>
-          {index === 0 ? (
-              <li 
-                  className={
-                      `${draggableConstructorElementStyles.dropContainer}
-                      ${isFirstItemHover ? draggableConstructorElementStyles.dropContainerPushed : null}`
-                  }
-                  ref={dropFirstItemTarget}
-              >
-              </li>
-              ) : null
-          }
-
-          <li 
-              className={
-                  `${draggableConstructorElementStyles.draggable_list_item}
-                  ${isItemDragging ? draggableConstructorElementStyles.hidden : null}`
-                  }
-              ref={dragItemRef}
-          >
-              <span className={draggableConstructorElementStyles.drag_icon}>
-                  <DragIcon type='primary' />
-              </span>
-              <ConstructorElement 
-                  text={item.name}
-                  thumbnail={item.image}
-                  price={item.price}
-                  handleClose={() => 
-                      handleItemDelete(item._id, index)
-                  }
-              />
-          </li>
-          <li 
-              className={
-                  `${draggableConstructorElementStyles.dropContainer}
-                  ${isItemHover ? draggableConstructorElementStyles.dropContainerPushed : null}`
-              }
-              ref={dropItemTarget}
-          >
-          </li>
+        <li 
+            className={
+                `${draggableConstructorElementStyles.draggable_list_item}
+                ${isItemDragging ? draggableConstructorElementStyles.dragged : null}
+                ${isItemHover && isItemHigher ? (
+                  draggableConstructorElementStyles.pushedUp
+                  ) : isItemHover && isItemLower ? (
+                    draggableConstructorElementStyles.pushedDown
+                  ) : null }`
+                }
+            ref={dndItemRef}
+            data-source-id={sourceId}
+            data-target-id={targetId}
+        >
+            <span className={draggableConstructorElementStyles.drag_icon}>
+                <DragIcon type='primary' />
+            </span>
+            <ConstructorElement 
+                text={item.name}
+                thumbnail={item.image}
+                price={item.price}
+                handleClose={() => 
+                    handleItemDelete(item._id, index)
+                }
+            />
+        </li>
       </>
   )
 }
