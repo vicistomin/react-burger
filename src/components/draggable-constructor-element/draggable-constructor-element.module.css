@@ -1,0 +1,41 @@
+
+.dropContainer {
+  scroll-snap-align: start;
+  min-height: 10px;
+  transition: min-height 0.2s ease-in-out 0.05s;
+}
+
+.dropContainerPushed {
+  min-height: 80px;
+  transition: min-height 0.2s ease-in-out 0.05s;
+}
+
+.drag_icon {
+  flex-shrink: 0;
+  margin-right: calc(var(--offset-base-size) * 2);
+}
+
+.draggable_list_item {
+  /* transition: padding 0.2s ease-in-out 0.1s; */
+  composes: flex_row from global;
+  scroll-snap-align: start;
+  justify-content: flex-start;
+  transition: opacity 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out 0.1s;
+}
+
+.dragged {
+  /* display: none; */
+  transition: all 0.2s ease-in-out;
+  opacity: 0.25;
+  padding: 0 !important;
+  transform: scale(0.9);
+}
+
+.pushedUp {
+  padding-top: 60px;
+}
+
+.pushedDown {
+  padding-bottom: 60px;
+}
