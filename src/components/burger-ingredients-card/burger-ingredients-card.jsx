@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { useDispatch } from 'react-redux';
 import { useDrag } from 'react-dnd';
 import PropTypes from 'prop-types';
@@ -8,7 +9,7 @@ import { ingredientSlice } from '../../services/slices/ingredient';
 import { burgerConstructorSlice } from '../../services/slices/burger-constructor';
 import { itemsSlice } from '../../services/slices/items';
 
-function BurgerIngredientsCard(props) {
+const BurgerIngredientsCard = memo((props) => {
     const dispatch = useDispatch();
     const { openIngredientModal } = ingredientSlice.actions;
     const { increaseQuantityValue } = itemsSlice.actions;
@@ -53,7 +54,7 @@ function BurgerIngredientsCard(props) {
             </div>
         </li>
     );
-}
+});
 
 BurgerIngredientsCard.propTypes = {
     item: PropTypes.shape({
