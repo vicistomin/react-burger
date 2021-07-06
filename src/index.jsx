@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import './index.module.css';
-import App from './components/app/app.jsx';
+import App from './app';
 
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
