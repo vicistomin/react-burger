@@ -3,10 +3,12 @@ import menuItemStyles from './menu-item.module.css';
 
 function MenuItem(props) {
     return(
-            <a className={menuItemStyles.menu_list_item +
-                ' pl-5 pr-5 pt-4 pb-4 mt-4 mb-4 mr-2 ' +
-               (props.active ? menuItemStyles.menu_list_item_active : null)}
-                href={props.link} 
+            <button className={
+                `${menuItemStyles.menu_list_item}
+                pl-5 pr-5 pt-4 pb-4 mt-4 mb-4
+                ${props.active ? menuItemStyles.menu_list_item_active : ''}`
+                }
+                onClick={props.onClick} 
                 title={props.text}
             >
                 <span className={menuItemStyles.menu_list_item_icon + ' mr-2'}>
@@ -17,13 +19,13 @@ function MenuItem(props) {
                 >
                     {props.text}
                 </span>
-            </a>
+            </button>
     );
 }
 
 MenuItem.propTypes = {
     active: PropTypes.bool,
-    link: PropTypes.string.isRequired,
+    onClick: PropTypes.func.isRequired,
     text: PropTypes.string.isRequired,
     icon: PropTypes.element.isRequired
 };
