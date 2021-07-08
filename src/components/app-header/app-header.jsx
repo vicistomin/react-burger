@@ -4,7 +4,22 @@ import MenuItem from '../menu-item/menu-item';
 // importing components from library
 import { Logo, BurgerIcon, ListIcon, ProfileIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 
+import { useHistory } from 'react-router-dom';
+
 function AppHeader() {
+
+    const history = useHistory();
+
+    const onConstructorClick = () => {
+        history.replace({ pathname: '/' });
+    };
+    const onFeedClick = () => {
+        history.replace({ pathname: '/feed' });
+    };
+    const onProfileClick = () => {
+        history.replace({ pathname: '/profile' });
+    };
+
     return(
         <header>
             <nav className={appHeaderStyles.menu_container}>
@@ -14,10 +29,24 @@ function AppHeader() {
                         <ul className={appHeaderStyles.menu_list_left_items}>
                             {/* TODO: reimplement active/hover/inactive link and icon colors */}
                             <li>
-                                <MenuItem icon={<BurgerIcon type="primary" />} text="Конструктор" link="#" active/>
+                                <MenuItem
+                                    icon={
+                                        <BurgerIcon type="primary" />
+                                    }
+                                    text="Конструктор"
+                                    onClick={onConstructorClick}
+                                    active
+                                />
                             </li>
                             <li>
-                                <MenuItem icon={<ListIcon type="secondary" />} text="Лента заказов" link="#" />
+
+                                <MenuItem
+                                    icon={
+                                        <ListIcon type="secondary" />
+                                    }
+                                    text="Лента заказов"
+                                    onClick={onFeedClick}
+                                />
                             </li>
                         </ul>
                     </li>
@@ -26,7 +55,13 @@ function AppHeader() {
                     </li>
                     <li className={appHeaderStyles.menu_list_right}>
                         <span>
-                            <MenuItem icon={<ProfileIcon type="secondary" />} text="Личный кабинет" link="#" />
+                            <MenuItem
+                                icon={
+                                    <ProfileIcon type="secondary" />
+                                }
+                                text="Личный кабинет"
+                                onClick={onProfileClick}
+                            />
                         </span>
                     </li>
                 </ul>
