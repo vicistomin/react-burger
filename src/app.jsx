@@ -1,18 +1,26 @@
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import {
+  HomePage,
   LoginPage,
   RegisterPage,
   ForgotPasswordPage,
   ResetPasswordPage,
-  ConstructorPage,
+  FeedPage,
+  FeedOrderPage,
   ProfilePage,
+  HistoryPage,
+  HistoryOrderPage,
+  IngredientPage,
   NotFound404
 } from './pages';
 
 function App() {
   return (
-    <Router>
+    <BrowserRouter>
       <Switch>
+        <Route path="/" exact={true}>
+          <HomePage />
+        </Route>
         <Route path="/login" exact={true}>
           <LoginPage />
         </Route>
@@ -25,20 +33,29 @@ function App() {
         <Route path="/reset-password" exact={true}>
           <ResetPasswordPage />
         </Route>
-        <Route path="/" exact={true}>
-          <ConstructorPage />
+        <Route path="/feed" exact={true}>
+          <FeedPage />
+        </Route>
+        <Route path="/feed/:id" exact={true}>
+          <FeedOrderPage />
         </Route>
         <Route path="/profile" exact={true}>
           <ProfilePage />
         </Route>
-        {/* TODO: implement route /profile/orders */}
-        {/* TODO: implement route /profile/orders/:id */}
-        {/* TODO: implement route /ingredients/:id */}
+        <Route path="/profile/orders" exact={true}>
+          <HistoryPage />
+        </Route>
+        <Route path="/profile/orders/:id" exact={true}>
+          <HistoryOrderPage />
+        </Route>
+        <Route path="/ingredients/:id" exact={true}>
+          <IngredientPage />
+        </Route>
         <Route>
           <NotFound404 />
         </Route>
       </Switch>
-    </Router>
+    </BrowserRouter>
   );
 }
 

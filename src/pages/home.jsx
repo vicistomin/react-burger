@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import styles from './constructor.module.css';
+import styles from './home.module.css';
 // importing components from project
 import AppHeader from '../components/app-header/app-header';
 import BurgerConstructor from '../components/burger-constructor/burger-constructor.jsx';
@@ -15,7 +15,7 @@ import { ingredientSlice } from '../services/slices/ingredient';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 
-function ConstructorPage() {
+function HomePage() {
   const dispatch = useDispatch();
   const { closeOrderModal } = orderSlice.actions;
   const { closeIngredientModal } = ingredientSlice.actions;
@@ -107,4 +107,4 @@ function ConstructorPage() {
   );
 }
 
-export default ConstructorPage;
+export default HomePage;
