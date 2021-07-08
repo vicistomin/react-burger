@@ -8,7 +8,5 @@
 }
 
 .fullscreen_message {
-    position: relative;
-    top: 40vh;
-    text-align: center;
+    composes: fullscreen_message from global;
 }
