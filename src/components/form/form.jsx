@@ -10,7 +10,7 @@ function Form(props) {
         {props.title}
       </h1>
       {props.children}
-      <Button type="primary" size="medium">
+      <Button type="primary" size="medium" onClick={props.onClick}>
         {props.actionName}
       </Button>
     </div>
@@ -18,8 +18,9 @@ function Form(props) {
 }
 
 Form.propTypes = {
-  title: PropTypes.string.isRequired,
-  actionName: PropTypes.string.isRequired
+  title: PropTypes.string,
+  actionName: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired
 };
 
 export default Form;
