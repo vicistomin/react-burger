@@ -6,7 +6,3 @@
 .container_left, .container_right {
     flex-basis: 600px;
 }
-
-.fullscreen_message {
-    composes: fullscreen_message from global;
-}

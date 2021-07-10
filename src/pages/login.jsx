@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from 'react';
-import styles from './login.module.css';
 // importing components from project
 import AppHeader from '../components/app-header/app-header';
 import Form from '../components/form/form';
@@ -55,7 +54,7 @@ export const LoginPage = () => {
   return(
     <>
       <AppHeader />
-      <div className={styles.fullscreen_message}>
+      <div className='fullscreen_message'>
         <Form
           title='Вход'
           actionName='Войти'
@@ -78,7 +77,7 @@ export const LoginPage = () => {
             name={'password'}
           />
         </Form>
-        <div className={styles.bottom_navigation}>
+        <div className='bottom_navigation'>
           <p className="text text_type_main-default text_color_inactive">
             Вы — новый пользователь?
           </p>
@@ -90,7 +89,7 @@ export const LoginPage = () => {
             Зарегистрироваться
           </Button>
         </div>
-        <div className={styles.bottom_navigation + ' mt-4'}>
+        <div className='bottom_navigation mt-4'>
           <p className="text text_type_main-default text_color_inactive">
             Забыли пароль?
           </p>

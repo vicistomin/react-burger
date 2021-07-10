@@ -59,7 +59,7 @@ function HomePage() {
           itemsFailed && 
           !itemsRequest && 
           !itemsSuccess && (
-            <h2 className={styles.fullscreen_message + ' text text_type_main-large text_color_inactive'}>
+            <h2 className='fullscreen_message text text_type_main-large text_color_inactive'>
               Ошибка загрузки
             </h2>
         )}
@@ -67,7 +67,7 @@ function HomePage() {
           itemsRequest && 
           !itemsFailed && 
           !itemsSuccess && (
-            <h2 className={styles.fullscreen_message + ' text text_type_main-large text_color_inactive'}>
+            <h2 className='fullscreen_message text text_type_main-large text_color_inactive'>
               Загрузка...
             </h2>
         )}

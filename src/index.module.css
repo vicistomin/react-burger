@@ -32,6 +32,18 @@ ul {
   justify-content: center;
 }
 
+:global .bottom_navigation {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  column-gap: calc(var(--offset-base-size) * 2);
+}
+
+:global .bottom_navigation button {
+  padding: 0;
+}
+
 :global .scroll {
   overflow-y: auto;
   scrollbar-color: #2F2F37 #8585AD;
