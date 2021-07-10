@@ -15,7 +15,10 @@ export const LoginPage = () => {
   const [emailValue, setEmailValue] = useState('');
   const [isEmailValid, setEmailValid] = useState(true);
   const [passwordValue, setPasswordValue] = useState('');
+
   const emailInputRef = useRef(null);
+
+  const emailRegExp = /.+@.+\.[A-Za-z]+$/;
 
   const onEmailChange = e => {
     setEmailValue(e.target.value);
@@ -26,6 +29,11 @@ export const LoginPage = () => {
   };
 
   const onLoginClick = () => {
+    // performing email field check
+    // TODO: check are better be done when focus is out of input, before the form submit action
+    if (!emailRegExp.test(emailValue)) {
+      setEmailValid(false);
+    }
     // TODO: implement login action
   }
 
@@ -38,12 +46,9 @@ export const LoginPage = () => {
   }
 
   useEffect(() => {
-    // maybe just pass here and check native {e.target.validity.valid}?
-    // TODO: check should be done only when focus is gone out of EmailInput 
-    if (emailValue.length > 3) {
-      setEmailValid(
-        /.+@.+\.[A-Za-z]+$/.test(emailValue)
-      );
+    // hide the error message if user writed correct email in the field
+    if (emailRegExp.test(emailValue)) {
+      setEmailValid(true);
     }
   }, [emailValue]);
 
@@ -56,7 +61,6 @@ export const LoginPage = () => {
           actionName='Войти'
           onClick={onLoginClick}
         >
-          {/* TODO: Implement email validation on the fly */}
           <Input
             type={'email'}
             placeholder={'E-mail'}
