@@ -7,6 +7,7 @@ import BurgerIngredients from '../components/burger-ingredients/burger-ingredien
 import Modal from '../components/modal/modal';
 import OrderDetails from '../components/order-details/order-details';
 import IngredientDetails from '../components/ingredient-details/ingredient-details';
+import Loader from '../components/loader/loader';
 import { useSelector, useDispatch } from "react-redux";
 // import slices and their functions
 import { getItems } from '../services/slices/items';
@@ -67,9 +68,7 @@ function HomePage() {
           itemsRequest && 
           !itemsFailed && 
           !itemsSuccess && (
-            <h2 className='fullscreen_message text text_type_main-large text_color_inactive'>
-              Загрузка...
-            </h2>
+            <Loader />
         )}
         {
           itemsSuccess && 
