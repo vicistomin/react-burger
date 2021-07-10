@@ -1,0 +1,9 @@
+.sidebar_container {
+    flex-basis: 320px;
+    align-self: flex-start;
+  }
+  
+  .sidebar_list {
+    composes: flex_column from global;
+    justify-content: flex-start;
+  }

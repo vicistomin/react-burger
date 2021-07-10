@@ -1,0 +1,18 @@
+.sidebar_list_item {
+    width: 100%;
+}
+
+
+
+.sidebar_link {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    height: calc(var(--offset-base-size) * 16);
+    width: 100%;
+    text-align: left;
+}
+
+.sidebar_link_active, .sidebar_link:hover {
+    color: var(--text-primary-color);
+}
