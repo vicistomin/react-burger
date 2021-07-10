@@ -25,6 +25,8 @@ function AppHeader() {
                 setFeedPage(true);
                 break;
             case '/profile':
+            case '/profile/orders':
+            case '/profile/orders/:id':
                 setProfilePage(true);
                 break;
             default:
