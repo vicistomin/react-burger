@@ -1,7 +1,9 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 // importing components from project
 import AppHeader from '../components/app-header/app-header';
 import Form from '../components/form/form';
+import Loader from '../components/loader/loader';
+import { fakeAuth } from '../services/auth';
 
 import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 
@@ -11,6 +13,8 @@ export const ForgotPasswordPage = () => {
 
   const history = useHistory();
 
+  const [isFormProcessing, setFormProcessing] = useState(false);
+
   const [emailValue, setEmailValue] = useState('');
   const [isEmailValid, setEmailValid] = useState(true);
 
@@ -19,35 +23,63 @@ export const ForgotPasswordPage = () => {
   const emailRegExp = /.+@.+\.[A-Za-z]+$/;
 
   const onEmailChange = e => {
+    // hide the error message if user writed correct email in the field
+    if (emailRegExp.test(e.target.value)) {
+      setEmailValid(true);
+    }
     setEmailValue(e.target.value);
   };
 
-  const onResetPasswordClick = () => {
+  // TODO: move form/inputs validation function to separate file in /utils?
+
+  const validateForm = () => {
+    // TODO: check is better be done when focus is out of input, before the form submit action
+    
+    const validFields = {
+      email: false
+    }
+
     // performing email field check
-    // TODO: check are better be done when focus is out of input, before the form submit action
     if (!emailRegExp.test(emailValue)) {
       setEmailValid(false);
     }
+    else {
+      validFields.email = true;
+    }
 
-    // TODO: implement reset password action
+    if (validFields.email) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
 
-    history.replace({ pathname: '/reset-password' });
+  const onResetPasswordClick = async () => {
+    const isFormCorrect = validateForm();
+    if(!isFormCorrect) {
+      return;
+    }
+    else {
+      // if form field are correct then start network request
+      setFormProcessing(true);
+      // TODO: implement reset password action
+      const success = await fakeAuth();
+      setFormProcessing(false);
+      if(success) {
+        history.replace({ pathname: '/reset-password' });
+      }
+    }
   }
 
   const onLoginClick = () => {
     history.replace({ pathname: '/login' });
   }
 
-  useEffect(() => {
-    // hide the error message if user writed correct email in the field
-    if (emailRegExp.test(emailValue)) {
-      setEmailValid(true);
-    }
-  }, [emailValue]);
-
   return(
     <>
       <AppHeader />
+      {isFormProcessing && <Loader />}
       <div className='fullscreen_message'>
         <Form
           title='Восстановление пароля'
@@ -56,7 +88,7 @@ export const ForgotPasswordPage = () => {
         >
           <Input
             type={'email'}
-            placeholder={'E-mail'}
+            placeholder={'Укажите e-mail'}
             onChange={onEmailChange}
             value={emailValue}
             name={'email'}
