@@ -1,0 +1,10 @@
+.profile_container {
+  composes: flex_row from global;
+  column-gap: calc(var(--offset-base-size) * 15);
+}
+
+.form_container {
+  flex-basis: 860px;
+  display: flex;
+  align-self: flex-start;
+}
