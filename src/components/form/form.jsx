@@ -5,22 +5,27 @@ import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
 
 function Form(props) {
   return(
-    <div className={formStyles.form_container}>
-      <h1 className="text text_type_main-medium">
-        {props.title}
-      </h1>
+    <form className={formStyles.form_container} autocomplete="on">
+      {props.title &&
+        <label className="text text_type_main-medium">
+          {props.title}
+        </label>
+      }
       {props.children}
-      <Button type="primary" size="medium" onClick={props.onClick}>
-        {props.actionName}
-      </Button>
-    </div>
+      {
+        props.actionName &&
+          <Button type="primary" size="medium" onClick={props.onClick}>
+            {props.actionName}
+          </Button>
+        }
+    </form>
   );
 }
 
 Form.propTypes = {
   title: PropTypes.string,
-  actionName: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired
+  actionName: PropTypes.string,
+  onClick: PropTypes.func
 };
 
 export default Form;
