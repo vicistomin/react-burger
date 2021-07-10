@@ -44,6 +44,32 @@ ul {
   padding: 0;
 }
 
+/* possible compensation of jumping input fields in case of errors */
+/* :global .input__error {
+  margin-top: 0;
+  margin-bottom: 0;
+  position: relative;
+  height: 0;
+} */
+
+/* TODO: find a way to trigger PasswordInput error status */
+:global .password_error .input_type_password {
+  border: 2px solid var(--colors-interface-error) !important;
+}
+
+:global .password_error::after {
+  font-family: 'Jet Brains Mono';
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: normal;
+  color: var(--colors-interface-error);
+  content: 'Некорректный пароль';
+  margin-left: 24px;
+  margin-top: 2px;
+  position: relative;
+  height: 0;
+}
+
 :global .scroll {
   overflow-y: auto;
   scrollbar-color: #2F2F37 #8585AD;
