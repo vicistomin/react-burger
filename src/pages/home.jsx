@@ -45,8 +45,11 @@ function HomePage() {
 
   // TODO: move API call for getting items into BurgerIngredients component
   useEffect(() => {
-    dispatch(getItems())
-  }, [dispatch]);
+    // won't call API if items are already in store
+    if (!itemsSuccess) {
+      dispatch(getItems());
+    }
+  }, [dispatch, itemsSuccess]);
 
     const closeAllModals = () => {
       dispatch(closeOrderModal());
