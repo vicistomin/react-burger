@@ -1,0 +1,28 @@
+.history_container {
+  composes: flex_row from global;
+  column-gap: calc(var(--offset-base-size) * 15);
+}
+
+.history_orders_container {
+  flex-basis: 860px;
+  align-self: flex-start;
+}
+
+.history_orders_container .order_status {
+  /* order status is showing only in history page */
+  display: block;
+}
+
+.error_message {
+  text-align: center;
+}
+
+.loader_container {
+  position: relative;
+  left: 200px;
+}
+
+.loader_container .loader {
+  width: 860px;
+  top: 88px;
+}
