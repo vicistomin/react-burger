@@ -77,7 +77,8 @@ export const LoginPage = () => {
     }
   }
 
-  const onLoginClick = async () => {
+  const onLoginClick = async (e) => {
+    e.preventDefault();
     const isFormCorrect = validateForm();
     if(!isFormCorrect) {
       return;
