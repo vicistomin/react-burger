@@ -8,3 +8,12 @@
   display: flex;
   align-self: flex-start;
 }
+
+:global .input_type_email label {
+  visibility: hidden;
+}
+
+:global .input_type_email label::before {
+  content: "Логин";
+  visibility: visible;
+}
