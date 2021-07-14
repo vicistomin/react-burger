@@ -1,0 +1,49 @@
+.order_card {
+  composes: flex_column from global;
+  composes: order_card_box_shadow from global;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 860px;
+  align-items: flex-start;
+  padding: 24px;
+  background-color: var(--background);
+  border-radius: var(--common-border-radius-s);
+}
+
+.order_info {
+  composes: flex_row from global;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* as in Figma */
+.order_info svg {
+  width: 22px;
+  height: 22px;
+  padding-left: 9px;
+}
+
+.ingredient_icons_container {
+
+}
+
+.ingredient_icon_wrapper {
+  max-width: 64px;
+  display: inline-block;
+  position: relative;
+  background: linear-gradient(to right, #801AB2, #4C4CFF );
+  border-radius: 200px;
+  margin-right: -16px;
+}
+
+.ingredient_icon {
+  height: 60px;
+  background: var(--background);
+  border-radius: 200px;
+  box-sizing: border-box;
+  position: relative;
+  top: 2px;
+  left: -24px;
+  padding: 4px;
+  clip-path: circle(30px at center);
+}
