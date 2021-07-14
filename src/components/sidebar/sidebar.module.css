@@ -1,6 +1,8 @@
 .sidebar_container {
     flex-basis: 320px;
     align-self: flex-start;
+    /* should be in front of loader */
+    z-index: 1001;
   }
   
   .sidebar_list {
