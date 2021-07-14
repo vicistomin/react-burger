@@ -44,7 +44,7 @@ const BurgerIngredientsCard = memo((props) => {
             >
                 {props.item.__v ? <Counter count={props.item.__v}/> : null}
                 <img src={props.item.image} alt={props.item.name} title={props.item.name} className="ml-4 mr-4"/>
-                    <div className={burgerIngredientsCardStyles.ingredient_price + ' mt-1 mb-1 '}>
+                    <div className={'flex_row mt-1 mb-1 '}>
                         <p className='pr-2 text text_type_digits-default'>{props.item.price}</p>
                         <CurrencyIcon />
                     </div>
