@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from 'react-router-dom';
-import styles from './history-order.module.css';
 // importing components from project
 import AppHeader from '../components/app-header/app-header';
 import Loader from '../components/loader/loader';
@@ -54,28 +53,26 @@ export const HistoryOrderPage = () => {
         (itemsRequest || userRequest) && 
         (!itemsFailed || !userFailed) && 
         (!itemsSuccess || !userSuccess) && (
-          <div className={styles.loader_container}>
-            <Loader />
-          </div>
+          <Loader />
       )}
-      <div className={styles.history_order_container}>
-        {
-          (itemsFailed || userFailed) && 
-          (!itemsRequest || !userRequest) && 
-          (!itemsSuccess || !userSuccess) && (
-            <h2 className='error_message mt-30 text text_type_main-large text_color_inactive'>
-              Ошибка загрузки
-            </h2>
-        )}
-        {
-          (itemsSuccess && userSuccess) && 
-          (!itemsFailed || !userFailed) && 
-          (!itemsRequest || !userRequest) && (
+      {
+        (itemsFailed || userFailed) && 
+        (!itemsRequest || !userRequest) && 
+        (!itemsSuccess || !userSuccess) && (
+          <h2 className='fullscreen_message text text_type_main-large text_color_inactive'>
+            Ошибка загрузки
+          </h2>
+      )}
+      {
+        (itemsSuccess && userSuccess) && 
+        (!itemsFailed || !userFailed) && 
+        (!itemsRequest || !userRequest) && (
+          <div className='flex_row mt-30'>
             <OrderDetailedView
               order={user.orders.find((order) => order.id === currentOrderId)}
             />
+          </div>
         )}
-      </div>
     </>
   );
 }
