@@ -114,6 +114,7 @@ OrdersCard.propTypes = {
     time: PropTypes.number.isRequired,
     type: PropTypes.string.isRequired,
     price: PropTypes.number.isRequired,
+    status: PropTypes.string.isRequired,
     ingredients: PropTypes.arrayOf(
       PropTypes.string.isRequired
     ).isRequired
