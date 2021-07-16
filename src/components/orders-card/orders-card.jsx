@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import ordersCardStyles from './orders-card.module.css';
 // importing components from library
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import { formatDateTime } from '../../services/utils'
 
 import { useHistory } from 'react-router-dom';
 import { useCallback } from 'react';
@@ -17,39 +18,13 @@ const OrdersCard = (props) => {
   );
   
   const handleOrderClick = () => {
-    // TODO: redirect to /profile/orders/:id
     history.replace({ pathname: '/profile/orders/'+props.order.id });
   }
 
-  // TODO: parse data and time to specific format as in Figma
-  const getOrderDateTime = useCallback(() => {
-    const dateTime = new Date(props.order.time);
-    const today = new Date(Date.now()).getDate();
-    const daysFromToday = today - dateTime.getDate();
-
-    const getPluralDayForm = (n) => (
-      (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)) ?
-        'дня' : 'дней'
-    );
-    
-    const day = (
-      daysFromToday === 0 ?
-        'Сегодня' :
-        daysFromToday === 1 ?
-          'Вчера' : 
-          `${daysFromToday} ${getPluralDayForm(daysFromToday)} назад`
-    );
-    const hours = dateTime.getHours();
-    const mins = dateTime.getMinutes();
-    const timeZone = new Intl.NumberFormat("ru-RU", {
-      // always display the plus sign
-      signDisplay: "exceptZero"
-    }).format(
-      0 - dateTime.getTimezoneOffset() / 60
-    );
-
-    return (`${day}, ${hours}:${mins} i-GMT${timeZone}`);
-  }, [props.order.time]);
+  // parsing data and time to specific format as in Figma
+  const getOrderDateTime = useCallback(() => (
+    formatDateTime(props.order.time)
+  ), [props.order.time]);
 
   const renderIngredientIcons = useCallback(() => (
      props.order.ingredients.map((item_id, index) => {
