@@ -24,14 +24,15 @@ const OrderDetailedView = (props) => {
      props.order.ingredients.map((item_id, index) => {
       const ingredient = items.find(item => item._id === item_id);
       
-      const ingredientsToShow = 5;
-      if (index > ingredientsToShow) return null;
+      // TODO: implement calculation of ingredients quantity 
+      const itemQty = ingredient.type === 'bun' ? 2 : 1;
 
       return (
-        <li key={item_id+index}>
+        <li
+          className={orderDetailedViewStyles.ingredient_wrapper}
+          key={item_id+index}>
           <span 
-            className={orderDetailedViewStyles.ingredient_icon_wrapper}
-            style={{ zIndex: 10 - index }}
+            className='ingredient_icon_wrapper'
           >
             <img 
               src={ingredient.image_mobile}
@@ -41,71 +42,68 @@ const OrderDetailedView = (props) => {
               className='ingredient_icon'
             />
           </span>
-          {index === ingredientsToShow ? (
-            <span
-              className={orderDetailedViewStyles.more_ingredients_icon}
-            >
-              <p className={
-                orderDetailedViewStyles.more_icon_text +
-                ' text text_type_main-default'
-              }>
-                +{props.order.ingredients.length - ingredientsToShow}
-              </p>
-              <span className={orderDetailedViewStyles.more_icon_wrapper}></span>
-            </span>
-          ) : null}
+          <p className={
+            orderDetailedViewStyles.ingredient_name +
+            ' text text_type_main-default'
+          }>
+            {ingredient.name}
+          </p>
+          <span className={orderDetailedViewStyles.ingredient_price}>
+            <p className='text text_type_digits-default'>
+              {`${itemQty} x ${ingredient.price}`}
+            </p>
+            <CurrencyIcon />
+          </span>
         </li>
       );
     })
   ), [items, props.order.ingredients]);
 
   return(
-    <li
-      className={orderDetailedViewStyles.order_card}
-    >
-      <div className={orderDetailedViewStyles.order_info}>
-        <p className='text text_type_digits-default'>
-          {`#${props.order.id}`}
-        </p>
-        <p className='text text_type_main-default text_color_inactive'>
-          {getOrderDateTime()}
-        </p>
-      </div>
-      <p className={'mt-6 text text_type_main-medium'}>
+    <div className={orderDetailedViewStyles.order_container}>
+      <p className={
+        orderDetailedViewStyles.order_id +
+        ' text text_type_digits-default'
+      }>
+        {`#${props.order.id}`}
+      </p>
+      <p className={'mt-10 mb-3 text text_type_main-medium'}>
         {props.order.type}
       </p>
-      {/* order status is displayed only on HistoryPage, not on FeedPage */}
-      {props.source === 'history' ?
-        <p className={
-          `${props.order.status === 'Выполнен' ?
-              orderDetailedViewStyles.status_completed :
-              props.order.status === 'Отменён' ?
-                orderDetailedViewStyles.status_canceled : ''
-            } mt-2 text text_type_main-default`
-        }>
-          {props.order.status}
-        </p>
-        : null
-      }
-      <div className={orderDetailedViewStyles.order_info + ' mt-6'}>
-        <ul className={orderDetailedViewStyles.ingredient_icons_container}>
-          {renderIngredientIcons()}
-        </ul>
+      <p className={
+        `${props.order.status === 'Выполнен' ?
+            orderDetailedViewStyles.status_completed :
+            props.order.status === 'Отменён' ?
+              orderDetailedViewStyles.status_canceled : ''
+          } text text_type_main-default`
+      }>
+        {props.order.status}
+      </p>
+      <p className={'mt-15 mb-6 text text_type_main-medium'}>
+        Состав:
+      </p>
+      <ul className={orderDetailedViewStyles.ingredients_container + ' pr-6'}>
+        {renderIngredientIcons()}
+      </ul>
+      <div className={orderDetailedViewStyles.order_info + ' mt-10'}>
+        <p className='text text_type_main-default text_color_inactive'>
+          {getOrderDateTime()}
+        </p>  
         <div className={'flex_row ml-6'}>
           <p className='text text_type_digits-default'>{props.order.price}</p>
           <CurrencyIcon />
         </div>
       </div>
-    </li>
+    </div>
   );
 };
 
 OrderDetailedView.propTypes = {
-  source: PropTypes.string.isRequired,
   order: PropTypes.shape({
     id: PropTypes.string.isRequired,
     time: PropTypes.number.isRequired,
     type: PropTypes.string.isRequired,
+    status: PropTypes.string.isRequired,
     price: PropTypes.number.isRequired,
     ingredients: PropTypes.arrayOf(
       PropTypes.string.isRequired
