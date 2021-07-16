@@ -5,7 +5,7 @@ import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
 
 function Form(props) {
   return(
-    <form className={formStyles.form_container} autocomplete="on">
+    <form className={formStyles.form_container} autoComplete="on">
       {props.title &&
         <label className="text text_type_main-medium">
           {props.title}
