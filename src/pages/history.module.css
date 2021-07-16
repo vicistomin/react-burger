@@ -8,11 +8,6 @@
   align-self: flex-start;
 }
 
-.history_orders_container .order_status {
-  /* order status is showing only in history page */
-  display: block;
-}
-
 .error_message {
   text-align: center;
 }

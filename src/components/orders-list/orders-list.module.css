@@ -1,6 +1,6 @@
 .orders_list {
   composes: flex_column from global;
-  row-gap: calc(var(--offset-base-size) * 6);
+  composes: pr-2 from global;
 
   margin-top: calc(var(--offset-base-size) * -20);
   
@@ -9,16 +9,9 @@
   we exclude height of top part of a page
   (for desktop it's 88px header + 40px = 128px) */
   max-height: calc(100vh - 128px);
-
-  padding-right: calc(var(--offset-base-size) * 2);
-  /* scrollbar compensation */
-  /* FIXME: check if it compensate correctly */
-  position: relative;
-  margin-left: calc(var(--offset-base-size) * -4);
-  left: calc(var(--offset-base-size) * 4);
 }
 
 .orders_list::-webkit-scrollbar {
- padding-left: 20px;
-
+  position: relative;
+  left: 20px;
 }

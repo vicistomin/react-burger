@@ -16,6 +16,7 @@ const { orders } = (props.source === 'feed' ? fakeFeedData : fakeUserData)
           {orders.map((order) => (
             <OrdersCard
               key={order.id}
+              source={props.source}
               order={order}
             />
           ))}
