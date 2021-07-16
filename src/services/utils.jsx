@@ -15,8 +15,8 @@ export const formatDateTime = (time) => {
         'Вчера' : 
         `${daysFromToday} ${getPluralDayForm(daysFromToday)} назад`
   );
-  const hours = dateTime.getHours();
-  const mins = dateTime.getMinutes();
+  const hours = dateTime.getHours().toString().padStart(2, '0');
+  const mins = dateTime.getMinutes().toString().padStart(2, '0');
   const timeZone = new Intl.NumberFormat("ru-RU", {
     // always display the plus sign
     signDisplay: "exceptZero"
