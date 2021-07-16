@@ -8,6 +8,7 @@ import OrdersList from '../components/orders-list/orders-list';
 import Loader from '../components/loader/loader';
 // import slices and their functions
 import { getItems } from '../services/slices/items';
+import { getUser } from '../services/slices/user';
 
 export const HistoryPage = () => {
   const dispatch = useDispatch();
@@ -19,6 +20,14 @@ export const HistoryPage = () => {
   } = useSelector(
     state => state.items
   );
+  const {
+    user,
+    userRequest,
+    userSuccess,
+    userFailed
+  } = useSelector(
+    state => state.user
+  );
 
   // we need to have items from API in store to render ingredients icons in order card
   useEffect(() => {
@@ -28,13 +37,21 @@ export const HistoryPage = () => {
     }
   }, [dispatch, itemsSuccess]);
 
+  // we need to have user from API in store to render orders data
+  useEffect(() => {
+    // won't call API if items are already in store
+    if (!userSuccess) {
+      dispatch(getUser());
+    }
+  }, [dispatch, userSuccess]);
+
   return(
     <>
       <AppHeader />
         {
-          itemsRequest && 
-          !itemsFailed && 
-          !itemsSuccess && (
+          (itemsRequest || userRequest) && 
+          (!itemsFailed || !userFailed) && 
+          (!itemsSuccess || !userSuccess) && (
             <div className={styles.loader_container}>
               <Loader />
             </div>
@@ -43,19 +60,20 @@ export const HistoryPage = () => {
         <Sidebar />
         <div className={styles.history_orders_container}>
           {
-            itemsFailed && 
-            !itemsRequest && 
-            !itemsSuccess && (
+            (itemsFailed || userFailed) && 
+            (!itemsRequest || !userRequest) && 
+            (!itemsSuccess || !userSuccess) && (
               <h2 className='error_message mt-30 text text_type_main-large text_color_inactive'>
                 Ошибка загрузки
               </h2>
           )}
           {
-            itemsSuccess && 
-            !itemsFailed && 
-            !itemsRequest && (
+            (itemsSuccess && userSuccess) && 
+            (!itemsFailed || !userFailed) && 
+            (!itemsRequest || !userRequest) && (
               <OrdersList 
                 source='history'
+                orders={user.orders}
               />
           )}
         </div>

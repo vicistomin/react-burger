@@ -2,18 +2,13 @@ import PropTypes from 'prop-types';
 import ordersListStyles from './orders-list.module.css';
 // importing components from project
 import OrdersCard from '../orders-card/orders-card';
-import { fakeUserData } from "../../services/user-data";
-import { fakeFeedData } from "../../services/feed-data";
 
 const OrdersList = (props) => {
-// TODO: replace orders data source to slices
-const { orders } = (props.source === 'feed' ? fakeFeedData : fakeUserData)
-
   return (
     <>  
-      {(orders.length > 0 ? 
+      {(props.orders.length > 0 ? 
         <ul className={ordersListStyles.orders_list}>
-          {orders.map((order) => (
+          {props.orders.map((order) => (
             <OrdersCard
               key={order.id}
               source={props.source}
@@ -29,7 +24,18 @@ const { orders } = (props.source === 'feed' ? fakeFeedData : fakeUserData)
 };
 
 OrdersList.propTypes = {
-    source: PropTypes.string.isRequired
+  source: PropTypes.string.isRequired,
+  orders: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      time: PropTypes.number.isRequired,
+      type: PropTypes.string.isRequired,
+      price: PropTypes.number.isRequired,
+      ingredients: PropTypes.arrayOf(
+        PropTypes.string.isRequired
+      ).isRequired
+    })
+  ).isRequired
 };
 
 export default OrdersList;
