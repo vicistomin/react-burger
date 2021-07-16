@@ -4,7 +4,7 @@ export const fakeFeedData = {
       id: '034536',
       type: 'Death Star Starship Main бургер',
       status: 'Создан',
-      time: 1626015158221,
+      time: Date.now(),
       price: 480,
       ingredients: [
         '60d3b41abdacab0026a733c6',
@@ -17,7 +17,7 @@ export const fakeFeedData = {
       id: '034535',
       type: 'Death Main бургер',
       status: 'Готовится',
-      time: 1626015158021,
+      time: Date.now() - 100000000,
       price: 1420,
       ingredients: [
         '60d3b41abdacab0026a733c6',
@@ -34,7 +34,7 @@ export const fakeFeedData = {
       id: '034534',
       type: 'Death Star Main бургер',
       status: 'Выполнен',
-      time: 1626015118221,
+      time: Date.now() - 300000000,
       price: 510,
       ingredients: [
         '60d3b41abdacab0026a733c6',
@@ -46,7 +46,7 @@ export const fakeFeedData = {
       id: '034533',
       type: 'Star Main бургер',
       status: 'Отменён',
-      time: 1626014158221,
+      time: Date.now() - 500000000,
       price: 310,
       ingredients: [
         '60d3b41abdacab0026a733c6',
