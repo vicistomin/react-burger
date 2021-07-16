@@ -30,24 +30,8 @@
 }
 
 .ingredient_icon_wrapper {
-  max-width: 64px;
-  display: inline-block;
-  position: relative;
-  background: linear-gradient(to right, #801AB2, #4C4CFF );
-  border-radius: 200px;
+  composes: ingredient_icon_wrapper from global;
   margin-right: -16px;
-}
-
-.ingredient_icon {
-  height: 60px;
-  background: var(--background);
-  border-radius: 200px;
-  box-sizing: border-box;
-  position: relative;
-  top: 2px;
-  left: -24px;
-  padding: 4px;
-  clip-path: circle(30px at center);
 }
 
 .more_ingredients_icon {

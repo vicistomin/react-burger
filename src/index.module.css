@@ -107,6 +107,26 @@ ul {
   0px 0px 1px rgba(0, 0, 0, 0.04);
 }
 
+:global .ingredient_icon_wrapper {
+  max-width: 64px;
+  display: inline-block;
+  position: relative;
+  background: linear-gradient(to right, #801AB2, #4C4CFF );
+  border-radius: 200px;
+}
+
+:global .ingredient_icon {
+  height: 60px;
+  background: var(--background);
+  border-radius: 200px;
+  box-sizing: border-box;
+  position: relative;
+  top: 2px;
+  left: -24px;
+  padding: 4px;
+  clip-path: circle(30px at center);
+}
+
 /* text/primary-light (standart text) (from Figma) */
 :root {
   --text-primary-color: #F2F2F3 !important;

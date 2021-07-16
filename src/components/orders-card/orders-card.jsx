@@ -69,7 +69,7 @@ const OrdersCard = (props) => {
               alt={ingredient.name}
               title={ingredient.name}
               width='112px'
-              className={ordersCardStyles.ingredient_icon}
+              className='ingredient_icon'
             />
           </span>
           {index === ingredientsToShow ? (
