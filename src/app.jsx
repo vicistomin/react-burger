@@ -6,10 +6,9 @@ import {
   ForgotPasswordPage,
   ResetPasswordPage,
   FeedPage,
-  FeedOrderPage,
+  OrderPage,
   ProfilePage,
   HistoryPage,
-  HistoryOrderPage,
   IngredientPage,
   NotFound404
 } from './pages';
@@ -37,7 +36,7 @@ function App() {
           <FeedPage />
         </Route>
         <Route path="/feed/:id" exact={true}>
-          <FeedOrderPage />
+          <OrderPage />
         </Route>
         <Route path="/profile" exact={true}>
           <ProfilePage />
@@ -46,7 +45,7 @@ function App() {
           <HistoryPage />
         </Route>
         <Route path="/profile/orders/:id" exact={true}>
-          <HistoryOrderPage />
+          <OrderPage />
         </Route>
         <Route path="/ingredients/:id" exact={true}>
           <IngredientPage />

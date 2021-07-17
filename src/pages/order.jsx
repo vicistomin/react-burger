@@ -9,7 +9,7 @@ import OrderDetailedView from '../components/order-detailed-view/order-detailed-
 import { getItems } from '../services/slices/items';
 import { getFeed } from '../services/slices/feed';
 
-export const HistoryOrderPage = () => {
+export const OrderPage = () => {
   const dispatch = useDispatch();
   
   const {
@@ -77,4 +77,4 @@ export const HistoryOrderPage = () => {
   );
 }
 
-export default HistoryOrderPage;
+export default OrderPage;
