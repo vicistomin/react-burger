@@ -38,6 +38,15 @@ export const userSlice = createSlice({
       state.userRequest = false;
       state.userFailed = false;
       state.user = action.payload;
+    },
+    setName(state, action) {
+      state.user.name = action.payload;
+    },
+    setPassword(state, action) {
+      state.user.password = action.payload;
+    },
+    setEmail(state, action) {
+      state.user.email = action.payload;
     }
   }
 }) 
