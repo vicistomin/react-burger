@@ -1,0 +1,76 @@
+.panel_container {
+  composes: flex_column from global;
+  align-items: flex-start;
+}
+
+.orders_list_container {
+  composes: flex_row from global;
+  align-items: flex-start;
+  column-gap: calc(var(--offset-base-size) * 9);
+  width: 100%;
+}
+
+.orders_list_column {
+  flex-basis: 50%;
+}
+
+.orders_list_completed,
+.orders_list_preparing {
+  composes: flex_column from global;
+  row-gap: calc(var(--offset-base-size) * 2);
+  align-items: flex-start;
+}
+
+.orders_list_completed li {
+  color: var(--colors-interface-success);
+}
+
+.order_id {
+  align-self: center;
+}
+
+.order_info {
+  composes: flex_row from global;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* as in Figma */
+.order_info svg,
+.ingredient_wrapper svg { 
+  width: 22px;
+  height: 22px;
+  padding-left: 9px;
+}
+
+.ingredients_container {
+  composes: flex_column from global;
+  composes: scroll from global;
+  row-gap: calc(var(--offset-base-size) * 4);
+  width: 100%;
+  max-height: 312px;
+}
+
+.ingredient_wrapper {
+  composes: flex_row from global;
+  align-self: stretch;
+  justify-content: space-between;
+  column-gap: calc(var(--offset-base-size) * 4);
+}
+
+.ingredient_name {
+  flex-basis: 100%;
+}
+
+.ingredient_price {
+  display: flex;
+  min-width: fit-content;
+}
+
+.status_completed {
+  color: var(--colors-interface-success);
+}
+
+.status_canceled {
+  color: var(--colors-interface-error);
+}
