@@ -9,6 +9,7 @@ import Loader from '../components/loader/loader';
 // import slices and their functions
 import { getItems } from '../services/slices/items';
 import { getUser } from '../services/slices/user';
+import { getFeed } from '../services/slices/feed';
 
 export const HistoryPage = () => {
   const dispatch = useDispatch();
@@ -28,6 +29,18 @@ export const HistoryPage = () => {
   } = useSelector(
     state => state.user
   );
+  const {
+    orders,
+    feedRequest,
+    feedSuccess,
+    feedFailed
+  } = useSelector(
+    state => state.feed
+  );
+
+  const userOrders = orders.filter((order) => (
+    user.orders.includes(order.id)
+  ));
 
   // we need to have items from API in store to render ingredients icons in order card
   useEffect(() => {
@@ -37,7 +50,7 @@ export const HistoryPage = () => {
     }
   }, [dispatch, itemsSuccess]);
 
-  // we need to have user from API in store to render orders data
+  // we need to have user from API in store to select its orders
   useEffect(() => {
     // won't call API if items are already in store
     if (!userSuccess) {
@@ -45,33 +58,41 @@ export const HistoryPage = () => {
     }
   }, [dispatch, userSuccess]);
 
+  // we need to have feed from API in store to render orders data
+  useEffect(() => {
+    // won't call API if items are already in store
+    if (!feedSuccess) {
+      dispatch(getFeed());
+    }
+  }, [dispatch, feedSuccess]);
+
   return(
     <>
       <AppHeader />
         {
-          (itemsRequest || userRequest) && 
-          (!itemsFailed || !userFailed) && 
-          (!itemsSuccess || !userSuccess) && (
+          (itemsRequest || userRequest || feedRequest) && 
+          (!itemsFailed || !userFailed || !feedFailed) && 
+          (!itemsSuccess || !userSuccess || !feedSuccess) && (
             <Loader />
         )}
         <div className={styles.history_container + ' mt-30'}>
         <Sidebar />
         <div className={styles.history_orders_container}>
           {
-            (itemsFailed || userFailed) && 
-            (!itemsRequest || !userRequest) && 
-            (!itemsSuccess || !userSuccess) && (
+            (itemsFailed || userFailed || feedFailed) && 
+            (!itemsRequest || !userRequest || !feedRequest) && 
+            (!itemsSuccess || !userSuccess || !feedSuccess) && (
               <h2 className='mt-30 text text_type_main-large text_color_inactive'>
                 Ошибка загрузки
               </h2>
           )}
           {
-            (itemsSuccess && userSuccess) && 
-            (!itemsFailed || !userFailed) && 
-            (!itemsRequest || !userRequest) && (
+            (itemsSuccess && userSuccess && feedSuccess) && 
+            (!itemsFailed || !userFailed || !feedFailed) && 
+            (!itemsRequest || !userRequest || !feedRequest) && (
               <OrdersList 
                 source='history'
-                orders={user.orders}
+                orders={userOrders}
               />
           )}
         </div>
