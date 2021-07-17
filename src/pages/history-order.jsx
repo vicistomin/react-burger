@@ -67,7 +67,7 @@ export const HistoryOrderPage = () => {
         (itemsSuccess && feedSuccess) && 
         (!itemsFailed || !feedFailed) && 
         (!itemsRequest || !feedRequest) && (
-          <div className='flex_row mt-30'>
+          <div className='fullscreen_message'>
             <OrderDetailedView
               order={orders.find((order) => order.id === currentOrderId)}
             />

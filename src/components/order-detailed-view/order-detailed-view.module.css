@@ -1,7 +1,7 @@
 .order_container {
   composes: flex_column from global;
   align-items: flex-start;
-  flex-basis: 640px;
+  width: 640px;
 }
 
 .order_id {
