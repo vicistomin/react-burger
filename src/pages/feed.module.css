@@ -1,0 +1,9 @@
+.feed_container {
+  composes: flex_row from global;
+  column-gap: calc(var(--offset-base-size) * 15);
+}
+
+.feed_orders_container {
+  flex-basis: 860px;
+  align-self: flex-start;
+}
