@@ -52,9 +52,7 @@ export const HistoryPage = () => {
           (itemsRequest || userRequest) && 
           (!itemsFailed || !userFailed) && 
           (!itemsSuccess || !userSuccess) && (
-            <div className={styles.loader_container}>
-              <Loader />
-            </div>
+            <Loader />
         )}
         <div className={styles.history_container + ' mt-30'}>
         <Sidebar />
@@ -63,7 +61,7 @@ export const HistoryPage = () => {
             (itemsFailed || userFailed) && 
             (!itemsRequest || !userRequest) && 
             (!itemsSuccess || !userSuccess) && (
-              <h2 className='error_message mt-30 text text_type_main-large text_color_inactive'>
+              <h2 className='mt-30 text text_type_main-large text_color_inactive'>
                 Ошибка загрузки
               </h2>
           )}

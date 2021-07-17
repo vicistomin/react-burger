@@ -7,17 +7,3 @@
   flex-basis: 860px;
   align-self: flex-start;
 }
-
-.error_message {
-  text-align: center;
-}
-
-.loader_container {
-  position: relative;
-  left: 200px;
-}
-
-.loader_container .loader {
-  width: 860px;
-  top: 88px;
-}
