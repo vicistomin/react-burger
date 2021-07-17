@@ -9,6 +9,7 @@
   background-color: var(--background);
   border-radius: var(--common-border-radius-s);
   cursor: pointer;
+  scroll-snap-align: start;
 }
 
 .order_info {
