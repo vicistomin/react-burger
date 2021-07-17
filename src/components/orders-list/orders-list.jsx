@@ -16,7 +16,7 @@ const OrdersList = (props) => {
             />
           ))}
         </ul>
-      : <h3 className='text text_type_main-default text_color_inactive pb-6'>
+      : <h3 className='text text_type_main-large text_color_inactive pb-6 ml-30'>
           Заказов нет
         </h3>)}
     </>

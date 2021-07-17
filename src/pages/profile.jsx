@@ -105,7 +105,7 @@ export const ProfilePage = () => {
             userFailed && 
             !userRequest && 
             !userSuccess && (
-              <h2 className='mt-30 text text_type_main-large text_color_inactive'>
+              <h2 className='ml-30 text text_type_main-large text_color_inactive'>
                 Ошибка загрузки
               </h2>
           )}
