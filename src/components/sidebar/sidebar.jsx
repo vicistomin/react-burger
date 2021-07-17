@@ -19,7 +19,6 @@ function Sidebar() {
           setProfilePage(true);
           break;
         case '/profile/orders':
-        case '/profile/orders/:id':
           setHistoryPage(true);
           break;
         default:
@@ -31,10 +30,11 @@ function Sidebar() {
     history.replace({ pathname: '/profile' });
   };
   const onHistoryClick = () => {
-      history.replace({ pathname: '/profile/orders' });
+    history.replace({ pathname: '/profile/orders' });
   };
   const onLogoutClick = () => {
-      history.replace({ pathname: '/' });
+    // TODO: show loader during logout?
+    history.replace({ pathname: '/login' });
   };
 
   return(
