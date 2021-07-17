@@ -6,4 +6,5 @@
 .history_orders_container {
   flex-basis: 860px;
   align-self: flex-start;
+  margin-top: calc(var(--offset-base-size) * -20);
 }

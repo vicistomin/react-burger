@@ -1,8 +1,6 @@
 .orders_list {
   composes: flex_column from global;
   composes: pr-2 from global;
-
-  margin-top: calc(var(--offset-base-size) * -20);
   
   composes: scroll from global;
   /* to calculate height of the scrollable container 
