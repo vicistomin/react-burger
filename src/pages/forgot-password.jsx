@@ -55,7 +55,8 @@ export const ForgotPasswordPage = () => {
     }
   }
 
-  const onResetPasswordClick = async () => {
+  const onResetPasswordClick = async (e) => {
+    e.preventDefault();
     const isFormCorrect = validateForm();
     if(!isFormCorrect) {
       return;

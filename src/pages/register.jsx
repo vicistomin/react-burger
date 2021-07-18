@@ -105,7 +105,11 @@ export const RegisterPage = () => {
     }
   }
 
-  const onRegisterClick = async (e) => {
+  const redirectOnSuccess = () => {
+      history.replace({ pathname: '/' });
+  }
+
+  const onRegisterClick = (e) => {
     e.preventDefault();
     const isFormCorrect = validateForm();
     if(!isFormCorrect) {
@@ -113,14 +117,11 @@ export const RegisterPage = () => {
     }
     else {
       // if form fields are correct then start registration action
-      await dispatch(register({
+      dispatch(register({
         name: nameValue,
         email: emailValue,
         password: passwordValue
-      }));
-      if(userSuccess) {
-        history.replace({ pathname: '/' });
-      }
+      }, redirectOnSuccess))
     }
   }
 

@@ -76,7 +76,8 @@ export const ResetPasswordPage = () => {
     }
   }
 
-  const onResetPasswordClick = async () => {
+  const onResetPasswordClick = async (e) => {
+    e.preventDefault();
     const isFormCorrect = validateForm();
     if(!isFormCorrect) {
       return;
@@ -101,7 +102,7 @@ export const ResetPasswordPage = () => {
     <>
       <AppHeader />
       {isFormProcessing && <Loader />}
-      <div className='fullscreen_message'>
+      <div className={styles.reset_password_container + ' fullscreen_message'}>
         <Form
           title='Восстановление пароля'
           actionName='Сохранить'
