@@ -154,7 +154,7 @@ export const ProfilePage = () => {
                   size={'default'}
                 />            
                 <Input
-                  type={'text'}
+                  type={'password'}
                   placeholder={'Пароль'}
                   onChange={onPasswordChange}
                   value={passwordValue}
