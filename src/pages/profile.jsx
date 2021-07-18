@@ -23,7 +23,21 @@ export const ProfilePage = () => {
     state => state.user
   );
 
-  const { setName, setPassword, setEmail } = userSlice.actions
+  const {
+    setName,
+    setPassword,
+    setEmail,
+    resetStatus
+  } = userSlice.actions
+
+  const resetError = () => {
+    dispatch(resetStatus());
+  }  
+
+  // reset status and errors on page load
+  useEffect(() => {
+    resetError();
+  }, [])
 
   // we need to have user from API in store to render user data
   useEffect(() => {

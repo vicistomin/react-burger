@@ -4,6 +4,7 @@ import { LOGIN_API_URL } from "../constants";
 import { REGISTER_API_URL } from "../constants";
 import { FORGOT_PASSWORD_API_URL } from "../constants";
 import { RESET_PASSWORD_API_URL } from "../constants";
+import { LOGOUT_API_URL } from "../constants";
 
 export const getUser = () => {
   return dispatch => {
@@ -147,6 +148,41 @@ export const resetPassword = (code, password, redirectCallback) => {
       body: JSON.stringify({
         "password": password,
         "token": code
+      })
+    })
+    .then(res => {
+      if (!res.ok && res.status !== 400) {
+        throw Error(res.statusText);
+        }
+      return res.json();
+      })
+    .then((data) => {
+      if (data.success) {
+        dispatch(userSlice.actions.success());
+        redirectCallback();
+      }
+      else {
+        throw Error(data.message);
+      }
+    })
+    .catch((error) => {
+      dispatch(userSlice.actions.failed())
+      console.log(error);
+    })
+  }
+}
+
+export const logout = (token, redirectCallback) => {
+  return dispatch => {
+    dispatch(userSlice.actions.request());
+    // send user data to the API
+    fetch(LOGOUT_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        "token": token
       })
     })
     .then(res => {

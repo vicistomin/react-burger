@@ -1,11 +1,28 @@
+import { useSelector, useDispatch } from "react-redux";
 import sidebarStyles from './sidebar.module.css';
 // importing components from project
 import SidebarLink from '../sidebar-link/sidebar-link';
+// import slices and their functions
+import { logout, userSlice } from '../../services/slices/user';
 
 import { useHistory } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
 function Sidebar() {
+  const dispatch = useDispatch();
+
+  const {
+    refreshToken
+  } = useSelector(
+     state => state.user
+  );
+  const { resetStatus } = userSlice.actions;
+  
+  // reset status and errors on page load
+  useEffect(() => {
+    dispatch(resetStatus());
+  }, [])
+  
   const history = useHistory();
 
   const [isProfilePage, setProfilePage] = useState(false);
@@ -32,9 +49,13 @@ function Sidebar() {
   const onHistoryClick = () => {
     history.replace({ pathname: '/profile/orders' });
   };
-  const onLogoutClick = () => {
-    // TODO: show loader during logout?
+
+  const redirectOnSuccess = () => {
     history.replace({ pathname: '/login' });
+  }
+
+  const onLogoutClick = () => {
+    dispatch(logout(refreshToken, redirectOnSuccess));
   };
 
   return(
