@@ -5,18 +5,23 @@ import PropTypes from 'prop-types';
 import burgerIngredientsCardStyles from './burger-ingredients-card.module.css';
 // importing components from library
 import { Counter, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { ingredientSlice } from '../../services/slices/ingredient';
 import { burgerConstructorSlice } from '../../services/slices/burger-constructor';
 import { itemsSlice } from '../../services/slices/items';
 
+import { useHistory } from 'react-router-dom';
+
 const BurgerIngredientsCard = memo((props) => {
     const dispatch = useDispatch();
-    const { openIngredientModal } = ingredientSlice.actions;
     const { increaseQuantityValue } = itemsSlice.actions;
     const { addMiddleItem } = burgerConstructorSlice.actions
     
+    const history = useHistory();
+
     const handleIngredientClick = () => {
-        dispatch(openIngredientModal(props.item));
+        history.replace({ 
+            pathname: `/ingredients/${props.item._id}`,
+            state: { background: history.location }
+        });
     }
 
     const [{opacity}, dragRef] = useDrag({

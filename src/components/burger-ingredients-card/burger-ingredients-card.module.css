@@ -1,5 +1,6 @@
 .ingredient_card {
     composes: flex_column from global;
+    cursor: pointer;
     /* flex-basis: 272px; */
     flex-basis: 50%;
     /* for correct positioning of Counter:*/

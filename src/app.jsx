@@ -1,4 +1,4 @@
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { Switch, Route, useLocation } from 'react-router-dom';
 import {
   HomePage,
   LoginPage,
@@ -10,13 +10,17 @@ import {
   ProfilePage,
   HistoryPage,
   IngredientPage,
+  IngredientModalPage,
   NotFound404
 } from './pages';
 
 function App() {
+  let location = useLocation();
+  let background = location.state && location.state.background;
+
   return (
-    <BrowserRouter>
-      <Switch>
+    <>
+      <Switch location={background || location}>
         <Route path="/" exact={true}>
           <HomePage />
         </Route>
@@ -54,7 +58,14 @@ function App() {
           <NotFound404 />
         </Route>
       </Switch>
-    </BrowserRouter>
+
+      {/* Show the modal when a background page is set */
+        background && 
+        <Route path="/ingredients/:id" exact={true}>
+          <IngredientModalPage />
+        </Route>
+      }
+    </>
   );
 }
 
