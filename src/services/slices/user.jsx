@@ -6,6 +6,8 @@ import { FORGOT_PASSWORD_API_URL } from "../constants";
 import { RESET_PASSWORD_API_URL } from "../constants";
 import { LOGOUT_API_URL } from "../constants";
 
+import { getCookie, setCookie, deleteCookie } from '../utils';
+
 export const getUser = () => {
   return dispatch => {
     dispatch(userSlice.actions.request());
@@ -46,7 +48,9 @@ export const register = (user, redirectCallback) => {
         dispatch(userSlice.actions.setEmail(data.user.email));
         dispatch(userSlice.actions.setName(data.user.name));
         dispatch(userSlice.actions.setAccessToken(data.accessToken));
-        dispatch(userSlice.actions.setRefreshToken(data.refreshToken));
+
+        setCookie('token', data.refreshToken);
+
         redirectCallback();
       }
       else {
@@ -86,7 +90,8 @@ export const login = (user, redirectCallback) => {
         dispatch(userSlice.actions.setEmail(data.user.email));
         dispatch(userSlice.actions.setName(data.user.name));
         dispatch(userSlice.actions.setAccessToken(data.accessToken));
-        dispatch(userSlice.actions.setRefreshToken(data.refreshToken));
+        
+        setCookie('token', data.refreshToken);
 
         redirectCallback();
       }
@@ -172,7 +177,9 @@ export const resetPassword = (code, password, redirectCallback) => {
   }
 }
 
-export const logout = (token, redirectCallback) => {
+export const logout = (redirectCallback) => {
+  const token = getCookie('token');
+
   return dispatch => {
     dispatch(userSlice.actions.request());
     // send user data to the API
@@ -194,6 +201,9 @@ export const logout = (token, redirectCallback) => {
     .then((data) => {
       if (data.success) {
         dispatch(userSlice.actions.success());
+
+        deleteCookie('token');
+
         redirectCallback();
       }
       else {
@@ -214,7 +224,6 @@ export const userSlice = createSlice({
       orders: []
     },
     accessToken: '',
-    refreshToken: '',
     userRequest: false,
     userFailed: false,
     userSuccess: false,
@@ -254,9 +263,6 @@ export const userSlice = createSlice({
     },
     setAccessToken(state, action) {
       state.accessToken = action.payload;
-    },
-    setRefreshToken(state, action) {
-      state.refreshToken = action.payload;
     }
   }
 }) 
