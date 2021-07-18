@@ -48,9 +48,9 @@ export const register = (user, redirectCallback) => {
         dispatch(userSlice.actions.success());
         dispatch(userSlice.actions.setEmail(data.user.email));
         dispatch(userSlice.actions.setName(data.user.name));
-        dispatch(userSlice.actions.setAccessToken(data.accessToken));
 
-        setCookie('token', data.refreshToken);
+        setCookie('accessToken', data.accessToken);
+        setCookie('refreshToken', data.refreshToken);
 
         redirectCallback();
       }
@@ -90,9 +90,9 @@ export const login = (user, redirectCallback) => {
         dispatch(userSlice.actions.success());
         dispatch(userSlice.actions.setEmail(data.user.email));
         dispatch(userSlice.actions.setName(data.user.name));
-        dispatch(userSlice.actions.setAccessToken(data.accessToken));
-        
-        setCookie('token', data.refreshToken);
+
+        setCookie('accessToken', data.accessToken);
+        setCookie('refreshToken', data.refreshToken);
 
         redirectCallback();
       }
@@ -179,7 +179,7 @@ export const resetPassword = (code, password, redirectCallback) => {
 }
 
 export const logout = (redirectCallback) => {
-  const token = getCookie('token');
+  const refreshToken = getCookie('refreshToken');
 
   return dispatch => {
     dispatch(userSlice.actions.request());
@@ -190,7 +190,7 @@ export const logout = (redirectCallback) => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        "token": token
+        "token": refreshToken
       })
     })
     .then(res => {
@@ -203,7 +203,8 @@ export const logout = (redirectCallback) => {
       if (data.success) {
         dispatch(userSlice.actions.success());
 
-        deleteCookie('token');
+        deleteCookie('accessToken');
+        deleteCookie('refreshToken');
 
         redirectCallback();
       }
@@ -219,7 +220,7 @@ export const logout = (redirectCallback) => {
 }
 
 export const refreshToken = () => {
-  const refreshToken = getCookie('token');
+  const refreshToken = getCookie('refreshToken');
 
   return dispatch => {
     dispatch(userSlice.actions.request());
@@ -242,9 +243,10 @@ export const refreshToken = () => {
     .then((data) => {
       if (data.success) {
         dispatch(userSlice.actions.success());
-        dispatch(userSlice.actions.setAccessToken(data.accessToken));
+        
+        setCookie('accessToken', data.accessToken);
         // also saving new refreshToken from server
-        setCookie('token', data.refreshToken);
+        setCookie('refreshToken', data.refreshToken);
       }
       else {
         throw Error(data.message);
@@ -263,7 +265,6 @@ export const userSlice = createSlice({
     user: {
       orders: []
     },
-    accessToken: '',
     userRequest: false,
     userFailed: false,
     userSuccess: false,
@@ -300,9 +301,6 @@ export const userSlice = createSlice({
       state.userRequest = false;
       state.userFailed = false;
       state.userSuccess = false;
-    },
-    setAccessToken(state, action) {
-      state.accessToken = action.payload;
     }
   }
 }) 
