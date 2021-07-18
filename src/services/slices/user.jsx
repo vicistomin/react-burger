@@ -5,6 +5,7 @@ import { REGISTER_API_URL } from "../constants";
 import { FORGOT_PASSWORD_API_URL } from "../constants";
 import { RESET_PASSWORD_API_URL } from "../constants";
 import { LOGOUT_API_URL } from "../constants";
+import { TOKEN_API_URL } from "../constants";
 
 import { getCookie, setCookie, deleteCookie } from '../utils';
 
@@ -205,6 +206,45 @@ export const logout = (redirectCallback) => {
         deleteCookie('token');
 
         redirectCallback();
+      }
+      else {
+        throw Error(data.message);
+      }
+    })
+    .catch((error) => {
+      dispatch(userSlice.actions.failed())
+      console.log(error);
+    })
+  }
+}
+
+export const refreshToken = () => {
+  const refreshToken = getCookie('token');
+
+  return dispatch => {
+    dispatch(userSlice.actions.request());
+    // send user data to the API
+    fetch(TOKEN_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        "token": refreshToken
+      })
+    })
+    .then(res => {
+      if (!res.ok && res.status !== 400) {
+        throw Error(res.statusText);
+        }
+      return res.json();
+      })
+    .then((data) => {
+      if (data.success) {
+        dispatch(userSlice.actions.success());
+        dispatch(userSlice.actions.setAccessToken(data.accessToken));
+        // also saving new refreshToken from server
+        setCookie('token', data.refreshToken);
       }
       else {
         throw Error(data.message);
