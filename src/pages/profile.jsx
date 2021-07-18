@@ -6,9 +6,9 @@ import AppHeader from '../components/app-header/app-header';
 import Form from '../components/form/form';
 import Sidebar from '../components/sidebar/sidebar';
 import Loader from '../components/loader/loader';
-import { Input, EmailInput } from '@ya.praktikum/react-developer-burger-ui-components';
+import { Input, EmailInput, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 // import slices and their functions
-import { getUser } from '../services/slices/user';
+import { getUser, setUser } from '../services/slices/user';
 import { userSlice } from '../services/slices/user'
 
 export const ProfilePage = () => {
@@ -24,7 +24,10 @@ export const ProfilePage = () => {
   );
 
   const {
-    resetStatus
+    resetStatus,
+    setEmail,
+    setName,
+    setPassword
   } = userSlice.actions
 
   const [nameValue, setNameValue] = useState('')
@@ -42,20 +45,22 @@ export const ProfilePage = () => {
 
   // we need to have user from API in store to render user data
   useEffect(() => {
-    // won't call API if items are already in store
-    if (!userSuccess) {
+    // won't call API if items are already in store or in process
+    if (!userSuccess && !userRequest) {
       dispatch(getUser());
     }
     setNameValue(user.name);
     setEmailValue(user.email);
     setPasswordValue(user.password);
-  }, [dispatch, user.email, user.name, user.password, userSuccess]);
+  }, [userSuccess]);
 
    // TODO: create EditableInput component and move there all this checks and handlers 
   const [isNameInputDisabled, setNameInputDisabled] = useState(true)
   const [isNameInputEmpty, setNameInputEmpty] = useState(false)
   const [isPasswordInputDisabled, setPasswordInputDisabled] = useState(true)
   const [isPasswordInputEmpty, setPasswordInputEmpty] = useState(false)
+  
+  const [hasFormChanged, setFormChanged] = useState(false)
 
   const nameInputRef = useRef(null)
   const passwordInputRef = useRef(null)
@@ -66,6 +71,7 @@ export const ProfilePage = () => {
       setNameInputEmpty(false);
     }
     setNameValue(e.target.value);
+    setFormChanged(true);
   };
 
   const onPasswordChange = e => {
@@ -74,11 +80,13 @@ export const ProfilePage = () => {
       setPasswordInputEmpty(false);
     }
     setPasswordValue(e.target.value);
+    setFormChanged(true);
   };
 
   const onEmailChange = e => {
     // hide the error message if user is writing something in the password field
     setEmailValue(e.target.value);
+    setFormChanged(true);
   };
 
   const onNameIconClick = () => {
@@ -105,6 +113,24 @@ export const ProfilePage = () => {
       setPasswordInputEmpty(true);
     }
     setPasswordInputDisabled(true);
+  }
+
+  const onSubmitChanges = (e) => {
+    e.preventDefault();
+    dispatch(setUser({
+      name: nameValue,
+      email: emailValue,
+      password: passwordValue
+    }));
+    setFormChanged(false);
+  }
+
+  const onCancelChanges = (e) => {
+    e.preventDefault();
+    setNameValue(user.name);
+    setEmailValue(user.email);
+    setPasswordValue(user.password);
+    setFormChanged(false);
   }
 
   return(
@@ -168,6 +194,24 @@ export const ProfilePage = () => {
                   disabled={isPasswordInputDisabled}
                   onBlur={onPasswordInputBlur}
                 />
+                {hasFormChanged && 
+                  <div className={styles.buttons_container}>
+                    <Button 
+                      type="secondary"
+                      size="medium"
+                      onClick={onCancelChanges}
+                    >
+                      Отменить
+                    </Button>
+                    <Button 
+                      type="primary"
+                      size="medium"
+                      onClick={onSubmitChanges}
+                    >
+                      Сохранить
+                    </Button>
+                  </div>
+                }
               </Form>
           )}
         </div>

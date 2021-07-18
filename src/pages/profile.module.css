@@ -9,6 +9,12 @@
   align-self: flex-start;
 }
 
+.buttons_container {
+  composes: flex_row from global;
+  width: 100%;
+  justify-content: space-around;
+}
+
 .profile_container :global .input_type_email label {
   visibility: hidden;
 }

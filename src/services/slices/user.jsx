@@ -29,9 +29,9 @@ export const getUser = () => {
       })
     .then((data) => {
       if (data.success === true) {
-        dispatch(userSlice.actions.success());
         dispatch(userSlice.actions.setName(data.user.name));
         dispatch(userSlice.actions.setEmail(data.user.email));
+        dispatch(userSlice.actions.success());
       }
       else if (data.message === 'jwt expired') {
         refreshToken()
@@ -60,9 +60,102 @@ export const getUser = () => {
               })
             .then((data) => {
               if (data.success) {
-                dispatch(userSlice.actions.success());
                 dispatch(userSlice.actions.setName(data.user.name));
                 dispatch(userSlice.actions.setEmail(data.user.email));
+                dispatch(userSlice.actions.success());
+              }
+              else {
+                throw Error(data.message);
+              }
+            })
+            .catch((error) => {
+              dispatch(userSlice.actions.failed())
+              console.log(error);
+            })
+          }
+          else {
+            throw Error(refresh_data.message);
+          }
+        })
+        .catch((error) => {
+          dispatch(userSlice.actions.failed())
+          console.log(error);
+        });
+      }
+      else {
+        throw Error(data.message);
+      }
+    })
+    .catch((error) => {
+      dispatch(userSlice.actions.failed())
+      console.log(error);
+    })
+  }
+}
+
+export const setUser = (user) => {
+  return dispatch => {
+    dispatch(userSlice.actions.request());
+    // get user data from the API
+    fetch(USER_API_URL, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: getCookie('accessToken')
+      },
+      body: JSON.stringify({
+        "email": user.email,
+        "password": user.password,
+        "name": user.name,
+      })
+    })
+    .then(res => {
+      if (!res.ok && res.status >= 500) {
+        throw Error(res.statusText);
+        }
+      return res.json();
+      })
+    .then((data) => {
+      if (data.success === true) {
+        dispatch(userSlice.actions.setName(data.user.name));
+        dispatch(userSlice.actions.setEmail(data.user.email));
+        dispatch(userSlice.actions.success());
+      }
+      else if (data.message === 'jwt expired') {
+        refreshToken()
+        .then((refresh_res) => {
+          if (!refresh_res.ok && refresh_res.status >= 500) {
+            throw Error(refresh_res.statusText);
+          }
+          return refresh_res.json();
+        })
+        .then((refresh_data) => {
+          if (refresh_data.success === true) {
+            setCookie('accessToken', refresh_data.accessToken);
+            setCookie('refreshToken', refresh_data.refreshToken);
+            fetch(USER_API_URL, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: getCookie('accessToken'),
+              },
+              body: JSON.stringify({
+                "email": user.email,
+                "password": user.password,
+                "name": user.name,
+              })
+            })
+            .then(res => {
+              if (!res.ok && res.status >= 500) {
+                throw Error(res.statusText);
+                }
+              return res.json();
+              })
+            .then((data) => {
+              if (data.success) {
+                dispatch(userSlice.actions.setName(data.user.name));
+                dispatch(userSlice.actions.setEmail(data.user.email));
+                dispatch(userSlice.actions.success());
               }
               else {
                 throw Error(data.message);
@@ -116,13 +209,13 @@ export const register = (user, redirectCallback) => {
       })
     .then((data) => {
       if (data.success) {
-        dispatch(userSlice.actions.success());
         dispatch(userSlice.actions.setEmail(data.user.email));
         dispatch(userSlice.actions.setName(data.user.name));
 
         setCookie('accessToken', data.accessToken);
         setCookie('refreshToken', data.refreshToken);
 
+        dispatch(userSlice.actions.success());
         redirectCallback();
       }
       else {
@@ -158,13 +251,13 @@ export const login = (user, redirectCallback) => {
       })
     .then((data) => {
       if (data.success) {
-        dispatch(userSlice.actions.success());
         dispatch(userSlice.actions.setEmail(data.user.email));
         dispatch(userSlice.actions.setName(data.user.name));
 
         setCookie('accessToken', data.accessToken);
         setCookie('refreshToken', data.refreshToken);
 
+        dispatch(userSlice.actions.success());
         redirectCallback();
       }
       else {
@@ -271,11 +364,10 @@ export const logout = (redirectCallback) => {
       })
     .then((data) => {
       if (data.success) {
-        dispatch(userSlice.actions.success());
-
         deleteCookie('accessToken');
         deleteCookie('refreshToken');
 
+        dispatch(userSlice.actions.success());
         redirectCallback();
       }
       else {
@@ -353,7 +445,7 @@ export const userSlice = createSlice({
       }
     },
     resetStatus(state, action) {
-      state.userSuccess = false;
+      // state.userSuccess = false;
       state.userRequest = false;
       state.userFailed = false;
     }
