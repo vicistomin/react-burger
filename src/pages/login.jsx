@@ -1,19 +1,27 @@
 import { useState, useRef } from 'react';
+import { useSelector, useDispatch } from "react-redux";
 // importing components from project
 import AppHeader from '../components/app-header/app-header';
 import Form from '../components/form/form';
 import Loader from '../components/loader/loader';
-import { fakeAuth } from '../services/auth';
-
 import { Input, PasswordInput, Button } from '@ya.praktikum/react-developer-burger-ui-components';
+// import slices and their functions
+import { login } from '../services/slices/user';
 
 import { useHistory } from 'react-router-dom';
 
 export const LoginPage = () => {
+  const dispatch = useDispatch();
+
+  const {
+    userRequest,
+    userSuccess,
+    userFailed
+  } = useSelector(
+    state => state.user
+  );
 
   const history = useHistory();
-
-  const [isFormProcessing, setFormProcessing] = useState(false);
 
   const [emailValue, setEmailValue] = useState('');
   const [isEmailValid, setEmailValid] = useState(true);
@@ -77,21 +85,26 @@ export const LoginPage = () => {
     }
   }
 
-  const onLoginClick = async (e) => {
+  // FIXME: This callback is needed for redirecting in correct time
+  // (after userSuccess will be set)
+  // Async/await didn't worked in this case for some reason.
+  // Maybe CreateAsyncThunk should be used in userSlice?
+  const redirectOnSuccess = () => {
+    history.replace({ pathname: '/' });
+  }
+
+  const onLoginClick = (e) => {
     e.preventDefault();
     const isFormCorrect = validateForm();
     if(!isFormCorrect) {
       return;
     }
     else {
-      // if form fields are correct then start network request
-      setFormProcessing(true);
-      // TODO: implement login action
-      const success = await fakeAuth();
-      setFormProcessing(false);
-      if(success) {
-        history.replace({ pathname: '/' });
-      }
+      // if form fields are correct then start login action
+      dispatch(login({
+        email: emailValue,
+        password: passwordValue
+      }, redirectOnSuccess));
     }
   }
 
@@ -106,32 +119,47 @@ export const LoginPage = () => {
   return(
     <>
       <AppHeader />
-      {isFormProcessing && <Loader />}
+      {
+        userRequest && 
+        !userFailed && (
+          <Loader />
+      )}
       <div className='fullscreen_message'>
-        <Form
-          title='Вход'
-          actionName='Войти'
-          onClick={onLoginClick}
-        >
-          <Input
-            type={'email'}
-            placeholder={'E-mail'}
-            onChange={onEmailChange}
-            value={emailValue}
-            name={'email'}
-            error={!isEmailValid}
-            ref={emailInputRef}
-            errorText={'Неправильно введен e-mail'}
-            size={'default'}
-          />
-          <div className={isPasswordEmpty ? 'password_error' : ''}>
-            <PasswordInput
-              onChange={onPasswordChange}
-              value={passwordValue}
-              name={'password'}
+        {
+          userFailed && 
+          !userRequest && 
+          !userSuccess && (
+            <h2 className='mb-30 text text_type_main-large text_color_inactive'>
+              Ошибка авторизации
+            </h2>
+        )}
+        {
+          !userFailed && (
+          <Form
+            title='Вход'
+            actionName='Войти'
+            onClick={onLoginClick}
+          >
+            <Input
+              type={'email'}
+              placeholder={'E-mail'}
+              onChange={onEmailChange}
+              value={emailValue}
+              name={'email'}
+              error={!isEmailValid}
+              ref={emailInputRef}
+              errorText={'Неправильно введен e-mail'}
+              size={'default'}
             />
-          </div>
-        </Form>
+            <div className={isPasswordEmpty ? 'password_error' : ''}>
+              <PasswordInput
+                onChange={onPasswordChange}
+                value={passwordValue}
+                name={'password'}
+              />
+            </div>
+          </Form>
+        )}
         <div className='bottom_navigation'>
           <p className="text text_type_main-default text_color_inactive">
             Вы — новый пользователь?

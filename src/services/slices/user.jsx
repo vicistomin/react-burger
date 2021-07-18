@@ -1,6 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { fakeUserData } from '../user-data';
+import { LOGIN_API_URL } from "../constants";
 import { REGISTER_API_URL } from "../constants";
+import { resolve } from 'url';
 
 export const getUser = () => {
   return dispatch => {
@@ -15,7 +17,7 @@ export const getUser = () => {
   }
 }
 
-export const register = (user) => {
+export const register = (user, redirectCallback) => {
   return dispatch => {
     dispatch(userSlice.actions.request());
     // send user data to the API
@@ -44,6 +46,48 @@ export const register = (user) => {
           accessToken: data.accessToken,
           refreshToken: data.refreshToken
         }))
+        redirectCallback();
+      }
+      else {
+        throw Error(data.message);
+      }
+    })
+    .catch((error) => {
+      dispatch(userSlice.actions.failed())
+      console.log(error);
+    })
+  }
+}
+
+export const login = (user, redirectCallback) => {
+  return dispatch => {
+    dispatch(userSlice.actions.request());
+    // send user data to the API
+    fetch(LOGIN_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        "email": user.email,
+        "password": user.password
+      })
+    })
+    .then(res => {
+      if (!res.ok && res.status !== 400) {
+        throw Error(res.statusText);
+        }
+      return res.json();
+      })
+    .then((data) => {
+      if (data.success) {
+        dispatch(userSlice.actions.success({
+          email: data.user.email,
+          name: data.user.name,
+          accessToken: data.accessToken,
+          refreshToken: data.refreshToken
+        }));
+        redirectCallback();
       }
       else {
         throw Error(data.message);
