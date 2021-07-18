@@ -17,7 +17,7 @@ export const placeOrder = (items) => {
       })
     })
       .then(res => {
-        if (!res.ok && res.status !== 400) {
+        if (!res.ok && res.status >= 500) {
           throw Error(res.statusText);
           }
         return res.json();

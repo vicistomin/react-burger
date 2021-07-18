@@ -24,11 +24,12 @@ export const ProfilePage = () => {
   );
 
   const {
-    setName,
-    setPassword,
-    setEmail,
     resetStatus
   } = userSlice.actions
+
+  const [nameValue, setNameValue] = useState('')
+  const [emailValue, setEmailValue] = useState('')
+  const [passwordValue, setPasswordValue] = useState('')
 
   const resetError = () => {
     dispatch(resetStatus());
@@ -45,9 +46,12 @@ export const ProfilePage = () => {
     if (!userSuccess) {
       dispatch(getUser());
     }
-  }, [dispatch, userSuccess]);
+    setNameValue(user.name);
+    setEmailValue(user.email);
+    setPasswordValue(user.password);
+  }, [dispatch, user.email, user.name, user.password, userSuccess]);
 
-  // TODO: create EditableInput component and move there all this checks and handlers 
+   // TODO: create EditableInput component and move there all this checks and handlers 
   const [isNameInputDisabled, setNameInputDisabled] = useState(true)
   const [isNameInputEmpty, setNameInputEmpty] = useState(false)
   const [isPasswordInputDisabled, setPasswordInputDisabled] = useState(true)
@@ -61,7 +65,7 @@ export const ProfilePage = () => {
     if (e.target.value.length > 0) {
       setNameInputEmpty(false);
     }
-    dispatch(setName(e.target.value));
+    setNameValue(e.target.value);
   };
 
   const onPasswordChange = e => {
@@ -69,12 +73,12 @@ export const ProfilePage = () => {
     if (e.target.value.length > 0) {
       setPasswordInputEmpty(false);
     }
-    dispatch(setPassword(e.target.value));
+    setPasswordValue(e.target.value);
   };
 
   const onEmailChange = e => {
     // hide the error message if user is writing something in the password field
-    dispatch(setEmail(e.target.value));
+    setEmailValue(e.target.value);
   };
 
   const onNameIconClick = () => {
@@ -132,7 +136,7 @@ export const ProfilePage = () => {
                   type={'text'}
                   placeholder={'Имя'}
                   onChange={onNameChange}
-                  value={user.name}
+                  value={nameValue}
                   name={'name'}
                   error={isNameInputEmpty}
                   ref={nameInputRef}
@@ -145,7 +149,7 @@ export const ProfilePage = () => {
                 />
                 <EmailInput
                   onChange={onEmailChange}
-                  value={user.email}
+                  value={emailValue}
                   name={'email'}
                   size={'default'}
                 />            
@@ -153,7 +157,7 @@ export const ProfilePage = () => {
                   type={'text'}
                   placeholder={'Пароль'}
                   onChange={onPasswordChange}
-                  value={user.password}
+                  value={passwordValue}
                   name={'password'}
                   error={isPasswordInputEmpty}
                   ref={passwordInputRef}
