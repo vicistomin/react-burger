@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { fakeUserData } from '../user-data';
+import { REGISTER_API_URL } from "../constants";
 
 export const getUser = () => {
   return dispatch => {
@@ -11,6 +12,47 @@ export const getUser = () => {
     else
       dispatch(userSlice.actions.failed());
     }, 1000);
+  }
+}
+
+export const register = (user) => {
+  return dispatch => {
+    dispatch(userSlice.actions.request());
+    // send user data to the API
+    fetch(REGISTER_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        "email": user.email,
+        "password": user.password,
+        "name": user.name,
+      })
+    })
+    .then(res => {
+      if (!res.ok && res.status !== 400) {
+        throw Error(res.statusText);
+        }
+      return res.json();
+      })
+    .then((data) => {
+      if (data.success) {
+        dispatch(userSlice.actions.success({
+          email: data.user.email,
+          name: data.user.name,
+          accessToken: data.accessToken,
+          refreshToken: data.refreshToken
+        }))
+      }
+      else {
+        throw Error(data.message);
+      }
+    })
+    .catch((error) => {
+      dispatch(userSlice.actions.failed())
+      console.log(error);
+    })
   }
 }
 

@@ -1,19 +1,27 @@
 import { useState, useRef } from 'react';
+import { useSelector, useDispatch } from "react-redux";
 // importing components from project
 import AppHeader from '../components/app-header/app-header';
 import Form from '../components/form/form';
 import Loader from '../components/loader/loader';
-import { fakeAuth } from '../services/auth';
-
 import { Input, PasswordInput, Button } from '@ya.praktikum/react-developer-burger-ui-components';
+// import slices and their functions
+import { register } from '../services/slices/user';
 
 import { useHistory } from 'react-router-dom';
 
 export const RegisterPage = () => {
+  const dispatch = useDispatch();
+
+  const {
+    userRequest,
+    userSuccess,
+    userFailed
+  } = useSelector(
+    state => state.user
+  );
 
   const history = useHistory();
-
-  const [isFormProcessing, setFormProcessing] = useState(false);
 
   const [nameValue, setNameValue] = useState('');
   const [isNameEmpty, setNameEmpty] = useState(false);
@@ -97,18 +105,20 @@ export const RegisterPage = () => {
     }
   }
 
-  const onRegisterClick = async () => {
+  const onRegisterClick = async (e) => {
+    e.preventDefault();
     const isFormCorrect = validateForm();
     if(!isFormCorrect) {
       return;
     }
     else {
-      // if form fields are correct then start network request
-      setFormProcessing(true);
-      // TODO: implement registration action
-      const success = await fakeAuth();
-      setFormProcessing(false);
-      if(success) {
+      // if form fields are correct then start registration action
+      await dispatch(register({
+        name: nameValue,
+        email: emailValue,
+        password: passwordValue
+      }));
+      if(userSuccess) {
         history.replace({ pathname: '/' });
       }
     }
@@ -121,44 +131,59 @@ export const RegisterPage = () => {
   return(
     <>
       <AppHeader />
-      {isFormProcessing && <Loader />}
+      {
+        (userRequest) && 
+        !userFailed && (
+          <Loader />
+      )}
       <div className='fullscreen_message'>
-        <Form
-          title='Регистрация'
-          actionName='Зарегистрироваться'
-          onClick={onRegisterClick}
-        >
-          <Input
-            type={'text'}
-            placeholder={'Имя'}
-            onChange={onNameChange}
-            value={nameValue}
-            name={'name'}
-            error={isNameEmpty}
-            ref={nameInputRef}
-            errorText={'Поле не может быть пустым'}
-            size={'default'}
-          />
-          <Input
-            type={'email'}
-            placeholder={'E-mail'}
-            onChange={onEmailChange}
-            value={emailValue}
-            name={'email'}
-            error={!isEmailValid}
-            ref={emailInputRef}
-            errorText={'Неправильно введен e-mail'}
-            size={'default'}
-          />
-          {/* TODO: find a way to trigger PasswordInput error status */}
-          <div className={isPasswordEmpty ? 'password_error' : ''}>
-            <PasswordInput
-              onChange={onPasswordChange}
-              value={passwordValue}
-              name={'password'}
+        {
+          userFailed && 
+          !userRequest && 
+          !userSuccess && (
+            <h2 className='mb-30 text text_type_main-large text_color_inactive'>
+              Ошибка при регистрации
+            </h2>
+        )}
+        {
+          !userFailed && (
+          <Form
+            title='Регистрация'
+            actionName='Зарегистрироваться'
+            onClick={onRegisterClick}
+          >
+            <Input
+              type={'text'}
+              placeholder={'Имя'}
+              onChange={onNameChange}
+              value={nameValue}
+              name={'name'}
+              error={isNameEmpty}
+              ref={nameInputRef}
+              errorText={'Поле не может быть пустым'}
+              size={'default'}
             />
-          </div>
-        </Form>
+            <Input
+              type={'email'}
+              placeholder={'E-mail'}
+              onChange={onEmailChange}
+              value={emailValue}
+              name={'email'}
+              error={!isEmailValid}
+              ref={emailInputRef}
+              errorText={'Неправильно введен e-mail'}
+              size={'default'}
+            />
+            {/* TODO: find a way to trigger PasswordInput error status */}
+            <div className={isPasswordEmpty ? 'password_error' : ''}>
+              <PasswordInput
+                onChange={onPasswordChange}
+                value={passwordValue}
+                name={'password'}
+              />
+            </div>
+          </Form>
+        )}
         <div className='bottom_navigation'>
           <p className="text text_type_main-default text_color_inactive">
             Уже зарегистрированы?
