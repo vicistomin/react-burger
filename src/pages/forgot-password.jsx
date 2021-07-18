@@ -24,13 +24,13 @@ export const ForgotPasswordPage = () => {
 
   const history = useHistory();
 
-  const resetLoginError = () => {
+  const resetError = () => {
     dispatch(resetStatus());
   }  
 
   // reset status and errors on page load
   useEffect(() => {
-    resetLoginError();
+    resetError();
   }, [])
 
   const [emailValue, setEmailValue] = useState('');
@@ -113,7 +113,7 @@ export const ForgotPasswordPage = () => {
               <Button 
                 type="primary"
                 size="medium"
-                onClick={resetLoginError}
+                onClick={resetError}
               >
                 Попробовать снова
               </Button>

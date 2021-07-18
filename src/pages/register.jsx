@@ -24,13 +24,13 @@ export const RegisterPage = () => {
 
   const history = useHistory();
 
-  const resetLoginError = () => {
+  const resetError = () => {
     dispatch(resetStatus());
   }  
 
   // reset status and errors on page load
   useEffect(() => {
-    resetLoginError();
+    resetError();
   }, [])
 
   const [nameValue, setNameValue] = useState('');
@@ -159,7 +159,7 @@ export const RegisterPage = () => {
               <Button 
                 type="primary"
                 size="medium"
-                onClick={resetLoginError}
+                onClick={resetError}
               >
                 Попробовать снова
               </Button>

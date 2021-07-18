@@ -13,7 +13,7 @@ import { useHistory } from 'react-router-dom';
 export const LoginPage = () => {
   const dispatch = useDispatch();
 
-  const {
+ const {
     userRequest,
     userSuccess,
     userFailed
@@ -21,16 +21,16 @@ export const LoginPage = () => {
     state => state.user
   );
   const { resetStatus } = userSlice.actions;
-  
+   
   const history = useHistory();
 
-  const resetLoginError = () => {
+  const resetError = () => {
     dispatch(resetStatus());
   }  
 
   // reset status and errors on page load
   useEffect(() => {
-    resetLoginError();
+    resetError();
   }, [])
 
   // TODO: rewrite form input vars to 'form' object fields
@@ -147,7 +147,7 @@ export const LoginPage = () => {
               <Button 
                 type="primary"
                 size="medium"
-                onClick={resetLoginError}
+                onClick={resetError}
               >
                 Попробовать снова
               </Button>
