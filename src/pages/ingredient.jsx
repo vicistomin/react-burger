@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import styles from './ingredient.module.css';
 // importing components from project
 import AppHeader from '../components/app-header/app-header';
 import IngredientDetails from '../components/ingredient-details/ingredient-details';
@@ -53,6 +52,9 @@ export const IngredientPage = () => {
       !itemsFailed && 
       !itemsRequest && (
         <div className='fullscreen_message'>
+          <p className="text text_type_main-large">
+            Детали ингредиента
+          </p>
           <IngredientDetails
             item={items.find((item) => item._id === currentIngredientId)}
           />
