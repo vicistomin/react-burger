@@ -53,7 +53,7 @@ export const HistoryPage = () => {
   // we need to have user from API in store to select its orders
   useEffect(() => {
     // won't call API if items are already in store
-    if (!userSuccess) {
+    if (!userSuccess || !user.orders) {
       dispatch(getUser());
     }
   }, [dispatch, userSuccess]);
