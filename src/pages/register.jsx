@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 // importing components from project
 import AppHeader from '../components/app-header/app-header';
@@ -6,7 +6,7 @@ import Form from '../components/form/form';
 import Loader from '../components/loader/loader';
 import { Input, PasswordInput, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 // import slices and their functions
-import { register } from '../services/slices/user';
+import { register, userSlice } from '../services/slices/user';
 
 import { useHistory } from 'react-router-dom';
 
@@ -20,8 +20,18 @@ export const RegisterPage = () => {
   } = useSelector(
     state => state.user
   );
+  const { resetStatus } = userSlice.actions;
 
   const history = useHistory();
+
+  const resetLoginError = () => {
+    dispatch(resetStatus());
+  }  
+
+  // reset status and errors on page load
+  useEffect(() => {
+    resetLoginError();
+  }, [])
 
   const [nameValue, setNameValue] = useState('');
   const [isNameEmpty, setNameEmpty] = useState(false);
@@ -61,7 +71,7 @@ export const RegisterPage = () => {
 
   // TODO: move form/inputs validation function to separate file in /utils?
 
-  const validateForm = () => {
+  const validateForm = useCallback(() => {
     // TODO: check is better be done when focus is out of input, before the form submit action
     
     const validFields = {
@@ -103,13 +113,13 @@ export const RegisterPage = () => {
     else {
       return false;
     }
-  }
+  }, [emailValue, passwordValue, nameValue]);
 
   const redirectOnSuccess = () => {
       history.replace({ pathname: '/' });
   }
 
-  const onRegisterClick = (e) => {
+  const onRegisterClick = useCallback((e) => {
     e.preventDefault();
     const isFormCorrect = validateForm();
     if(!isFormCorrect) {
@@ -123,7 +133,7 @@ export const RegisterPage = () => {
         password: passwordValue
       }, redirectOnSuccess))
     }
-  }
+  }, [emailValue, nameValue, passwordValue]);
 
   const onLoginClick = () => {
     history.replace({ pathname: '/login' });
@@ -142,9 +152,18 @@ export const RegisterPage = () => {
           userFailed && 
           !userRequest && 
           !userSuccess && (
-            <h2 className='mb-30 text text_type_main-large text_color_inactive'>
-              Ошибка при регистрации
-            </h2>
+            <div className='flex_column mb-30'>
+              <h2 className='mb-10 text text_type_main-large text_color_inactive'>
+                Ошибка при регистрации
+              </h2>
+              <Button 
+                type="primary"
+                size="medium"
+                onClick={resetLoginError}
+              >
+                Попробовать снова
+              </Button>
+            </div>
         )}
         {
           !userFailed && (

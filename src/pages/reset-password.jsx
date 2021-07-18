@@ -1,21 +1,39 @@
 import styles from './reset-password.module.css';
-import { useState, useRef } from 'react';
+import { useSelector, useDispatch } from "react-redux";
+import { useState, useRef, useCallback, useEffect } from 'react';
 // importing components from project
 import AppHeader from '../components/app-header/app-header';
 import Form from '../components/form/form';
 import Loader from '../components/loader/loader';
-import { fakeAuth } from '../services/auth';
-
 import { Input, PasswordInput, Button } from '@ya.praktikum/react-developer-burger-ui-components';
+// import slices and their functions
+import { resetPassword, userSlice } from '../services/slices/user';
 
 import { useHistory } from 'react-router-dom';
 
 export const ResetPasswordPage = () => {
+  const dispatch = useDispatch();
+
+  const {
+    userRequest,
+    userSuccess,
+    userFailed
+  } = useSelector(
+    state => state.user
+  );
+  const { resetStatus } = userSlice.actions;
 
   const history = useHistory();
 
-  const [isFormProcessing, setFormProcessing] = useState(false);
+  const resetLoginError = () => {
+    dispatch(resetStatus());
+  }  
 
+  // reset status and errors on page load
+  useEffect(() => {
+    resetLoginError();
+  }, [])
+  
   const [passwordValue, setPasswordValue] = useState('');
   const [isPasswordEmpty, setPasswordEmpty] = useState(false);
   const [codeValue, setCodeValue] = useState('');
@@ -41,7 +59,7 @@ export const ResetPasswordPage = () => {
 
   // TODO: move form/inputs validation function to separate file in /utils?
 
-  const validateForm = () => {
+  const validateForm = useCallback(() => {
     // TODO: check is better be done when focus is out of input, before the form submit action
     
     const validFields = {
@@ -74,25 +92,27 @@ export const ResetPasswordPage = () => {
     else {
       return false;
     }
+  }, [codeValue, passwordValue]);
+
+  const redirectOnSuccess = () => {
+    history.replace({ pathname: '/login' });
   }
 
-  const onResetPasswordClick = async (e) => {
+  const onResetPasswordClick = useCallback((e) => {
     e.preventDefault();
     const isFormCorrect = validateForm();
     if(!isFormCorrect) {
       return;
     }
     else {
-      // if form field are correct then start network request
-      setFormProcessing(true);
-      // TODO: implement reset password action
-      const success = await fakeAuth();
-      setFormProcessing(false);
-      if(success) {
-        history.replace({ pathname: '/' });
-      }
+      // if form fields are correct then start reset password action
+      dispatch(resetPassword(
+        codeValue,
+        passwordValue,
+        redirectOnSuccess
+      ));
     }
-  }
+  }, [codeValue, passwordValue]);
 
   const onLoginClick = () => {
     history.replace({ pathname: '/login' });
@@ -101,33 +121,58 @@ export const ResetPasswordPage = () => {
   return(
     <>
       <AppHeader />
-      {isFormProcessing && <Loader />}
-      <div className={styles.reset_password_container + ' fullscreen_message'}>
-        <Form
-          title='Восстановление пароля'
-          actionName='Сохранить'
-          onClick={onResetPasswordClick}
-        >
-          {/* TODO: find a way to trigger PasswordInput error status */}
-          <div className={isPasswordEmpty ? 'password_error' : ''}>
-            <PasswordInput
-              onChange={onPasswordChange}
-              value={passwordValue}
-              name={'password'}
+      {
+        userRequest && 
+        !userFailed && (
+          <Loader />
+      )}
+      <div 
+        className={styles.reset_password_container + ' fullscreen_message'}>
+        {
+          userFailed && 
+          !userRequest && 
+          !userSuccess && (
+            <div className='flex_column mb-30'>
+              <h2 className='mb-10 text text_type_main-large text_color_inactive'>
+                Ошибка восстановления пароля
+              </h2>
+              <Button 
+                type="primary"
+                size="medium"
+                onClick={resetLoginError}
+              >
+                Попробовать снова
+              </Button>
+            </div>
+        )}
+        {
+          !userFailed && (
+          <Form
+            title='Восстановление пароля'
+            actionName='Сохранить'
+            onClick={onResetPasswordClick}
+          >
+            {/* TODO: find a way to trigger PasswordInput error status */}
+            <div className={isPasswordEmpty ? 'password_error' : ''}>
+              <PasswordInput
+                onChange={onPasswordChange}
+                value={passwordValue}
+                name={'password'}
+              />
+            </div>
+            <Input
+              type={'text'}
+              placeholder={'Введите код из письма'}
+              onChange={onCodeChange}
+              value={codeValue}
+              name={'code'}
+              error={isCodeEmpty}
+              ref={codeInputRef}
+              errorText={'Поле не может быть пустым'}
+              size={'default'}
             />
-          </div>
-          <Input
-            type={'text'}
-            placeholder={'Введите код из письма'}
-            onChange={onCodeChange}
-            value={codeValue}
-            name={'code'}
-            error={isCodeEmpty}
-            ref={codeInputRef}
-            errorText={'Поле не может быть пустым'}
-            size={'default'}
-          />
-        </Form>
+          </Form>
+        )}
         <div className='bottom_navigation mt-4'>
           <p className="text text_type_main-default text_color_inactive">
             Вспомнили пароль?

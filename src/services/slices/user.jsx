@@ -2,7 +2,8 @@ import { createSlice } from '@reduxjs/toolkit'
 import { fakeUserData } from '../user-data';
 import { LOGIN_API_URL } from "../constants";
 import { REGISTER_API_URL } from "../constants";
-import { resolve } from 'url';
+import { FORGOT_PASSWORD_API_URL } from "../constants";
+import { RESET_PASSWORD_API_URL } from "../constants";
 
 export const getUser = () => {
   return dispatch => {
@@ -40,12 +41,11 @@ export const register = (user, redirectCallback) => {
       })
     .then((data) => {
       if (data.success) {
-        dispatch(userSlice.actions.success({
-          email: data.user.email,
-          name: data.user.name,
-          accessToken: data.accessToken,
-          refreshToken: data.refreshToken
-        }))
+        dispatch(userSlice.actions.success());
+        dispatch(userSlice.actions.setEmail(data.user.email));
+        dispatch(userSlice.actions.setName(data.user.name));
+        dispatch(userSlice.actions.setAccessToken(data.accessToken));
+        dispatch(userSlice.actions.setRefreshToken(data.refreshToken));
         redirectCallback();
       }
       else {
@@ -81,12 +81,83 @@ export const login = (user, redirectCallback) => {
       })
     .then((data) => {
       if (data.success) {
-        dispatch(userSlice.actions.success({
-          email: data.user.email,
-          name: data.user.name,
-          accessToken: data.accessToken,
-          refreshToken: data.refreshToken
-        }));
+        dispatch(userSlice.actions.success());
+        dispatch(userSlice.actions.setEmail(data.user.email));
+        dispatch(userSlice.actions.setName(data.user.name));
+        dispatch(userSlice.actions.setAccessToken(data.accessToken));
+        dispatch(userSlice.actions.setRefreshToken(data.refreshToken));
+
+        redirectCallback();
+      }
+      else {
+        throw Error(data.message);
+      }
+    })
+    .catch((error) => {
+      dispatch(userSlice.actions.failed())
+      console.log(error);
+    })
+  }
+}
+
+export const forgotPassword = (email, redirectCallback) => {
+  return dispatch => {
+    dispatch(userSlice.actions.request());
+    // send user data to the API
+    fetch(FORGOT_PASSWORD_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        "email": email
+      })
+    })
+    .then(res => {
+      if (!res.ok && res.status !== 400) {
+        throw Error(res.statusText);
+        }
+      return res.json();
+      })
+    .then((data) => {
+      if (data.success) {
+        dispatch(userSlice.actions.success());
+        redirectCallback();
+      }
+      else {
+        throw Error(data.message);
+      }
+    })
+    .catch((error) => {
+      dispatch(userSlice.actions.failed())
+      console.log(error);
+    })
+  }
+}
+
+export const resetPassword = (code, password, redirectCallback) => {
+  return dispatch => {
+    dispatch(userSlice.actions.request());
+    // send user data to the API
+    fetch(RESET_PASSWORD_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        "password": password,
+        "token": code
+      })
+    })
+    .then(res => {
+      if (!res.ok && res.status !== 400) {
+        throw Error(res.statusText);
+        }
+      return res.json();
+      })
+    .then((data) => {
+      if (data.success) {
+        dispatch(userSlice.actions.success());
         redirectCallback();
       }
       else {
@@ -103,7 +174,11 @@ export const login = (user, redirectCallback) => {
 export const userSlice = createSlice({
   name: 'user',
   initialState: {
-    user: {},
+    user: {
+      orders: []
+    },
+    accessToken: '',
+    refreshToken: '',
     userRequest: false,
     userFailed: false,
     userSuccess: false,
@@ -123,7 +198,6 @@ export const userSlice = createSlice({
       state.userSuccess = true;
       state.userRequest = false;
       state.userFailed = false;
-      state.user = action.payload;
     },
     setName(state, action) {
       state.user.name = action.payload;
@@ -133,6 +207,20 @@ export const userSlice = createSlice({
     },
     setEmail(state, action) {
       state.user.email = action.payload;
+    },
+    setOrders(state, action) {
+      state.user.orders = action.payload;
+    },
+    resetStatus(state, action) {
+      state.userRequest = false;
+      state.userFailed = false;
+      state.userSuccess = false;
+    },
+    setAccessToken(state, action) {
+      state.accessToken = action.payload;
+    },
+    setRefreshToken(state, action) {
+      state.refreshToken = action.payload;
     }
   }
 }) 

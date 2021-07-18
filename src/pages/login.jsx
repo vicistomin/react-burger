@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 // importing components from project
 import AppHeader from '../components/app-header/app-header';
@@ -6,7 +6,7 @@ import Form from '../components/form/form';
 import Loader from '../components/loader/loader';
 import { Input, PasswordInput, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 // import slices and their functions
-import { login } from '../services/slices/user';
+import { login, userSlice } from '../services/slices/user';
 
 import { useHistory } from 'react-router-dom';
 
@@ -20,9 +20,20 @@ export const LoginPage = () => {
   } = useSelector(
     state => state.user
   );
-
+  const { resetStatus } = userSlice.actions;
+  
   const history = useHistory();
 
+  const resetLoginError = () => {
+    dispatch(resetStatus());
+  }  
+
+  // reset status and errors on page load
+  useEffect(() => {
+    resetLoginError();
+  }, [])
+
+  // TODO: rewrite form input vars to 'form' object fields
   const [emailValue, setEmailValue] = useState('');
   const [isEmailValid, setEmailValid] = useState(true);
   const [passwordValue, setPasswordValue] = useState('');
@@ -50,7 +61,7 @@ export const LoginPage = () => {
 
   // TODO: move form/inputs validation function to separate file in /utils?
 
-  const validateForm = () => {
+  const validateForm = useCallback(() => {
     // TODO: check is better be done when focus is out of input, before the form submit action
   
     const validFields = {
@@ -83,7 +94,7 @@ export const LoginPage = () => {
     else {
       return false;
     }
-  }
+  }, [emailValue, passwordValue]);
 
   // FIXME: This callback is needed for redirecting in correct time
   // (after userSuccess will be set)
@@ -93,7 +104,7 @@ export const LoginPage = () => {
     history.replace({ pathname: '/' });
   }
 
-  const onLoginClick = (e) => {
+  const onLoginClick = useCallback((e) => {
     e.preventDefault();
     const isFormCorrect = validateForm();
     if(!isFormCorrect) {
@@ -106,7 +117,7 @@ export const LoginPage = () => {
         password: passwordValue
       }, redirectOnSuccess));
     }
-  }
+  }, [emailValue, passwordValue]);
 
   const onRegisterClick = () => {
     history.replace({ pathname: '/register' });
@@ -129,9 +140,18 @@ export const LoginPage = () => {
           userFailed && 
           !userRequest && 
           !userSuccess && (
-            <h2 className='mb-30 text text_type_main-large text_color_inactive'>
-              Ошибка авторизации
-            </h2>
+            <div className='flex_column mb-30'>
+              <h2 className='mb-10 text text_type_main-large text_color_inactive'>
+                Ошибка авторизации
+              </h2>
+              <Button 
+                type="primary"
+                size="medium"
+                onClick={resetLoginError}
+              >
+                Попробовать снова
+              </Button>
+            </div>
         )}
         {
           !userFailed && (
