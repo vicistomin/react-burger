@@ -13,6 +13,7 @@ import {
   IngredientModalPage,
   NotFound404
 } from './pages';
+import { ProtectedRoute } from './components/protected-route';
 
 function App() {
   let location = useLocation();
@@ -24,33 +25,33 @@ function App() {
         <Route path="/" exact={true}>
           <HomePage />
         </Route>
-        <Route path="/login" exact={true}>
+        <ProtectedRoute isGuestOnly={true} path="/login" exact={true}>
           <LoginPage />
-        </Route>
-        <Route path="/register" exact={true}>
+        </ProtectedRoute>
+        <ProtectedRoute isGuestOnly={true} path="/register" exact={true}>
           <RegisterPage />
-        </Route>
-        <Route path="/forgot-password" exact={true}>
+        </ProtectedRoute>
+        <ProtectedRoute isGuestOnly={true} path="/forgot-password" exact={true}>
           <ForgotPasswordPage />
-        </Route>
-        <Route path="/reset-password" exact={true}>
+        </ProtectedRoute>
+        <ProtectedRoute isGuestOnly={true} path="/reset-password" exact={true}>
           <ResetPasswordPage />
-        </Route>
+        </ProtectedRoute>
         <Route path="/feed" exact={true}>
           <FeedPage />
         </Route>
         <Route path="/feed/:id" exact={true}>
           <OrderPage />
         </Route>
-        <Route path="/profile" exact={true}>
+        <ProtectedRoute path="/profile" exact={true}>
           <ProfilePage />
-        </Route>
-        <Route path="/profile/orders" exact={true}>
+        </ProtectedRoute>
+        <ProtectedRoute path="/profile/orders" exact={true}>
           <HistoryPage />
-        </Route>
-        <Route path="/profile/orders/:id" exact={true}>
+        </ProtectedRoute>
+        <ProtectedRoute path="/profile/orders/:id" exact={true}>
           <OrderPage />
-        </Route>
+        </ProtectedRoute>
         <Route path="/ingredients/:id" exact={true}>
           <IngredientPage />
         </Route>

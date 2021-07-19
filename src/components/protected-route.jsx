@@ -1,31 +1,67 @@
-import { useAuth } from '../services/auth';
 import { Redirect, Route } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from "react-redux";
+// import slices and their functions
+import { getUser, userSlice } from '../services/slices/user';
 
 // TODO: implement protection for route /reset-password
 
-export function ProtectedRoute({ children, ...rest }) {
-  let { getUser, ...auth } = useAuth();
-  const [isUserLoaded, setUserLoaded] = useState(false);
+export function ProtectedRoute({ children, isGuestOnly, ...rest }) {
+  const dispatch = useDispatch();
 
-  const init = async () => {
-    await getUser();
-    setUserLoaded(true);
+  const {
+    userSuccess,
+    userRequest,
+    isAuthorized
+  } = useSelector(
+    state => state.user
+  );
+
+  const { resetStatus } = userSlice.actions;
+
+  const resetError = () => {
+    dispatch(resetStatus());
   };
 
+  // reset status and errors on page load
   useEffect(() => {
-    init();
+    resetError();
+    dispatch(getUser());
   }, []);
 
-  if (!isUserLoaded) {
-    return null;
+  // we need to have user from API in store to check authorization status
+  useEffect(() => {
+    // won't call API if user is already in store or in process
+    if (!userSuccess && !userRequest) {
+      dispatch(getUser());
+    }
+  }, [userSuccess]);
+
+  // protect some routes from authorized users
+  if (isGuestOnly) {
+    return (
+      <Route
+        {...rest}
+        render={({ location }) =>
+          isAuthorized ? (
+            <Redirect
+              to={{
+                pathname: '/profile'
+              }}
+            />
+          ) : (
+            children
+          )
+        }
+      />
+    )
   }
 
   return (
     <Route
       {...rest}
       render={({ location }) =>
-        auth.user ? (
+        isAuthorized ? (
           children
         ) : (
           <Redirect

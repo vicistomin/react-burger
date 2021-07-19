@@ -101,7 +101,12 @@ export const LoginPage = () => {
   // Async/await didn't worked in this case for some reason.
   // Maybe CreateAsyncThunk should be used in userSlice?
   const redirectOnSuccess = () => {
-    history.replace({ pathname: '/' });
+    // redirecting to the page which unauthed user tried to reach
+    if (history.location.state.from)
+      history.replace({ pathname: history.location.state.from.pathname });
+    // in other cases redirect to HomePage
+    else
+      history.replace({ pathname: '/' });
   }
 
   const onLoginClick = useCallback((e) => {

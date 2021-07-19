@@ -8,8 +8,7 @@ import Sidebar from '../components/sidebar/sidebar';
 import Loader from '../components/loader/loader';
 import { Input, EmailInput, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 // import slices and their functions
-import { getUser, setUser } from '../services/slices/user';
-import { userSlice } from '../services/slices/user'
+import { getUser, setUser, userSlice } from '../services/slices/user';
 
 export const ProfilePage = () => {
   const dispatch = useDispatch();
@@ -24,10 +23,7 @@ export const ProfilePage = () => {
   );
 
   const {
-    resetStatus,
-    setEmail,
-    setName,
-    setPassword
+    resetStatus
   } = userSlice.actions
 
   const [nameValue, setNameValue] = useState('')
@@ -45,7 +41,7 @@ export const ProfilePage = () => {
 
   // we need to have user from API in store to render user data
   useEffect(() => {
-    // won't call API if items are already in store or in process
+    // won't call API if user data is already in store or in process
     if (!userSuccess && !userRequest) {
       dispatch(getUser());
     }

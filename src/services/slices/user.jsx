@@ -31,6 +31,14 @@ export const getUser = () => {
       if (data.success === true) {
         dispatch(userSlice.actions.setName(data.user.name));
         dispatch(userSlice.actions.setEmail(data.user.email));
+
+        dispatch(userSlice.actions.setAuthorization(true));
+
+        dispatch(userSlice.actions.success());
+      }
+      else if (data.message === 'You should be authorised') {
+        // force redirect to login page
+        dispatch(userSlice.actions.setAuthorization(false));
         dispatch(userSlice.actions.success());
       }
       else if (data.message === 'jwt expired') {
@@ -62,6 +70,14 @@ export const getUser = () => {
               if (data.success) {
                 dispatch(userSlice.actions.setName(data.user.name));
                 dispatch(userSlice.actions.setEmail(data.user.email));
+                
+                dispatch(userSlice.actions.setAuthorization(true));
+
+                dispatch(userSlice.actions.success());
+              }
+              else if (data.message === 'You should be authorised') {
+                // force redirect to login page
+                dispatch(userSlice.actions.setAuthorization(false));
                 dispatch(userSlice.actions.success());
               }
               else {
@@ -216,6 +232,7 @@ export const register = (user, redirectCallback) => {
         setCookie('refreshToken', data.refreshToken);
 
         dispatch(userSlice.actions.success());
+        dispatch(userSlice.actions.setAuthorization(true));
         redirectCallback();
       }
       else {
@@ -258,6 +275,7 @@ export const login = (user, redirectCallback) => {
         setCookie('refreshToken', data.refreshToken);
 
         dispatch(userSlice.actions.success());
+        dispatch(userSlice.actions.setAuthorization(true));
         redirectCallback();
       }
       else {
@@ -368,6 +386,7 @@ export const logout = (redirectCallback) => {
         deleteCookie('refreshToken');
 
         dispatch(userSlice.actions.success());
+        dispatch(userSlice.actions.setAuthorization(false));
         redirectCallback();
       }
       else {
@@ -403,6 +422,7 @@ export const userSlice = createSlice({
     userRequest: false,
     userFailed: false,
     userSuccess: false,
+    isAuthorized: false
   },
   reducers: {
     request(state) {
@@ -448,6 +468,9 @@ export const userSlice = createSlice({
       // state.userSuccess = false;
       state.userRequest = false;
       state.userFailed = false;
+    },
+    setAuthorization(state, action) {
+      state.isAuthorized = action.payload;
     }
   }
 }) 
