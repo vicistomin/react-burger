@@ -116,7 +116,10 @@ export const RegisterPage = () => {
   }, [emailValue, passwordValue, nameValue]);
 
   const redirectOnSuccess = () => {
-      history.replace({ pathname: '/' });
+    // redirecting to the page which unauthed user tried to reach
+    // in other cases redirect to HomePage
+    const { from } = history.location.state || { from: { pathname: "/" } };
+    history.replace(from);
   }
 
   const onRegisterClick = useCallback((e) => {

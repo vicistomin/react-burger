@@ -8,7 +8,7 @@ import { Input, PasswordInput, Button } from '@ya.praktikum/react-developer-burg
 // import slices and their functions
 import { login, userSlice } from '../services/slices/user';
 
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 export const LoginPage = () => {
   const dispatch = useDispatch();
@@ -23,6 +23,7 @@ export const LoginPage = () => {
   const { resetStatus } = userSlice.actions;
    
   const history = useHistory();
+  const location = useLocation();
 
   const resetError = () => {
     dispatch(resetStatus());
@@ -102,11 +103,9 @@ export const LoginPage = () => {
   // Maybe CreateAsyncThunk should be used in userSlice?
   const redirectOnSuccess = () => {
     // redirecting to the page which unauthed user tried to reach
-    if (history.location.state.from)
-      history.replace({ pathname: history.location.state.from.pathname });
     // in other cases redirect to HomePage
-    else
-      history.replace({ pathname: '/' });
+    const { from } = location.state || { from: { pathname: "/" } };
+    history.replace(from);
   }
 
   const onLoginClick = useCallback((e) => {

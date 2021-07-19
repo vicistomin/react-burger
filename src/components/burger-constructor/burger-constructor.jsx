@@ -9,17 +9,28 @@ import { placeOrder } from '../../services/slices/order';
 import { burgerConstructorSlice } from '../../services/slices/burger-constructor';
 import { itemsSlice } from '../../services/slices/items';
 
+import { useHistory } from 'react-router-dom';
+
 function BurgerConstructor() {
     const dispatch = useDispatch();
     const { increaseQuantityValue, decreaseQuantityValue } = itemsSlice.actions;
     const { setBunItem, calcTotalPrice } = burgerConstructorSlice.actions
     const { bunItem, middleItems, totalPrice } = useSelector(state => state.burgerConstructor);
+    const { isAuthorized } = useSelector(state => state.user);
+
+    const history = useHistory();
 
     const onOrderButtonClick = () => {
-        const items = [bunItem._id];
-        middleItems.map(item => items.push(item._id));
-        // get new order ID from API:
-        dispatch(placeOrder(items));
+        if (isAuthorized) {
+            const items = [bunItem._id];
+            middleItems.map(item => items.push(item._id));
+            // get new order ID from API:
+            dispatch(placeOrder(items));
+        }
+        // redirect guests to login page
+        else {
+            history.replace({ pathname: '/login' });
+        }
       };
 
     // recalculating total price
