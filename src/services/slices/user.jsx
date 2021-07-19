@@ -231,8 +231,8 @@ export const register = (user, redirectCallback) => {
         setCookie('accessToken', data.accessToken);
         setCookie('refreshToken', data.refreshToken);
 
-        dispatch(userSlice.actions.success());
         dispatch(userSlice.actions.setAuthorization(true));
+        dispatch(userSlice.actions.success());
         redirectCallback();
       }
       else {
@@ -274,8 +274,8 @@ export const login = (user, redirectCallback) => {
         setCookie('accessToken', data.accessToken);
         setCookie('refreshToken', data.refreshToken);
 
-        dispatch(userSlice.actions.success());
         dispatch(userSlice.actions.setAuthorization(true));
+        dispatch(userSlice.actions.success());
         redirectCallback();
       }
       else {
@@ -386,9 +386,11 @@ export const logout = (redirectCallback) => {
       if (data.success) {
         deleteCookie('accessToken');
         deleteCookie('refreshToken');
+  
+        dispatch(userSlice.actions.resetUserData());
 
-        dispatch(userSlice.actions.success());
         dispatch(userSlice.actions.setAuthorization(false));
+        dispatch(userSlice.actions.success());
         redirectCallback();
       }
       else {
@@ -418,7 +420,7 @@ export const userSlice = createSlice({
   name: 'user',
   initialState: {
     user: {
-      password: 'falsepassword',
+      password: fakeUserData.password,
       orders: fakeUserData.orders
     },
     userRequest: false,
@@ -471,6 +473,12 @@ export const userSlice = createSlice({
       // state.userSuccess = false;
       state.userRequest = false;
       state.userFailed = false;
+    },
+    resetUserData(state) {
+      state.user.name = '';
+      state.user.email = '';
+      state.user.password = fakeUserData.password;
+      state.user.orders = fakeUserData.orders;
     },
     setAuthorization(state, action) {
       state.isAuthorized = action.payload;
