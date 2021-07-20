@@ -17,6 +17,7 @@ import {
   NotFound404
 } from './pages';
 import { ProtectedRoute } from './components/protected-route';
+import AppHeader from './components/app-header/app-header';
 
 function App() {
   const dispatch = useDispatch();
@@ -40,6 +41,7 @@ function App() {
 
   return (
     <>
+      <AppHeader />
       <Switch location={background || location}>
         <Route path="/" exact={true}>
           <HomePage />

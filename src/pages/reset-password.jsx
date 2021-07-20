@@ -2,7 +2,6 @@ import styles from './reset-password.module.css';
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useRef, useCallback, useEffect } from 'react';
 // importing components from project
-import AppHeader from '../components/app-header/app-header';
 import Form from '../components/form/form';
 import Loader from '../components/loader/loader';
 import { Input, PasswordInput, Button } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -120,7 +119,6 @@ export const ResetPasswordPage = () => {
 
   return(
     <>
-      <AppHeader />
       {
         userRequest && 
         !userFailed && (

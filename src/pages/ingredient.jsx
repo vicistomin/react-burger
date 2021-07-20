@@ -1,7 +1,6 @@
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 // importing components from project
-import AppHeader from '../components/app-header/app-header';
 import IngredientDetails from '../components/ingredient-details/ingredient-details';
 import Loader from '../components/loader/loader';
 
@@ -19,7 +18,6 @@ export const IngredientPage = () => {
 
   return (
     <>
-    <AppHeader />
     {
       itemsRequest && 
       !itemsFailed && 

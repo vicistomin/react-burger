@@ -1,7 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 // importing components from project
-import AppHeader from '../components/app-header/app-header';
 import Form from '../components/form/form';
 import Loader from '../components/loader/loader';
 import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -95,7 +94,6 @@ export const ForgotPasswordPage = () => {
 
   return(
     <>
-      <AppHeader />
       {
         userRequest && 
         !userFailed && (

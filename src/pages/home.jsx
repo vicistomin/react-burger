@@ -1,6 +1,5 @@
 import styles from './home.module.css';
 // importing components from project
-import AppHeader from '../components/app-header/app-header';
 import BurgerConstructor from '../components/burger-constructor/burger-constructor.jsx';
 import BurgerIngredients from '../components/burger-ingredients/burger-ingredients';
 import Modal from '../components/modal/modal';
@@ -37,7 +36,6 @@ function HomePage() {
 
   return (
     <>
-      <AppHeader />
         {
           itemsFailed && 
           !itemsRequest && 

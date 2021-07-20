@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import styles from './history.module.css';
 // importing components from project
-import AppHeader from '../components/app-header/app-header';
 import Sidebar from '../components/sidebar/sidebar';
 import OrdersList from '../components/orders-list/orders-list';
 import Loader from '../components/loader/loader';
@@ -59,7 +58,6 @@ export const HistoryPage = () => {
 
   return(
     <>
-      <AppHeader />
         {
           (itemsRequest || userRequest || feedRequest) && 
           (!itemsFailed || !userFailed || !feedFailed) && 

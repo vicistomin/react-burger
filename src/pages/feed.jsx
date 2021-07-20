@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import styles from './feed.module.css';
 // importing components from project
-import AppHeader from '../components/app-header/app-header';
 import OrdersList from '../components/orders-list/orders-list';
 import FeedInfoPanel from '../components/feed-info-panel/feed-info-panel';
 import Loader from '../components/loader/loader';
@@ -38,7 +37,6 @@ export const FeedPage = () => {
 
   return(
     <>
-      <AppHeader />
       {
         (itemsRequest || feedRequest) && 
         (!itemsFailed || !feedFailed) && 

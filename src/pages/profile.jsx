@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import styles from './profile.module.css';
 // importing components from project
-import AppHeader from '../components/app-header/app-header';
 import Form from '../components/form/form';
 import Sidebar from '../components/sidebar/sidebar';
 import Loader from '../components/loader/loader';
@@ -131,7 +130,6 @@ export const ProfilePage = () => {
 
   return(
     <>
-      <AppHeader />
       {
           userRequest && 
           !userFailed && 

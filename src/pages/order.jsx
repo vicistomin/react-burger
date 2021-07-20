@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from 'react-router-dom';
 // importing components from project
-import AppHeader from '../components/app-header/app-header';
 import Loader from '../components/loader/loader';
 import OrderDetailedView from '../components/order-detailed-view/order-detailed-view';
 // import slices and their functions
@@ -39,7 +38,6 @@ export const OrderPage = () => {
 
   return(
     <>
-      <AppHeader />
       {
         (itemsRequest || feedRequest) && 
         (!itemsFailed || !feedFailed) && 
