@@ -51,8 +51,8 @@ export const getUser = () => {
         })
         .then((refresh_data) => {
           if (refresh_data.success === true) {
-            setCookie('accessToken', refresh_data.accessToken);
-            setCookie('refreshToken', refresh_data.refreshToken);
+            setCookie('accessToken', refresh_data.accessToken, { path: '/' });
+            setCookie('refreshToken', refresh_data.refreshToken, { path: '/' });
             fetch(USER_API_URL, {
               method: 'GET',
               headers: {
@@ -147,8 +147,8 @@ export const setUser = (user) => {
         })
         .then((refresh_data) => {
           if (refresh_data.success === true) {
-            setCookie('accessToken', refresh_data.accessToken);
-            setCookie('refreshToken', refresh_data.refreshToken);
+            setCookie('accessToken', refresh_data.accessToken, { path: '/' });
+            setCookie('refreshToken', refresh_data.refreshToken, { path: '/' });
             fetch(USER_API_URL, {
               method: 'GET',
               headers: {
@@ -228,8 +228,8 @@ export const register = (user, redirectCallback) => {
         dispatch(userSlice.actions.setEmail(data.user.email));
         dispatch(userSlice.actions.setName(data.user.name));
 
-        setCookie('accessToken', data.accessToken);
-        setCookie('refreshToken', data.refreshToken);
+        setCookie('accessToken', data.accessToken, { path: '/' });
+        setCookie('refreshToken', data.refreshToken, { path: '/' });
 
         dispatch(userSlice.actions.setAuthorization(true));
         dispatch(userSlice.actions.success());
@@ -271,8 +271,8 @@ export const login = (user, redirectCallback) => {
         dispatch(userSlice.actions.setEmail(data.user.email));
         dispatch(userSlice.actions.setName(data.user.name));
 
-        setCookie('accessToken', data.accessToken);
-        setCookie('refreshToken', data.refreshToken);
+        setCookie('accessToken', data.accessToken, { path: '/' });
+        setCookie('refreshToken', data.refreshToken, { path: '/' });
 
         dispatch(userSlice.actions.setAuthorization(true));
         dispatch(userSlice.actions.success());
