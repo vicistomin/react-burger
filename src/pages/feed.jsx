@@ -7,7 +7,6 @@ import OrdersList from '../components/orders-list/orders-list';
 import FeedInfoPanel from '../components/feed-info-panel/feed-info-panel';
 import Loader from '../components/loader/loader';
 // import slices and their functions
-import { getItems } from '../services/slices/items';
 import { getFeed } from '../services/slices/feed';
 
 export const FeedPage = () => {
@@ -28,14 +27,6 @@ export const FeedPage = () => {
   } = useSelector(
     state => state.feed
   );
-
-  // we need to have items from API in store to render ingredients icons in order card
-  useEffect(() => {
-    // won't call API if items are already in store
-    if (!itemsSuccess) {
-      dispatch(getItems());
-    }
-  }, [dispatch, itemsSuccess]);
 
   // we need to have feed from API in store to render orders data
   useEffect(() => {

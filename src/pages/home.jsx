@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import styles from './home.module.css';
 // importing components from project
 import AppHeader from '../components/app-header/app-header';
@@ -9,7 +8,6 @@ import OrderDetails from '../components/order-details/order-details';
 import Loader from '../components/loader/loader';
 import { useSelector, useDispatch } from "react-redux";
 // import slices and their functions
-import { getItems } from '../services/slices/items';
 import { orderSlice } from '../services/slices/order';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
@@ -32,14 +30,6 @@ function HomePage() {
   } = useSelector(
     state => state.order
   );
-
-  // TODO: move API call for getting items into BurgerIngredients component
-  useEffect(() => {
-    // won't call API if items are already in store
-    if (!itemsSuccess) {
-      dispatch(getItems());
-    }
-  }, [dispatch, itemsSuccess]);
 
     const closeModal = () => {
       dispatch(closeOrderModal());

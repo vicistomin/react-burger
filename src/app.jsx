@@ -1,4 +1,7 @@
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from "react-redux";
 import { Switch, Route, useLocation } from 'react-router-dom';
+import { getItems } from './services/slices/items';
 import {
   HomePage,
   LoginPage,
@@ -16,8 +19,24 @@ import {
 import { ProtectedRoute } from './components/protected-route';
 
 function App() {
+  const dispatch = useDispatch();
+
   let location = useLocation();
   let background = location.state && location.state.background;
+
+  const {
+    itemsSuccess,
+  } = useSelector(
+    state => state.items
+  );
+
+  // we need to have items from API in store to render ingredients on pages
+  useEffect(() => {
+    // we won't call API if items are already in store
+    if (!itemsSuccess) {
+      dispatch(getItems());
+    }
+  }, [dispatch, itemsSuccess]);
 
   return (
     <>

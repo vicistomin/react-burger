@@ -6,7 +6,6 @@ import Modal from '../components/modal/modal';
 import IngredientDetails from '../components/ingredient-details/ingredient-details';
 import Loader from '../components/loader/loader';
 // import slices and their functions
-import { getItems } from '../services/slices/items';
 import { itemsSlice } from '../services/slices/items';
 
 export const IngredientModalPage = () => {
@@ -22,14 +21,6 @@ export const IngredientModalPage = () => {
   );
 
   const { request } = itemsSlice.actions;
-
-  // we need to have items from API in store to render ingredient
-  useEffect(() => {
-    // won't call API if items are already in store
-    if (!itemsSuccess) {
-      dispatch(getItems());
-    }
-  }, [dispatch, itemsSuccess]);
 
   let history = useHistory();
 
