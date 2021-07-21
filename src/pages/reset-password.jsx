@@ -105,13 +105,16 @@ export const ResetPasswordPage = () => {
     }
     else {
       // if form fields are correct then start reset password action
-      dispatch(resetPassword(
-        codeValue,
-        passwordValue,
-        redirectOnSuccess
-      ));
+      // won't call API if user data is already in process
+      if (!userRequest) {
+        dispatch(resetPassword(
+          codeValue,
+          passwordValue,
+          redirectOnSuccess
+        ));
+      }
     }
-  }, [codeValue, passwordValue]);
+  }, [codeValue, passwordValue, userRequest]);
 
   const onLoginClick = () => {
     history.replace({ pathname: '/login' });

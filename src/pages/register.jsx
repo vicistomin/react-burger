@@ -129,13 +129,16 @@ export const RegisterPage = () => {
     }
     else {
       // if form fields are correct then start registration action
-      dispatch(register({
-        name: nameValue,
-        email: emailValue,
-        password: passwordValue
-      }, redirectOnSuccess))
+      // won't call API if user data is already in process
+      if (!userRequest) {
+        dispatch(register({
+          name: nameValue,
+          email: emailValue,
+          password: passwordValue
+        }, redirectOnSuccess))
+      }
     }
-  }, [emailValue, nameValue, passwordValue]);
+  }, [emailValue, nameValue, passwordValue, userRequest]);
 
   const onLoginClick = () => {
     history.replace({ pathname: '/login' });

@@ -1,4 +1,4 @@
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import sidebarStyles from './sidebar.module.css';
 // importing components from project
 import SidebarLink from '../sidebar-link/sidebar-link';
@@ -11,6 +11,7 @@ import { useState, useEffect } from 'react';
 function Sidebar() {
   const dispatch = useDispatch();
 
+  const { userRequest } = useSelector(state => state.user);
   const { resetStatus } = userSlice.actions;
   
   // reset status and errors on page load
@@ -50,7 +51,10 @@ function Sidebar() {
   }
 
   const onLogoutClick = () => {
-    dispatch(logout(redirectOnSuccess));
+    // won't call API if user data is already in process
+    if (!userRequest) {
+      dispatch(logout(redirectOnSuccess));
+    }
   };
 
   return(

@@ -33,21 +33,22 @@ export const ProfilePage = () => {
     dispatch(resetStatus());
   }  
 
-  // reset status and errors on page load
   useEffect(() => {
+    // reset status and errors on page load
     resetError();
-  }, [])
-
-  // we need to have user from API in store to render user data
-  useEffect(() => {
-    // won't call API if user data is already in store or in process
-    if (!userSuccess && !userRequest) {
+    
+    // we need to have user from API in store to render user data
+    // won't call API if user data is already in process
+    if (!userRequest) {
       dispatch(getUser());
     }
+  }, [])
+
+  useEffect(() => {
     setNameValue(user.name);
     setEmailValue(user.email);
     setPasswordValue(user.password);
-  }, [userSuccess]);
+  }, [user]);
 
    // TODO: create EditableInput component and move there all this checks and handlers 
   const [isNameInputDisabled, setNameInputDisabled] = useState(true)
@@ -112,11 +113,14 @@ export const ProfilePage = () => {
 
   const onSubmitChanges = (e) => {
     e.preventDefault();
-    dispatch(setUser({
-      name: nameValue,
-      email: emailValue,
-      password: passwordValue
-    }));
+    // won't call API if user data is already in process
+    if (!userRequest) {
+      dispatch(setUser({
+        name: nameValue,
+        email: emailValue,
+        password: passwordValue
+      }));
+    }
     setFormChanged(false);
   }
 
