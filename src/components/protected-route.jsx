@@ -13,6 +13,10 @@ export function ProtectedRoute({ children, isGuestOnly, ...rest }) {
     state => state.user
   );
 
+  const { checkAuthorization } = userSlice.actions;
+
+  // check cookies with tokens
+  dispatch(checkAuthorization());
   // protect some routes from authorized users
   if (isGuestOnly) {
     return (

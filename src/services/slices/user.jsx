@@ -85,6 +85,7 @@ export const getUser = () => {
               }
             })
             .catch((error) => {
+              dispatch(userSlice.actions.setAuthorization(false));
               dispatch(userSlice.actions.failed())
               console.log(error);
             })
@@ -94,6 +95,7 @@ export const getUser = () => {
           }
         })
         .catch((error) => {
+          dispatch(userSlice.actions.setAuthorization(false));
           dispatch(userSlice.actions.failed())
           console.log(error);
         });
@@ -103,6 +105,7 @@ export const getUser = () => {
       }
     })
     .catch((error) => {
+      dispatch(userSlice.actions.setAuthorization(false));
       dispatch(userSlice.actions.failed())
       console.log(error);
     })
@@ -240,6 +243,7 @@ export const register = (user, redirectCallback) => {
       }
     })
     .catch((error) => {
+      dispatch(userSlice.actions.setAuthorization(false));
       dispatch(userSlice.actions.failed())
       console.log(error);
     })
@@ -283,6 +287,7 @@ export const login = (user, redirectCallback) => {
       }
     })
     .catch((error) => {
+      dispatch(userSlice.actions.setAuthorization(false));
       dispatch(userSlice.actions.failed())
       console.log(error);
     })
@@ -471,7 +476,9 @@ export const userSlice = createSlice({
     },
     resetStatus(state, action) {
       // state.userSuccess = false;
-      state.userRequest = false;
+      // state.userRequest = false;
+
+      // resetting only errors
       state.userFailed = false;
     },
     resetUserData(state) {
@@ -482,6 +489,10 @@ export const userSlice = createSlice({
     },
     setAuthorization(state, action) {
       state.isAuthorized = action.payload;
+    },
+    checkAuthorization(state) {
+      state.isAuthorized = ((getCookie('accessToken') !== undefined) &&
+        (getCookie('refreshToken') !== undefined));
     },
     setPasswordResetRequest(state, action) {
       state.hasRequestedPasswordReset = action.payload;
