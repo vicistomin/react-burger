@@ -6,7 +6,6 @@ import Sidebar from '../components/sidebar/sidebar';
 import OrdersList from '../components/orders-list/orders-list';
 import Loader from '../components/loader/loader';
 // import slices and their functions
-import { getUser } from '../services/slices/user';
 import { getFeed } from '../services/slices/feed';
 
 export const HistoryPage = () => {
@@ -39,14 +38,6 @@ export const HistoryPage = () => {
   const userOrders = orders.filter((order) => (
     user.orders.includes(order.id)
   ));
-
-  // we need to have user from API in store to select its orders
-  useEffect(() => {
-    // won't call API if items are already in store
-    if (!userSuccess || !user.orders) {
-      dispatch(getUser());
-    }
-  }, [dispatch, userSuccess]);
 
   // we need to have feed from API in store to render orders data
   useEffect(() => {
