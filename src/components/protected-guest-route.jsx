@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 // import slices and their functions
 import { userSlice } from '../services/slices/user';
 
-export function ProtectedRoute({ children, isGuestOnly, ...rest }) {
+export function ProtectedGuestRoute({ children, isGuestOnly, ...rest }) {
   const dispatch = useDispatch();
 
   const {
@@ -16,22 +16,21 @@ export function ProtectedRoute({ children, isGuestOnly, ...rest }) {
 
   // check cookies with tokens
   dispatch(checkAuthorization());
-  // protect routes from unauthorized users
+  // protect routes from authorized users
   return (
     <Route
       {...rest}
       render={({ location }) =>
         isAuthorized ? (
-          children
-        ) : (
           <Redirect
             to={{
-              pathname: '/login',
-              state: { from: location }
+              pathname: '/profile'
             }}
           />
+        ) : (
+          children
         )
       }
     />
-  );
+  )
 }

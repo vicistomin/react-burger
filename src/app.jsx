@@ -18,6 +18,7 @@ import {
 } from './pages';
 import { ProtectedRoute } from './components/protected-route';
 import { ProtectedResetRoute } from './components/protected-reset-route';
+import { ProtectedGuestRoute } from './components/protected-guest-route';
 import AppHeader from './components/app-header/app-header';
 
 function App() {
@@ -47,15 +48,15 @@ function App() {
         <Route path="/" exact={true}>
           <HomePage />
         </Route>
-        <ProtectedRoute isGuestOnly={true} path="/login" exact={true}>
+        <ProtectedGuestRoute path="/login" exact={true}>
           <LoginPage />
-        </ProtectedRoute>
-        <ProtectedRoute isGuestOnly={true} path="/register" exact={true}>
+        </ProtectedGuestRoute>
+        <ProtectedGuestRoute path="/register" exact={true}>
           <RegisterPage />
-        </ProtectedRoute>
-        <ProtectedRoute isGuestOnly={true} path="/forgot-password" exact={true}>
+        </ProtectedGuestRoute>
+        <ProtectedGuestRoute path="/forgot-password" exact={true}>
           <ForgotPasswordPage />
-        </ProtectedRoute>
+        </ProtectedGuestRoute>
         <ProtectedResetRoute path="/reset-password" exact={true}>
           <ResetPasswordPage />
         </ProtectedResetRoute>
