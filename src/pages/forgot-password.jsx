@@ -73,7 +73,10 @@ export const ForgotPasswordPage = () => {
   }
 
   const redirectOnSuccess = () => {
-    history.replace({ pathname: '/reset-password' });
+    history.replace({ 
+      pathname: '/reset-password',
+      state: { from: '/forgot-password' }
+    });
   }
 
   const onResetPasswordClick = useCallback((e) => {

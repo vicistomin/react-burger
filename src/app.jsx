@@ -17,6 +17,7 @@ import {
   NotFound404
 } from './pages';
 import { ProtectedRoute } from './components/protected-route';
+import { ProtectedResetRoute } from './components/protected-reset-route';
 import AppHeader from './components/app-header/app-header';
 
 function App() {
@@ -55,9 +56,9 @@ function App() {
         <ProtectedRoute isGuestOnly={true} path="/forgot-password" exact={true}>
           <ForgotPasswordPage />
         </ProtectedRoute>
-        <ProtectedRoute isGuestOnly={true} path="/reset-password" exact={true}>
+        <ProtectedResetRoute path="/reset-password" exact={true}>
           <ResetPasswordPage />
-        </ProtectedRoute>
+        </ProtectedResetRoute>
         <Route path="/feed" exact={true}>
           <FeedPage />
         </Route>

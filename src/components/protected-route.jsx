@@ -7,8 +7,7 @@ export function ProtectedRoute({ children, isGuestOnly, ...rest }) {
   const dispatch = useDispatch();
 
   const {
-    isAuthorized,
-    hasRequestedPasswordReset
+    isAuthorized
   } = useSelector(
     state => state.user
   );
@@ -30,16 +29,7 @@ export function ProtectedRoute({ children, isGuestOnly, ...rest }) {
               }}
             />
           ) : (
-            // guests can get to reset password only after sending request on ForgotPassword page
-            location.pathname === '/reset-password' && !hasRequestedPasswordReset ? (
-            <Redirect
-              to={{
-                pathname: '/forgot-password'
-              }}
-            />
-            ) : (
-             children
-            )
+            children
           )
         }
       />

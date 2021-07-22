@@ -315,7 +315,6 @@ export const forgotPassword = (email, redirectCallback) => {
       })
     .then((data) => {
       if (data.success) {
-        dispatch(userSlice.actions.setPasswordResetRequest(true));
         dispatch(userSlice.actions.success());
         redirectCallback();
       }
@@ -352,7 +351,6 @@ export const resetPassword = (code, password, redirectCallback) => {
       })
     .then((data) => {
       if (data.success) {
-        dispatch(userSlice.actions.setPasswordResetRequest(false));
         dispatch(userSlice.actions.success());
         redirectCallback();
       }
@@ -431,8 +429,7 @@ export const userSlice = createSlice({
     userRequest: false,
     userFailed: false,
     userSuccess: false,
-    isAuthorized: false,
-    hasRequestedPasswordReset: false
+    isAuthorized: false
   },
   reducers: {
     request(state) {
@@ -493,9 +490,6 @@ export const userSlice = createSlice({
     checkAuthorization(state) {
       state.isAuthorized = ((getCookie('accessToken') !== undefined) &&
         (getCookie('refreshToken') !== undefined));
-    },
-    setPasswordResetRequest(state, action) {
-      state.hasRequestedPasswordReset = action.payload;
     }
   }
 }) 
