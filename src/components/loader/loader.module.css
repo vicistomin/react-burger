@@ -1,0 +1,24 @@
+.loader {
+  composes: flex_row from global;
+  cursor: wait;
+  background-color: #131316aa;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  z-index: 1000;
+}
+
+@keyframes spin {
+  from {transform:rotate(0deg)}
+  to {transform:rotate(360deg)}
+}
+
+.spinner {
+  position: relative;
+  opacity: 1;
+  bottom: 88px;
+  animation-name: spin;
+  animation-duration: 4s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}

@@ -1,0 +1,17 @@
+.form_container {
+  composes: flex_column from global;
+  row-gap: calc(var(--offset-base-size) * 6);
+  margin-bottom: calc(var(--offset-base-size) * 20);
+}
+
+:global .input__container {
+  width: 480px;
+}
+
+:global .input {
+  width: 100%;
+}
+
+:global .input__icon-action {
+  margin-left: calc(var(--offset-base-size) * 6);
+}

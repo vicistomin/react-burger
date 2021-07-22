@@ -1,0 +1,24 @@
+.feed_container {
+  composes: flex_row from global;
+  column-gap: calc(var(--offset-base-size) * 15);
+  align-items: flex-start;
+}
+
+.feed_orders_container {
+  flex-basis: 600px;
+  align-self: flex-start;
+}
+
+.feed_orders_container ul {
+  max-height: calc(100vh - 187px);  
+}
+
+.feed_info_container {
+  flex-basis: 580px;
+}
+
+.feed_title {
+  width: 1240px;
+  margin-left: auto;
+  margin-right: auto;
+}

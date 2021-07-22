@@ -1,0 +1,16 @@
+.orders_list {
+  composes: flex_column from global;
+  composes: pr-2 from global;
+  
+  composes: scroll from global;
+  /* to calculate height of the scrollable container 
+  we exclude height of top part of a page
+  (for desktop it's 88px header + 40px = 128px) */
+  max-height: calc(100vh - 128px);
+  scroll-snap-type: y proximity;
+}
+
+.orders_list::-webkit-scrollbar {
+  position: relative;
+  left: 20px;
+}

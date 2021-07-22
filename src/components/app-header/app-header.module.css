@@ -17,6 +17,7 @@
 .menu_list_left_items {
     composes: flex_row from global;
     justify-content: flex-start;
+    column-gap: 20px;
 }
 
 .menu_list_center {
