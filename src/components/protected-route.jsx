@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 // import slices and their functions
 import { userSlice } from '../services/slices/user';
 
-export function ProtectedRoute({ children, ...rest }) {
+export function ProtectedRoute({ children, isGuestOnly, ...rest }) {
   const dispatch = useDispatch();
 
   const {
