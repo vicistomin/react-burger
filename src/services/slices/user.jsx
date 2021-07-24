@@ -394,7 +394,6 @@ export const logout = (redirectCallback) => {
 
         dispatch(userSlice.actions.setAuthorization(false));
         dispatch(userSlice.actions.success());
-        redirectCallback();
       }
       else {
         throw Error(data.message);
