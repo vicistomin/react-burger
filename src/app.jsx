@@ -10,6 +10,7 @@ import {
   ResetPasswordPage,
   FeedPage,
   OrderPage,
+  OrderModalPage,
   ProfilePage,
   HistoryPage,
   IngredientPage,
@@ -83,10 +84,22 @@ function App() {
         </Route>
       </Switch>
 
-      {/* Show the modal when a background page is set */
-        background && 
+      {/* Show the modals when a background page is set */
+        background && background.pathname === '/' &&
         <Route path="/ingredients/:id" exact={true}>
           <IngredientModalPage />
+        </Route>
+      }
+      {
+        background && background.pathname === '/profile/orders' &&
+        <ProtectedRoute path="/profile/orders/:id" exact={true}>
+          <OrderModalPage />
+        </ProtectedRoute>
+      }
+      {
+        background && background.pathname === '/feed' &&
+        <Route path="/feed/:id" exact={true}>
+          <OrderModalPage />
         </Route>
       }
     </>

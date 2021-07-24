@@ -9,7 +9,7 @@ import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 
 const modalRoot = document.getElementById('modal-root');
 
-function Modal({ children, header, closeModal, isFancyCloseIcon=false }) {
+function Modal({ children, header, closeModal, isFancyCloseIcon=false, isOrderModal=false }) {
     
     // closing modals with the "Esc" key:
     const handleEscKey = (e) => {
@@ -30,7 +30,13 @@ function Modal({ children, header, closeModal, isFancyCloseIcon=false }) {
         <>
             <ModalOverlay closeModal={closeModal} />
             <div className={modalStyles.modal_container + ' pl-10 pt-10 pr-10 pb-15'}>
-                <h3 className={modalStyles.modal_header + ' text text_type_main-large'}>
+                <h3 className={
+                    `${modalStyles.modal_header} ${isOrderModal ? (
+                        'text text_type_digits-default'
+                    ) : (
+                        'text text_type_main-large'
+                    )}`
+                }>
                     {header}
                 </h3>
                 {/* adding box-shadow only in OrderDetailsModal (as in Figma) */}

@@ -19,7 +19,10 @@ const OrdersCard = (props) => {
   
   const handleOrderClick = () => {
     const currentUrl = history.location.pathname;
-    history.replace({ pathname: `${currentUrl}/${props.order.id}` });
+    history.replace({ 
+      pathname: `${currentUrl}/${props.order.id}`,
+      state: { background: history.location }
+    });
   }
 
   // parsing data and time to specific format as in Figma

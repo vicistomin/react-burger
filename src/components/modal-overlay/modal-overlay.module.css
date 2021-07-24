@@ -6,4 +6,7 @@
     height: 100vh;
     background: #000;
     opacity: 0.6;
+
+    /* should be shown over sidebar and ingredient icons in order */
+    z-index: 30;
 }

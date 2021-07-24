@@ -7,7 +7,7 @@ import { formatDateTime } from '../../services/utils'
 
 import { useCallback } from 'react';
 
-const OrderDetailedView = (props) => {
+const OrderDetailedView = ({ order, isOrderModal=false }) => {
 
   const {
     items
@@ -17,11 +17,11 @@ const OrderDetailedView = (props) => {
 
   // parsing data and time to specific format as in Figma
   const getOrderDateTime = useCallback(() => (
-    formatDateTime(props.order.time)
-  ), [props.order.time]);
+    formatDateTime(order.time)
+  ), [order.time]);
 
   const renderIngredientIcons = useCallback(() => (
-     props.order.ingredients.map((item_id, index) => {
+     order.ingredients.map((item_id, index) => {
       const ingredient = items.find(item => item._id === item_id);
       
       // TODO: implement calculation of ingredients quantity 
@@ -57,27 +57,29 @@ const OrderDetailedView = (props) => {
         </li>
       );
     })
-  ), [items, props.order.ingredients]);
+  ), [items, order.ingredients]);
 
   return(
     <div className={orderDetailedViewStyles.order_container}>
-      <p className={
-        orderDetailedViewStyles.order_id +
-        ' text text_type_digits-default'
-      }>
-        {`#${props.order.id}`}
+      {!isOrderModal &&
+        <p className={
+          orderDetailedViewStyles.order_id +
+          ' text text_type_digits-default'
+        }>
+        {`#${order.id}`}
       </p>
+      }
       <p className={'mt-10 mb-3 text text_type_main-medium'}>
-        {props.order.type}
+        {order.type}
       </p>
       <p className={
-        `${props.order.status === 'Выполнен' ?
+        `${order.status === 'Выполнен' ?
             orderDetailedViewStyles.status_completed :
-            props.order.status === 'Отменён' ?
+            order.status === 'Отменён' ?
               orderDetailedViewStyles.status_canceled : ''
           } text text_type_main-default`
       }>
-        {props.order.status}
+        {order.status}
       </p>
       <p className={'mt-15 mb-6 text text_type_main-medium'}>
         Состав:
@@ -90,7 +92,7 @@ const OrderDetailedView = (props) => {
           {getOrderDateTime()}
         </p>  
         <div className={'flex_row ml-6'}>
-          <p className='text text_type_digits-default'>{props.order.price}</p>
+          <p className='text text_type_digits-default'>{order.price}</p>
           <CurrencyIcon />
         </div>
       </div>
@@ -108,7 +110,8 @@ OrderDetailedView.propTypes = {
     ingredients: PropTypes.arrayOf(
       PropTypes.string.isRequired
     ).isRequired
-  }).isRequired
+  }).isRequired,
+  isOrderModal: PropTypes.bool
 };
 
 export default OrderDetailedView;
