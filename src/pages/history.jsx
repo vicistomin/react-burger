@@ -7,6 +7,7 @@ import OrdersList from '../components/orders-list/orders-list';
 import Loader from '../components/loader/loader';
 // import slices and their functions
 import { getFeed } from '../services/slices/feed';
+import { getUser, userSlice } from '../services/slices/user';
 
 export const HistoryPage = () => {
   const dispatch = useDispatch();
@@ -35,17 +36,29 @@ export const HistoryPage = () => {
     state => state.feed
   );
 
+  const {
+    resetStatus
+  } = userSlice.actions;
+
   const userOrders = orders.filter((order) => (
     user.orders.includes(order.id)
   ));
 
-  // we need to have feed from API in store to render orders data
   useEffect(() => {
+    // reset errors on page load
+    dispatch(resetStatus());
+
     // won't call API if items are already in store
     if (!feedSuccess) {
       dispatch(getFeed());
     }
-  }, [dispatch, feedSuccess]);
+
+    // we need to have user from API in store to find user orders
+    // won't call API if user data is already in process
+    if (!userSuccess && !userRequest) {
+      dispatch(getUser());
+    }
+  }, []);
 
   return(
     <>

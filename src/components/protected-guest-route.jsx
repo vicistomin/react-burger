@@ -27,9 +27,8 @@ export function ProtectedGuestRoute({ children, ...rest }) {
       render={({ location }) =>
         isAuthorized ? (
           <Redirect
-            to={{
-              pathname: '/profile'
-            }}
+            // return to the page where user been before request
+            to={(location.state && location.state.from) || {pathname: "/profile"}}
           />
         ) : (
           children

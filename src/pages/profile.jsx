@@ -39,7 +39,7 @@ export const ProfilePage = () => {
     
     // we need to have user from API in store to render user data
     // won't call API if user data is already in process
-    if (!userRequest) {
+    if (!userSuccess && !userRequest) {
       dispatch(getUser());
     }
   }, [])
