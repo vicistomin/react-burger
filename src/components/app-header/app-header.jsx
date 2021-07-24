@@ -17,15 +17,23 @@ function AppHeader() {
     const currentUrl = history.location.pathname;
 
     useEffect(() => {
-        switch (currentUrl.split('/')[1]) {
-            case '':
+        console.log(currentUrl);
+        switch (currentUrl) {
+            case '/':
                 setHomePage(true);
+                setFeedPage(false);
+                setProfilePage(false);
                 break;
-            case 'feed':
+            case '/feed':
                 setFeedPage(true);
+                setHomePage(false);
+                setProfilePage(false);
                 break;
-            case 'profile':
+            case '/profile':
+            case '/profile/orders':
                 setProfilePage(true);
+                setHomePage(false);
+                setFeedPage(false);
                 break;
             default:
                 break;
