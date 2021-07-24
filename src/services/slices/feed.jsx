@@ -1,16 +1,14 @@
-import { createSlice } from '@reduxjs/toolkit'
-import { fakeFeedData } from '../feed-data';
+import { createSlice } from '@reduxjs/toolkit';
+import { wsSlice } from './websocket';
 
 export const getFeed = () => {
-  return dispatch => {
+  return (dispatch, getState) => {
+    dispatch(wsSlice.actions.wsSetDataDispatch(feedSlice.actions.setOrdersData));
     dispatch(feedSlice.actions.request());
-    // getting data from fake API
-    setTimeout(() => {  
-    if (!!fakeFeedData)
-      dispatch(feedSlice.actions.success(fakeFeedData));
+    if (getState())
+      dispatch(feedSlice.actions.success());
     else
       dispatch(feedSlice.actions.failed());
-    }, 1000);
   }
 }
 
@@ -21,6 +19,8 @@ export const feedSlice = createSlice({
     feedRequest: false,
     feedFailed: false,
     feedSuccess: false,
+    ordersTotal: 0,
+    ordersTotalToday: 0
   },
   reducers: {
     request(state) {
@@ -37,7 +37,11 @@ export const feedSlice = createSlice({
       state.feedSuccess = true;
       state.feedRequest = false;
       state.feedFailed = false;
-      state.orders = action.payload;
+    },
+    setOrdersData(state, action) {
+      state.orders = action.payload.orders;
+      state.ordersTotal = action.payload.total;
+      state.ordersTotalToday = action.payload.totalToday;
     }
   }
 }) 

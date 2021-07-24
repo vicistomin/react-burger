@@ -7,6 +7,8 @@ import FeedInfoPanel from '../components/feed-info-panel/feed-info-panel';
 import Loader from '../components/loader/loader';
 // import slices and their functions
 import { getFeed } from '../services/slices/feed';
+import { wsSlice } from '../services/slices/websocket';
+import { ALL_ORDERS_WS_URL } from '../services/constants';
 
 export const FeedPage = () => {
   const dispatch = useDispatch();
@@ -27,9 +29,18 @@ export const FeedPage = () => {
     state => state.feed
   );
 
-  // we need to have feed from API in store to render orders data
+  const {
+    wsConnectionStart
+  } = wsSlice.actions;
+
   useEffect(() => {
-    // won't call API if items are already in store
+    dispatch(wsConnectionStart({ url: ALL_ORDERS_WS_URL }));
+  }, [dispatch]);
+
+
+  // we need to have feed from websocket in store to render orders data
+  useEffect(() => {
+    // won't set new websocket if items are already in store
     if (!feedSuccess) {
       dispatch(getFeed());
     }
