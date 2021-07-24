@@ -29,7 +29,10 @@ function BurgerConstructor() {
         }
         // redirect guests to login page
         else {
-            history.replace({ pathname: '/login' });
+            history.replace({
+                pathname: '/login',
+                state: { from: '/' }
+            });
         }
       };
 
