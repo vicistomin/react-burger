@@ -441,7 +441,7 @@ export const userSlice = createSlice({
       state.userRequest = false;
       state.userSuccess = false;
     },
-    success(state, action) {
+    success(state) {
       state.userSuccess = true;
       state.userRequest = false;
       state.userFailed = false;
@@ -470,10 +470,7 @@ export const userSlice = createSlice({
         orders: action.payload
       }
     },
-    resetStatus(state, action) {
-      // state.userSuccess = false;
-      // state.userRequest = false;
-
+    resetStatus(state) {
       // resetting only errors
       state.userFailed = false;
     },

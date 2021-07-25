@@ -17,7 +17,6 @@ function AppHeader() {
     const currentUrl = history.location.pathname;
 
     useEffect(() => {
-        console.log(currentUrl);
         switch (currentUrl) {
             case '/':
                 setHomePage(true);
