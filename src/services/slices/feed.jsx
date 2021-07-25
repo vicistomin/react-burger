@@ -16,6 +16,16 @@ export const stopFeed = () => {
   }
 }
 
+// for some reason in profile page orders came up sorted backwards in time
+const sortOrdersByDate = (orders) => {
+  orders.sort(function(a, b) {
+    const keyA = new Date(a.updatedAt);
+    const keyB = new Date(b.updatedAt);
+    return keyB - keyA;
+  });
+  return orders;
+}
+
 export const feedSlice = createSlice({
   name: 'feed',
   initialState: {
@@ -43,7 +53,7 @@ export const feedSlice = createSlice({
       state.feedFailed = false;
     },
     setOrdersData(state, action) {
-      state.orders = action.payload.orders;
+      state.orders = sortOrdersByDate(action.payload.orders);
       state.ordersTotal = action.payload.total;
       state.ordersTotalToday = action.payload.totalToday;
     }

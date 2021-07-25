@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { fakeUserData } from '../user-data';
 import { LOGIN_API_URL } from "../constants";
 import { REGISTER_API_URL } from "../constants";
 import { FORGOT_PASSWORD_API_URL } from "../constants";
@@ -10,6 +9,7 @@ import { USER_API_URL } from "../constants";
 import { wsSlice } from './websocket';
 import { USER_ORDERS_WS_URL } from '../constants';
 import { getCookie, setCookie, deleteCookie } from '../utils';
+import { feedSlice } from './feed';
 
 export const getUser = () => {
   return dispatch => {
@@ -425,8 +425,9 @@ export const startHistory = () => {
       url: USER_ORDERS_WS_URL,
       token: getCookie('accessToken').replace('Bearer ', '')
     }));
-    dispatch(wsSlice.actions.wsSetDataDispatch(userSlice.actions.setOrders));
-    dispatch(userSlice.actions.request());
+    // saving user orders in feedSlice
+    dispatch(wsSlice.actions.wsSetDataDispatch(feedSlice.actions.setOrdersData));
+    dispatch(feedSlice.actions.request());
   }
 }
 
@@ -436,12 +437,14 @@ export const stopHistory = () => {
   }
 }
 
+// TODO: get password hash from server
+const fakePassword = 123456;
+
 export const userSlice = createSlice({
   name: 'user',
   initialState: {
     user: {
-      password: fakeUserData.password,
-      orders: []
+      password: fakePassword,
     },
     userRequest: false,
     userFailed: false,
@@ -482,12 +485,6 @@ export const userSlice = createSlice({
         email: action.payload
       }
     },
-    setOrders(state, action) {
-      state.user = {
-        ...state.user,
-        orders: action.payload.orders
-      }
-    },
     resetStatus(state) {
       // resetting only errors
       state.userFailed = false;
@@ -495,8 +492,8 @@ export const userSlice = createSlice({
     resetUserData(state) {
       state.user.name = '';
       state.user.email = '';
-      state.user.password = fakeUserData.password;
-      state.user.orders = [];
+      // TODO: get password hash from server
+      state.user.password = fakePassword;
     },
     setAuthorization(state, action) {
       state.isAuthorized = action.payload;

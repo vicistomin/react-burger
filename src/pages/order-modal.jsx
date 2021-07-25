@@ -6,7 +6,7 @@ import Modal from '../components/modal/modal';
 import Loader from '../components/loader/loader';
 import OrderDetailedView from '../components/order-detailed-view/order-detailed-view';
 // import slices and their functions
-import { feedSlice, startFeed, stopFeed } from '../services/slices/feed';
+import { feedSlice } from '../services/slices/feed';
 import { itemsSlice } from '../services/slices/items';
 
 export const OrderModalPage = () => {
@@ -39,16 +39,6 @@ export const OrderModalPage = () => {
 
   let history = useHistory();
 
-  // we need to have feed from websocket in store to render orders data
-  useEffect(() => {
-    // open new websocket when the page is opened
-    dispatch(startFeed());
-    return () => {
-      // close the websocket when the page is closed
-      dispatch(stopFeed());
-    };  
-  }, []);
-
   useEffect(() => {
     if (wsConnected)
       dispatch(feedSlice.actions.success());
@@ -57,7 +47,6 @@ export const OrderModalPage = () => {
     else 
       dispatch(feedSlice.actions.request());
   }, [wsConnected, wsError]);
-
 
   const currentOrderId = useParams().id;
   const currentOrder = orders.find(order => order._id === currentOrderId);

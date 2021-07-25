@@ -47,7 +47,6 @@ export const wsMiddleware = () => {
           const { data } = event;
           const parsedData = JSON.parse(data);
           const { success, ...restParsedData } = parsedData;
-          console.log(restParsedData);
 
           // if accessToken has gone stale we're need to refresh it first
           if (restParsedData.message && restParsedData.message === 'Invalid or missing token') {
@@ -61,8 +60,6 @@ export const wsMiddleware = () => {
             })
             .then((refresh_data) => {
               if (refresh_data.success === true) {
-                console.log(refresh_data);
-
                 setCookie('accessToken', refresh_data.accessToken, { path: '/' });
                 setCookie('refreshToken', refresh_data.refreshToken, { path: '/' });
                 const wsToken = refresh_data.accessToken.replace('Bearer ', '');
@@ -81,6 +78,7 @@ export const wsMiddleware = () => {
           }
 
           // save data with provided dispatch function
+          // it may be function another slice, not only from feedSlice
           let saveDataDispatch = getState().ws.saveDataDispatch;
           if (saveDataDispatch) {
             dispatch({

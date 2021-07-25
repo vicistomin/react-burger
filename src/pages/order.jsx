@@ -1,14 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from "react-redux";
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation  } from 'react-router-dom';
 // importing components from project
 import Loader from '../components/loader/loader';
 import OrderDetailedView from '../components/order-detailed-view/order-detailed-view';
 // import slices and their functions
 import { feedSlice, startFeed, stopFeed } from '../services/slices/feed';
+import { startHistory, stopHistory } from '../services/slices/user';
 
 export const OrderPage = () => {
   const dispatch = useDispatch();
+  // for user profile page we should open different websocket with auth token
+  // useRouteMatch for some reason returning always null here
+  const location = useLocation();
+  const isFeedPage = location.pathname.split('/')[1] === 'feed';
   
   const {
     itemsRequest,
@@ -38,10 +43,16 @@ export const OrderPage = () => {
   // we need to have feed from websocket in store to render orders data
   useEffect(() => {
     // open new websocket when the page is opened
-    dispatch(startFeed());
+    if(isFeedPage)
+      dispatch(startFeed());
+    else
+      dispatch(startHistory());
     return () => {
       // close the websocket when the page is closed
-      dispatch(stopFeed());
+      if(isFeedPage)
+        dispatch(stopFeed());
+      else
+        dispatch(stopHistory());
     };  
   }, []);
 

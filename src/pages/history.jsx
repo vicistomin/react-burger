@@ -6,6 +6,7 @@ import Sidebar from '../components/sidebar/sidebar';
 import OrdersList from '../components/orders-list/orders-list';
 import Loader from '../components/loader/loader';
 // import slices and their functions
+import { feedSlice } from '../services/slices/feed';
 import { getUser, userSlice, startHistory, stopHistory } from '../services/slices/user';
 
 export const HistoryPage = () => {
@@ -26,7 +27,14 @@ export const HistoryPage = () => {
   } = useSelector(
     state => state.user
   );
-
+  const {
+    orders,
+    feedRequest,
+    feedSuccess,
+    feedFailed
+  } = useSelector(
+    state => state.feed
+  );
   const {
     resetStatus
   } = userSlice.actions;
@@ -58,39 +66,37 @@ export const HistoryPage = () => {
 
   useEffect(() => {
     if (wsConnected)
-      dispatch(userSlice.actions.success());
+      dispatch(feedSlice.actions.success());
     else if (wsError)
-      dispatch(userSlice.actions.failed());
+      dispatch(feedSlice.actions.failed());
   }, [wsConnected, wsError]);
-
-  console.log(user.orders);
 
   return(
     <>
         {
-          (itemsRequest || userRequest) && 
-          (!itemsFailed || !userFailed) && 
-          (!itemsSuccess || !userSuccess) && (
+          (itemsRequest || userRequest || feedRequest) && 
+          (!itemsFailed || !userFailed || !feedFailed) && 
+          (!itemsSuccess || !userSuccess || !feedSuccess) && (
             <Loader />
         )}
         <div className={styles.history_container + ' mt-30'}>
         <Sidebar />
         <div className={styles.history_orders_container}>
           {
-            (itemsFailed || userFailed) && 
-            (!itemsRequest || !userRequest) && 
-            (!itemsSuccess || !userSuccess) && (
+            (itemsFailed || userFailed || feedFailed) && 
+            (!itemsRequest || !userRequest || !feedRequest) && 
+            (!itemsSuccess || !userSuccess || !feedSuccess) && (
               <h2 className='ml-30 text text_type_main-large text_color_inactive'>
                 Ошибка загрузки
               </h2>
           )}
           {
-            (itemsSuccess && userSuccess) && 
-            (!itemsFailed || !userFailed) && 
-            (!itemsRequest || !userRequest) && (
+            (itemsSuccess && userSuccess && feedSuccess) && 
+            (!itemsFailed || !userFailed || !feedFailed) && 
+            (!itemsRequest || !userRequest || !feedRequest) && (
               <OrdersList 
                 source='history'
-                orders={user.orders}
+                orders={orders}
               />
           )}
         </div>

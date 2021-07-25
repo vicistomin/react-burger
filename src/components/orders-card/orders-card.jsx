@@ -77,6 +77,8 @@ const OrdersCard = (props) => {
       if (index > ingredientsToShow) return null;
 
       return (
+        // skip if there is no bun or other invalid ingredient
+        (ingredient && ingredient._id) &&
         <li key={ingredient._id+index}>
           <span 
             className={ordersCardStyles.ingredient_icon_wrapper}
@@ -109,11 +111,17 @@ const OrdersCard = (props) => {
   }, [orderedMiddleItems, orderedBun]);
 
   const calculateOrderPrice = useCallback(() => (
-    // select only 1st bun in a case when there are 2 buns in the order (there shouldn't be)
-    orderedBun.price + orderedMiddleItems.reduce((acc, p) => (acc + p.price), 0)
+    // skip if there is no bun
+    orderedBun && orderedBun.price ? 
+      (
+        // select only 1st bun in a case when there are 2 buns in the order (there shouldn't be)
+        orderedBun.price + orderedMiddleItems.reduce((acc, p) => (acc + p.price), 0)
+      ) : ( 0 )
   ), [orderedBun, orderedMiddleItems]);
 
   return(
+    // skip if there is no bun
+    (!!orderedBun && !!orderedBun._id) &&
     <li
       className={ordersCardStyles.order_card} 
       onClick={handleOrderClick}
