@@ -65,7 +65,8 @@ export const wsMiddleware = () => {
 
                 setCookie('accessToken', refresh_data.accessToken, { path: '/' });
                 setCookie('refreshToken', refresh_data.refreshToken, { path: '/' });
-                const wsUrl = `${USER_ORDERS_WS_URL}?token=${refresh_data.accessToken}`;
+                const wsToken = refresh_data.accessToken.replace('Bearer ', '');
+                const wsUrl = `${USER_ORDERS_WS_URL}?token=${wsToken}`;
                 socket = new WebSocket(wsUrl);
               }
               else {

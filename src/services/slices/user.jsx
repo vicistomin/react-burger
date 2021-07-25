@@ -423,7 +423,7 @@ export const startHistory = () => {
   return (dispatch) => {
     dispatch(wsSlice.actions.wsConnectionStart({
       url: USER_ORDERS_WS_URL,
-      token: getCookie('accessToken')
+      token: getCookie('accessToken').replace('Bearer ', '')
     }));
     dispatch(wsSlice.actions.wsSetDataDispatch(userSlice.actions.setOrders));
     dispatch(userSlice.actions.request());
@@ -485,7 +485,7 @@ export const userSlice = createSlice({
     setOrders(state, action) {
       state.user = {
         ...state.user,
-        orders: action.payload
+        orders: action.payload.orders
       }
     },
     resetStatus(state) {

@@ -61,7 +61,9 @@ export const HistoryPage = () => {
       dispatch(userSlice.actions.success());
     else if (wsError)
       dispatch(userSlice.actions.failed());
-  }, [wsConnected]);
+  }, [wsConnected, wsError]);
+
+  console.log(user.orders);
 
   return(
     <>

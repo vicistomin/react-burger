@@ -56,7 +56,7 @@ export const OrderPage = () => {
       dispatch(feedSlice.actions.failed());
     else 
       dispatch(feedSlice.actions.request());
-  }, [wsConnected, orders]);
+  }, [wsConnected, orders, wsError]);
 
   return(
     <>

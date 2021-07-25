@@ -56,7 +56,7 @@ export const OrderModalPage = () => {
       dispatch(feedSlice.actions.failed());
     else 
       dispatch(feedSlice.actions.request());
-  }, [wsConnected]);
+  }, [wsConnected, wsError]);
 
 
   const currentOrderId = useParams().id;

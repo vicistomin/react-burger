@@ -45,11 +45,11 @@ export const FeedPage = () => {
   }, []);
 
   useEffect(() => {
-    if (wsConnected)
+    if (wsConnected && orders.length > 0)
       dispatch(feedSlice.actions.success());
     else if (wsError)
       dispatch(feedSlice.actions.failed());
-  }, [wsConnected]);
+  }, [wsConnected, wsError, orders]);
 
   return(
     <>
