@@ -1,4 +1,7 @@
 import { wsSlice } from '../slices/websocket';
+import { setCookie } from '../utils';
+import { refreshToken } from '../slices/user';
+import { USER_ORDERS_WS_URL } from '../constants';
 
 const {
   wsConnectionStart,
@@ -45,6 +48,36 @@ export const wsMiddleware = () => {
           const parsedData = JSON.parse(data);
           const { success, ...restParsedData } = parsedData;
           console.log(restParsedData);
+
+          // if accessToken has gone stale we're need to refresh it first
+          if (restParsedData.message && restParsedData.message === 'Invalid or missing token') {
+            socket.close(1000, 'CLOSE_NORMAL');
+            refreshToken()
+            .then((refresh_res) => {
+              if (!refresh_res.ok && refresh_res.status >= 500) {
+                throw Error(refresh_res.statusText);
+              }
+              return refresh_res.json();
+            })
+            .then((refresh_data) => {
+              if (refresh_data.success === true) {
+                console.log(refresh_data);
+
+                setCookie('accessToken', refresh_data.accessToken, { path: '/' });
+                setCookie('refreshToken', refresh_data.refreshToken, { path: '/' });
+                const wsUrl = `${USER_ORDERS_WS_URL}?token=${refresh_data.accessToken}`;
+                socket = new WebSocket(wsUrl);
+              }
+              else {
+                throw Error(refresh_data.message);
+              }
+            })
+            .catch((error) => {
+              dispatch(wsConnectionError(event));
+              console.log(error);
+            });
+
+          }
 
           // save data with provided dispatch function
           let saveDataDispatch = getState().ws.saveDataDispatch;

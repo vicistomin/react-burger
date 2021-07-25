@@ -7,7 +7,8 @@ import { RESET_PASSWORD_API_URL } from "../constants";
 import { LOGOUT_API_URL } from "../constants";
 import { TOKEN_API_URL } from "../constants";
 import { USER_API_URL } from "../constants";
-
+import { wsSlice } from './websocket';
+import { USER_ORDERS_WS_URL } from '../constants';
 import { getCookie, setCookie, deleteCookie } from '../utils';
 
 export const getUser = () => {
@@ -418,12 +419,29 @@ export const refreshToken = () => {
   })
 }
 
+export const startHistory = () => {
+  return (dispatch) => {
+    dispatch(wsSlice.actions.wsConnectionStart({
+      url: USER_ORDERS_WS_URL,
+      token: getCookie('accessToken')
+    }));
+    dispatch(wsSlice.actions.wsSetDataDispatch(userSlice.actions.setOrders));
+    dispatch(userSlice.actions.request());
+  }
+}
+
+export const stopHistory = () => {
+  return (dispatch) => {
+    dispatch(wsSlice.actions.wsConnectionStop());
+  }
+}
+
 export const userSlice = createSlice({
   name: 'user',
   initialState: {
     user: {
       password: fakeUserData.password,
-      orders: fakeUserData.orders
+      orders: []
     },
     userRequest: false,
     userFailed: false,
@@ -478,7 +496,7 @@ export const userSlice = createSlice({
       state.user.name = '';
       state.user.email = '';
       state.user.password = fakeUserData.password;
-      state.user.orders = fakeUserData.orders;
+      state.user.orders = [];
     },
     setAuthorization(state, action) {
       state.isAuthorized = action.payload;

@@ -12,7 +12,7 @@ export const startFeed = () => {
 
 export const stopFeed = () => {
   return (dispatch) => {
-    dispatch(wsSlice.actions.wsConnectionStop({ url: ALL_ORDERS_WS_URL }));
+    dispatch(wsSlice.actions.wsConnectionStop());
   }
 }
 

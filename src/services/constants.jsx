@@ -8,3 +8,4 @@ export const LOGOUT_API_URL = 'https://norma.nomoreparties.space/api/auth/logout
 export const TOKEN_API_URL = 'https://norma.nomoreparties.space/api/auth/token';
 export const USER_API_URL = 'https://norma.nomoreparties.space/api/auth/user';
 export const ALL_ORDERS_WS_URL = 'wss://norma.nomoreparties.space/orders/all';
+export const USER_ORDERS_WS_URL = 'wss://norma.nomoreparties.space/orders';
