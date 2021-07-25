@@ -2,6 +2,7 @@ import { wsSlice } from '../slices/websocket';
 
 const {
   wsConnectionStart,
+  wsConnectionStop,
   wsConnectionSuccess,
   wsConnectionError,
   wsConnectionClosed
@@ -16,9 +17,20 @@ export const wsMiddleware = () => {
       const { type, payload } = action;
 
       if (type === wsConnectionStart.type) {
-        socket = new WebSocket(`${payload.url}`);
-        // socket = new WebSocket(`${payload.url}?token=${payload.token}`);
+        const wsUrl = payload.token ? (
+          `${payload.url}?token=${payload.token}`
+        ) : (
+          `${payload.url}`
+        );
+        socket = new WebSocket(wsUrl);
       }
+      
+      if (type === wsConnectionStop.type) {
+        // user has moved to another page
+        // 1001 code fires an InvalidAccessError
+        socket.close(1000, 'CLOSE_NORMAL');
+      }
+
       if (socket) {
         socket.onopen = event => {
           dispatch(wsConnectionSuccess(event));
@@ -29,7 +41,6 @@ export const wsMiddleware = () => {
         };
 
         socket.onmessage = event => {
-          console.log('new message');
           const { data } = event;
           const parsedData = JSON.parse(data);
           const { success, ...restParsedData } = parsedData;

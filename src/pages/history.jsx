@@ -6,7 +6,7 @@ import Sidebar from '../components/sidebar/sidebar';
 import OrdersList from '../components/orders-list/orders-list';
 import Loader from '../components/loader/loader';
 // import slices and their functions
-import { getFeed } from '../services/slices/feed';
+import { feedSlice, startFeed, stopFeed } from '../services/slices/feed';
 import { getUser, userSlice } from '../services/slices/user';
 
 export const HistoryPage = () => {
@@ -40,6 +40,13 @@ export const HistoryPage = () => {
     resetStatus
   } = userSlice.actions;
 
+  const {
+    wsConnected,
+    wsError
+  } = useSelector(
+    state => state.ws
+  );
+
   const userOrders = orders.filter((order) => (
     user.orders.includes(order.id)
   ));
@@ -48,17 +55,28 @@ export const HistoryPage = () => {
     // reset errors on page load
     dispatch(resetStatus());
 
-    // won't call API if items are already in store
-    if (!feedSuccess) {
-      dispatch(getFeed());
-    }
+    // open new websocket when the page is opened
+    dispatch(startFeed());
 
     // we need to have user from API in store to find user orders
     // won't call API if user data is already in process
     if (!userSuccess && !userRequest) {
       dispatch(getUser());
     }
+    return () => {
+      // close the websocket when the page is closed
+      dispatch(stopFeed());
+    };  
   }, []);
+
+  useEffect(() => {
+    if (wsConnected)
+      dispatch(feedSlice.actions.success());
+    else if (wsError)
+      dispatch(feedSlice.actions.failed());
+    else 
+      dispatch(feedSlice.actions.request());
+  }, [wsConnected]);
 
   return(
     <>

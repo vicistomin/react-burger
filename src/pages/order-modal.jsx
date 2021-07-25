@@ -6,7 +6,7 @@ import Modal from '../components/modal/modal';
 import Loader from '../components/loader/loader';
 import OrderDetailedView from '../components/order-detailed-view/order-detailed-view';
 // import slices and their functions
-import { getFeed } from '../services/slices/feed';
+import { feedSlice, startFeed, stopFeed } from '../services/slices/feed';
 import { itemsSlice } from '../services/slices/items';
 
 export const OrderModalPage = () => {
@@ -28,19 +28,39 @@ export const OrderModalPage = () => {
     state => state.feed
   );
 
+  const {
+    wsConnected,
+    wsError
+  } = useSelector(
+    state => state.ws
+  );
+
   const { request } = itemsSlice.actions;
 
   let history = useHistory();
 
-  // we need to have feed from API in store to render order data
+  // we need to have feed from websocket in store to render orders data
   useEffect(() => {
-    // won't call API if items are already in store
-    if (!feedSuccess) {
-      dispatch(getFeed());
-    }
-  }, [dispatch, feedSuccess]);
+    // open new websocket when the page is opened
+    dispatch(startFeed());
+    return () => {
+      // close the websocket when the page is closed
+      dispatch(stopFeed());
+    };  
+  }, []);
+
+  useEffect(() => {
+    if (wsConnected)
+      dispatch(feedSlice.actions.success());
+    else if (wsError)
+      dispatch(feedSlice.actions.failed());
+    else 
+      dispatch(feedSlice.actions.request());
+  }, [wsConnected]);
+
 
   const currentOrderId = useParams().id;
+  const currentOrder = orders.find(order => order._id === currentOrderId);
 
   const replaceState = useCallback(() => {
     // hiding the content on page before the reload starts
@@ -88,11 +108,11 @@ export const OrderModalPage = () => {
         (!itemsFailed || !feedFailed) && 
         (!itemsRequest || !feedRequest) && (
           <Modal
-            header={`#${currentOrderId}`}
+            header={`#${currentOrder.number.toString().padStart(6, 0)}`}
             isOrderModal={true}
             closeModal={closeModal} >
             <OrderDetailedView
-              order={orders.find((order) => order.id === currentOrderId)}
+              order={currentOrder}
               isOrderModal={true}
             />
           </Modal> 

@@ -1,14 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { wsSlice } from './websocket';
+import { ALL_ORDERS_WS_URL } from '../constants';
 
-export const getFeed = () => {
-  return (dispatch, getState) => {
+export const startFeed = () => {
+  return (dispatch) => {
+    dispatch(wsSlice.actions.wsConnectionStart({ url: ALL_ORDERS_WS_URL }));
     dispatch(wsSlice.actions.wsSetDataDispatch(feedSlice.actions.setOrdersData));
     dispatch(feedSlice.actions.request());
-    if (getState())
-      dispatch(feedSlice.actions.success());
-    else
-      dispatch(feedSlice.actions.failed());
+  }
+}
+
+export const stopFeed = () => {
+  return (dispatch) => {
+    dispatch(wsSlice.actions.wsConnectionStop({ url: ALL_ORDERS_WS_URL }));
   }
 }
 
@@ -33,7 +37,7 @@ export const feedSlice = createSlice({
       state.feedRequest = false;
       state.feedSuccess = false;
     },
-    success(state, action) {
+    success(state) {
       state.feedSuccess = true;
       state.feedRequest = false;
       state.feedFailed = false;

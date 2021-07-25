@@ -5,40 +5,49 @@ import { useCallback } from 'react';
 const FeedInfoPanel = () => {
 
   const {
-    orders
+    orders,
+    ordersTotal,
+    ordersTotalToday
   } = useSelector(
     state => state.feed
   );
 
-  const renderCompletedOrders = useCallback(() => (
-    orders.map((order) => (
-     order.status === 'Выполнен' ?
-      <li
-        className='text text_type_digits-default'
-        key={order.id}
-      >
-        {order.id}
-      </li>
-      : null
-    ))
-  ), [orders]);
+  // showing max 20 last completed or pending orders in list
+  const maxDisplayedOrders = 20;
 
-  const renderPreparingOrders = useCallback(() => (
-    orders.map((order) => (
-     order.status === 'Готовится' ?
-      <li
-        className='text text_type_digits-default'
-        key={order.id}
-      >
-        {order.id}
-      </li>
-      : null
-    ))
-  ), [orders]);
+  const renderCompletedOrders = useCallback(() => {
+    const completedOrders = orders.filter((order) => (
+      order.status === 'done'
+    ));    
+    return (
+      completedOrders.slice(0, maxDisplayedOrders).map((order) => (
+        <li
+          className='text text_type_digits-default'
+          key={order._id}
+        >
+          {/* display order number in 6-digit format filled with zeros */}
+          {order.number.toString().padStart(6, 0)}
+        </li>
+      ))
+    )
+  }, [orders]);
 
-  // TODO: calculate qty from orders array using status and time
-  const preparedOrdersCount = 28572;
-  const preparedOrdersTodayCount = 138;
+  const renderPreparingOrders = useCallback(() => {
+    const pendingOrders = orders.filter((order) => (
+      order.status === 'pending'
+    ));    
+    return (
+      pendingOrders.slice(0, maxDisplayedOrders).map((order) => (
+        <li
+          className='text text_type_digits-default'
+          key={order._id}
+        >
+          {/* display order number in 6-digit format filled with zeros */}
+          {order.number.toString().padStart(6, 0)}
+        </li>
+      ))
+    )
+  }, [orders]);
 
   return(
     <div className={feedInfoPanelStyles.panel_container}>
@@ -65,13 +74,13 @@ const FeedInfoPanel = () => {
       </p>
       <p className='text text_type_digits-large'>
         {/* using space as a thousands separator */}
-        {preparedOrdersCount.toLocaleString()}
+        {ordersTotal.toLocaleString()}
       </p>
       <p className='mt-15 text text_type_main-medium'>
         Выполнено за сегодня:
       </p>
       <p className='text text_type_digits-large'>
-        {preparedOrdersTodayCount.toLocaleString()}
+        {ordersTotalToday.toLocaleString()}
       </p>
     </div>
   );

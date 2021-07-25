@@ -9,10 +9,6 @@
   align-self: flex-start;
 }
 
-.feed_orders_container ul {
-  max-height: calc(100vh - 187px);  
-}
-
 .feed_info_container {
   flex-basis: 580px;
 }
