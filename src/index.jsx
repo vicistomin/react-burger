@@ -2,19 +2,20 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import './index.module.css';
-import App from './app';
+import App from './components/app/app';
 
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import { configureStore } from '@reduxjs/toolkit'
 import rootReducer from './services/slices';
 import { BrowserRouter } from 'react-router-dom';
+import { wsMiddleware } from './services/middleware';
 
 // import reportWebVitals from './reportWebVitals';
 
 const store = configureStore({
   reducer: rootReducer,
-  middleware: [thunk],
+  middleware: [thunk, wsMiddleware()],
   devTools: process.env.NODE_ENV !== 'production',
   }); 
     

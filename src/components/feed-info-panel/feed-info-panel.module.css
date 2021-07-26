@@ -1,6 +1,8 @@
 .panel_container {
   composes: flex_column from global;
   align-items: flex-start;
+  height: calc(100vh - 187px);
+  composes: scroll from global;
 }
 
 .orders_list_container {
@@ -19,6 +21,9 @@
   composes: flex_column from global;
   row-gap: calc(var(--offset-base-size) * 2);
   align-items: flex-start;
+  flex-wrap: wrap;
+  /* max 10 items in column, each with 6*4px height and 2*4px gap */
+  max-height: calc(var(--offset-base-size) * 80);
 }
 
 .orders_list_completed li {

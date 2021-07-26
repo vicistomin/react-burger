@@ -1,11 +1,45 @@
-import PropTypes from 'prop-types';
 import orderDetailsStyles from './order-details.module.css';
 import orderAcceptedImage from '../../images/order-accepted.gif'
+import { useSelector } from "react-redux";
+import Loader from '../loader/loader';
 
-function OrderDetails({ orderData }) {
+function OrderDetails() {
+    const {
+        orderData,
+        orderRequest,
+        orderSuccess,
+        orderFailed
+      } = useSelector(
+        state => state.order
+      );
+
     return(
         <div className={orderDetailsStyles.order_details_container + ' mt-20 mb-15'}>
-            {orderData.success ? (
+            {
+                orderRequest && 
+                !orderFailed && 
+                !orderSuccess && (
+                <div className={orderDetailsStyles.loader_container}>
+                    <Loader />
+                </div>
+            )}
+            {
+                orderFailed && 
+                !orderRequest && 
+                !orderSuccess && (
+                <>
+                    <p className='text text_type_main-large'>
+                        Произошла ошибка
+                    </p>
+                    <p className='text text_type_main-default text_color_inactive mt-8 mb-15'>
+                        Пожалуйста, попробуйте оформить заказ позже
+                    </p>
+                </>
+            )}
+            {
+                orderSuccess && 
+                !orderFailed && 
+                !orderRequest && (
                 <>
                     <p className={orderDetailsStyles.order_id + ' text text_type_digits-large'}>
                         {orderData.id}
@@ -28,25 +62,9 @@ function OrderDetails({ orderData }) {
                         Дождитесь готовности на орбитальной станции
                     </p>
                 </>
-            ) : (
-                <>
-                    <p className='text text_type_main-large'>
-                        Произошла ошибка
-                    </p>
-                    <p className='text text_type_main-default text_color_inactive mt-8 mb-15'>
-                        Пожалуйста, попробуйте оформить заказ позже
-                    </p>
-                </>
             )}
         </div>
     );
 }
-
-OrderDetails.propTypes = {
-    orderData: PropTypes.shape({
-        success: PropTypes.bool.isRequired,
-        id: PropTypes.number
-    }).isRequired
-};
 
 export default OrderDetails;

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { Switch, Route, useLocation } from 'react-router-dom';
-import { getItems } from './services/slices/items';
+import { getItems } from '../../services/slices/items';
 import {
   HomePage,
   LoginPage,
@@ -10,16 +10,17 @@ import {
   ResetPasswordPage,
   FeedPage,
   OrderPage,
+  OrderModalPage,
   ProfilePage,
   HistoryPage,
   IngredientPage,
   IngredientModalPage,
   NotFound404
-} from './pages';
-import { ProtectedRoute } from './components/protected-route';
-import { ProtectedResetRoute } from './components/protected-reset-route';
-import { ProtectedGuestRoute } from './components/protected-guest-route';
-import AppHeader from './components/app-header/app-header';
+} from '../../pages';
+import { ProtectedRoute } from '../protected-route';
+import { ProtectedResetRoute } from '../protected-reset-route';
+import { ProtectedGuestRoute } from '../protected-guest-route';
+import AppHeader from '../app-header/app-header';
 
 function App() {
   const dispatch = useDispatch();
@@ -83,10 +84,22 @@ function App() {
         </Route>
       </Switch>
 
-      {/* Show the modal when a background page is set */
-        background && 
+      {/* Show the modals when a background page is set */
+        background && background.pathname === '/' &&
         <Route path="/ingredients/:id" exact={true}>
           <IngredientModalPage />
+        </Route>
+      }
+      {
+        background && background.pathname === '/profile/orders' &&
+        <ProtectedRoute path="/profile/orders/:id" exact={true}>
+          <OrderModalPage />
+        </ProtectedRoute>
+      }
+      {
+        background && background.pathname === '/feed' &&
+        <Route path="/feed/:id" exact={true}>
+          <OrderModalPage />
         </Route>
       }
     </>

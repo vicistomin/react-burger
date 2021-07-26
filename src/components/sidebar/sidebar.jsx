@@ -46,14 +46,10 @@ function Sidebar() {
     history.replace({ pathname: '/profile/orders' });
   };
 
-  const redirectOnSuccess = () => {
-    history.replace({ pathname: '/login' });
-  }
-
   const onLogoutClick = () => {
     // won't call API if user data is already in process
     if (!userRequest) {
-      dispatch(logout(redirectOnSuccess));
+      dispatch(logout());
     }
   };
 

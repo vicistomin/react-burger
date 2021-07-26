@@ -6,7 +6,8 @@ import Sidebar from '../components/sidebar/sidebar';
 import OrdersList from '../components/orders-list/orders-list';
 import Loader from '../components/loader/loader';
 // import slices and their functions
-import { getFeed } from '../services/slices/feed';
+import { feedSlice } from '../services/slices/feed';
+import { getUser, userSlice, startHistory, stopHistory } from '../services/slices/user';
 
 export const HistoryPage = () => {
   const dispatch = useDispatch();
@@ -19,7 +20,6 @@ export const HistoryPage = () => {
     state => state.items
   );
   const {
-    user,
     userRequest,
     userSuccess,
     userFailed
@@ -34,18 +34,41 @@ export const HistoryPage = () => {
   } = useSelector(
     state => state.feed
   );
+  const {
+    resetStatus
+  } = userSlice.actions;
 
-  const userOrders = orders.filter((order) => (
-    user.orders.includes(order.id)
-  ));
+  const {
+    wsConnected,
+    wsError
+  } = useSelector(
+    state => state.ws
+  );
 
-  // we need to have feed from API in store to render orders data
   useEffect(() => {
-    // won't call API if items are already in store
-    if (!feedSuccess) {
-      dispatch(getFeed());
+    // reset errors on page load
+    dispatch(resetStatus());
+
+    // open new websocket when the page is opened
+    dispatch(startHistory());
+
+    // we need to have user from API in store to find user orders
+    // won't call API if user data is already in process
+    if (!userSuccess && !userRequest) {
+      dispatch(getUser());
     }
-  }, [dispatch, feedSuccess]);
+    return () => {
+      // close the websocket when the page is closed
+      dispatch(stopHistory());
+    };  
+  }, []);
+
+  useEffect(() => {
+    if (wsConnected)
+      dispatch(feedSlice.actions.success());
+    else if (wsError)
+      dispatch(feedSlice.actions.failed());
+  }, [wsConnected, wsError]);
 
   return(
     <>
@@ -72,7 +95,7 @@ export const HistoryPage = () => {
             (!itemsRequest || !userRequest || !feedRequest) && (
               <OrdersList 
                 source='history'
-                orders={userOrders}
+                orders={orders}
               />
           )}
         </div>

@@ -6,7 +6,7 @@ import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components
 import { formatDateTime } from '../../services/utils'
 
 import { useHistory } from 'react-router-dom';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState, memo } from 'react';
 
 const OrdersCard = (props) => {
   const history = useHistory();
@@ -16,26 +16,70 @@ const OrdersCard = (props) => {
   } = useSelector(
     state => state.items
   );
+
+  const [orderStatusName, setOrderStatusName] = useState('');
+  const [orderStatusClass, setOrderStatusClass] = useState(null);
   
+  // defining the order status text and class based on status string from server
+  useEffect(() => {
+    switch (props.order.status) {
+      case 'created':
+        setOrderStatusName('Создан');
+        break;
+
+      case 'pending':
+        setOrderStatusName('Готовится');
+        break;
+
+      case 'done':
+        setOrderStatusName('Выполнен')
+        setOrderStatusClass(ordersCardStyles.status_completed);
+        break;
+
+      // TODO: find out what status string server will send on error
+      case 'canceled':
+        setOrderStatusName('Отменён')
+        setOrderStatusClass(ordersCardStyles.status_canceled);
+        break;
+
+      default:
+        break;
+    }
+  }, [props.order.status]);
+
   const handleOrderClick = () => {
     const currentUrl = history.location.pathname;
-    history.replace({ pathname: `${currentUrl}/${props.order.id}` });
+    history.replace({ 
+      pathname: `${currentUrl}/${props.order._id}`,
+      state: { background: history.location }
+    });
   }
 
   // parsing data and time to specific format as in Figma
   const getOrderDateTime = useCallback(() => (
-    formatDateTime(props.order.time)
-  ), [props.order.time]);
+    formatDateTime(props.order.createdAt)
+  ), [props.order.createdAt]);
 
-  const renderIngredientIcons = useCallback(() => (
-     props.order.ingredients.map((item_id, index) => {
-      const ingredient = items.find(item => item._id === item_id);
-      
+  const orderedIngredients = props.order.ingredients.map(item_id => (
+    items.find(item => item._id === item_id)
+  ));
+
+  const orderedBun = orderedIngredients.find(item => item.type === 'bun');
+  const orderedMiddleItems = orderedIngredients.filter(item => item.type !== 'bun');
+
+  const renderIngredientIcons = useCallback(() => {
+    let itemsToRender = orderedMiddleItems;
+    // adding bun in the first place
+    itemsToRender.splice(0, 0, orderedBun);
+
+    return itemsToRender.map((ingredient, index) => {
       const ingredientsToShow = 5;
       if (index > ingredientsToShow) return null;
 
       return (
-        <li key={item_id+index}>
+        // skip if there is no bun or other invalid ingredient
+        (ingredient && ingredient._id) &&
+        <li key={ingredient._id+index}>
           <span 
             className={ordersCardStyles.ingredient_icon_wrapper}
             style={{ zIndex: 10 - index }}
@@ -56,7 +100,7 @@ const OrdersCard = (props) => {
                 ordersCardStyles.more_icon_text +
                 ' text text_type_main-default'
               }>
-                +{props.order.ingredients.length - ingredientsToShow}
+                +{itemsToRender.length - ingredientsToShow}
               </p>
               <span className={ordersCardStyles.more_icon_wrapper}></span>
             </span>
@@ -64,34 +108,42 @@ const OrdersCard = (props) => {
         </li>
       );
     })
-  ), [items, props.order.ingredients]);
+  }, [orderedMiddleItems, orderedBun]);
+
+  const calculateOrderPrice = useCallback(() => (
+    // skip if there is no bun
+    orderedBun && orderedBun.price ? 
+      (
+        // select only 1st bun in a case when there are 2 buns in the order (there shouldn't be)
+        orderedBun.price + orderedMiddleItems.reduce((acc, p) => (acc + p.price), 0)
+      ) : ( 0 )
+  ), [orderedBun, orderedMiddleItems]);
 
   return(
+    // skip if there is no bun
+    (!!orderedBun && !!orderedBun._id) &&
     <li
       className={ordersCardStyles.order_card} 
       onClick={handleOrderClick}
     >
       <div className={ordersCardStyles.order_info}>
         <p className='text text_type_digits-default'>
-          {`#${props.order.id}`}
+          {/* display order number in 6-digit format filled with zeros */}
+          {`#${props.order.number.toString().padStart(6, 0)}`}
         </p>
         <p className='text text_type_main-default text_color_inactive'>
           {getOrderDateTime()}
         </p>
       </div>
       <p className={'mt-6 text text_type_main-medium'}>
-        {props.order.type}
+        {props.order.name}
       </p>
       {/* order status is displayed only on HistoryPage, not on FeedPage */}
       {props.source === 'history' ?
         <p className={
-          `${props.order.status === 'Выполнен' ?
-              ordersCardStyles.status_completed :
-              props.order.status === 'Отменён' ?
-                ordersCardStyles.status_canceled : ''
-            } mt-2 text text_type_main-default`
+          `${orderStatusClass} mt-2 text text_type_main-default`
         }>
-          {props.order.status}
+          {orderStatusName}
         </p>
         : null
       }
@@ -100,7 +152,7 @@ const OrdersCard = (props) => {
           {renderIngredientIcons()}
         </ul>
         <div className={'flex_row ml-6'}>
-          <p className='text text_type_digits-default'>{props.order.price}</p>
+          <p className='text text_type_digits-default'>{calculateOrderPrice()}</p>
           <CurrencyIcon />
         </div>
       </div>
@@ -111,10 +163,11 @@ const OrdersCard = (props) => {
 OrdersCard.propTypes = {
   source: PropTypes.string.isRequired,
   order: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    time: PropTypes.number.isRequired,
-    type: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
+    _id: PropTypes.string.isRequired,
+    createdAt: PropTypes.string.isRequired,
+    updatedAt: PropTypes.string.isRequired,
+    number: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
     status: PropTypes.string.isRequired,
     ingredients: PropTypes.arrayOf(
       PropTypes.string.isRequired
@@ -122,4 +175,11 @@ OrdersCard.propTypes = {
   }).isRequired
 };
 
-export default OrdersCard;
+// comparing updateAt field from server and from props
+// to check whether the order data was changed
+const compareOrders = (prevProps, nextProps) => {
+  return prevProps.order.updatedAt !== nextProps.order.updatedAt;
+}
+
+// memoizing component to avoid unnecessary renders
+export default memo(OrdersCard, compareOrders);

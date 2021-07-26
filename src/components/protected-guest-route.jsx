@@ -1,9 +1,10 @@
 import { Redirect, Route } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
 // import slices and their functions
 import { userSlice } from '../services/slices/user';
 
-export function ProtectedGuestRoute({ children, isGuestOnly, ...rest }) {
+export function ProtectedGuestRoute({ children, ...rest }) {
   const dispatch = useDispatch();
 
   const {
@@ -14,8 +15,11 @@ export function ProtectedGuestRoute({ children, isGuestOnly, ...rest }) {
 
   const { checkAuthorization } = userSlice.actions;
 
-  // check cookies with tokens
-  dispatch(checkAuthorization());
+  useEffect(() => {
+    // check cookies with tokens
+    dispatch(checkAuthorization());
+  }, []);
+
   // protect routes from authorized users
   return (
     <Route
@@ -23,9 +27,8 @@ export function ProtectedGuestRoute({ children, isGuestOnly, ...rest }) {
       render={({ location }) =>
         isAuthorized ? (
           <Redirect
-            to={{
-              pathname: '/profile'
-            }}
+            // return to the page where user been before request
+            to={(location.state && location.state.from) || {pathname: "/profile"}}
           />
         ) : (
           children

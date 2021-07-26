@@ -6,14 +6,17 @@ import Modal from '../components/modal/modal';
 import OrderDetails from '../components/order-details/order-details';
 import Loader from '../components/loader/loader';
 import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
 // import slices and their functions
 import { orderSlice } from '../services/slices/order';
+import { userSlice } from '../services/slices/user';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 
 function HomePage() {
   const dispatch = useDispatch();
   const { closeOrderModal } = orderSlice.actions;
+  const { checkAuthorization } = userSlice.actions;
 
   const {
     itemsRequest,
@@ -24,7 +27,6 @@ function HomePage() {
   );
 
   const {
-    orderData,
     isOrderModalOpen
   } = useSelector(
     state => state.order
@@ -33,6 +35,11 @@ function HomePage() {
     const closeModal = () => {
       dispatch(closeOrderModal());
     };
+
+  useEffect(() => {
+    // check cookies with tokens for correct order placement of authorized user
+    dispatch(checkAuthorization());
+  }, []);
 
   return (
     <>
@@ -71,7 +78,7 @@ function HomePage() {
               header={null}
               closeModal={closeModal}
               isFancyCloseIcon >
-                <OrderDetails orderData={orderData} />
+                <OrderDetails />
             </Modal>
         )}
     </>

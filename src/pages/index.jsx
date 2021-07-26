@@ -5,6 +5,7 @@ import ForgotPasswordPage from './forgot-password';
 import ResetPasswordPage from './reset-password';
 import FeedPage from './feed';
 import OrderPage from './order';
+import OrderModalPage from './order-modal';
 import ProfilePage from './profile';
 import HistoryPage from './history';
 import IngredientPage from './ingredient';
@@ -19,6 +20,7 @@ export {
   ResetPasswordPage,
   FeedPage,
   OrderPage,
+  OrderModalPage,
   ProfilePage,
   HistoryPage,
   IngredientPage,

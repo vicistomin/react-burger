@@ -1,14 +1,19 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from "react-redux";
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation  } from 'react-router-dom';
 // importing components from project
 import Loader from '../components/loader/loader';
 import OrderDetailedView from '../components/order-detailed-view/order-detailed-view';
 // import slices and their functions
-import { getFeed } from '../services/slices/feed';
+import { feedSlice, startFeed, stopFeed } from '../services/slices/feed';
+import { startHistory, stopHistory } from '../services/slices/user';
 
 export const OrderPage = () => {
   const dispatch = useDispatch();
+  // for user profile page we should open different websocket with auth token
+  // useRouteMatch for some reason returning always null here
+  const location = useLocation();
+  const isFeedPage = location.pathname.split('/')[1] === 'feed';
   
   const {
     itemsRequest,
@@ -26,15 +31,43 @@ export const OrderPage = () => {
     state => state.feed
   );
 
-  // we need to have feed from API in store to render order data
+  const {
+    wsConnected,
+    wsError
+  } = useSelector(
+    state => state.ws
+  );
+
+    const [currentOrder, setCurrentOrder] = useState({});
+
+  // we need to have feed from websocket in store to render orders data
   useEffect(() => {
-    // won't call API if items are already in store
-    if (!feedSuccess) {
-      dispatch(getFeed());
-    }
-  }, [dispatch, feedSuccess]);
+    // open new websocket when the page is opened
+    if(isFeedPage)
+      dispatch(startFeed());
+    else
+      dispatch(startHistory());
+    return () => {
+      // close the websocket when the page is closed
+      if(isFeedPage)
+        dispatch(stopFeed());
+      else
+        dispatch(stopHistory());
+    };  
+  }, []);
 
   const currentOrderId = useParams().id;
+
+  useEffect(() => {
+    if (orders.length > 0 && wsConnected) {
+      setCurrentOrder(orders.find(order => order._id === currentOrderId))
+      dispatch(feedSlice.actions.success());
+    }
+    else if (wsError)
+      dispatch(feedSlice.actions.failed());
+    else 
+      dispatch(feedSlice.actions.request());
+  }, [wsConnected, orders, wsError]);
 
   return(
     <>
@@ -53,12 +86,13 @@ export const OrderPage = () => {
           </h2>
       )}
       {
-        (itemsSuccess && feedSuccess) && 
+        (itemsSuccess && feedSuccess ) &&
+        (currentOrder !== {}) &&
         (!itemsFailed || !feedFailed) && 
         (!itemsRequest || !feedRequest) && (
           <div className='fullscreen_message'>
             <OrderDetailedView
-              order={orders.find((order) => order.id === currentOrderId)}
+              order={currentOrder}
             />
           </div>
         )}

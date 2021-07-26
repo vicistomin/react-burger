@@ -9,3 +9,13 @@
         0px 4px 32px rgba(51, 51, 255, 0.5);
 }
 
+.loader_container {
+    composes: flex_column from global;
+    height: 160px;
+    position: relative;
+    top: -90px;
+}
+
+.loader_container :global .flex_row {
+    background-color: transparent;
+}

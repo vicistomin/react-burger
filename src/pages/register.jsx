@@ -174,7 +174,7 @@ export const RegisterPage = () => {
           <Form
             title='Регистрация'
             actionName='Зарегистрироваться'
-            onClick={onRegisterClick}
+            onFormSubmit={onRegisterClick}
           >
             <Input
               type={'text'}

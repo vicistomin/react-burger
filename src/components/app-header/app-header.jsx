@@ -17,15 +17,22 @@ function AppHeader() {
     const currentUrl = history.location.pathname;
 
     useEffect(() => {
-        switch (currentUrl.split('/')[1]) {
-            case '':
+        switch (currentUrl) {
+            case '/':
                 setHomePage(true);
+                setFeedPage(false);
+                setProfilePage(false);
                 break;
-            case 'feed':
+            case '/feed':
                 setFeedPage(true);
+                setHomePage(false);
+                setProfilePage(false);
                 break;
-            case 'profile':
+            case '/profile':
+            case '/profile/orders':
                 setProfilePage(true);
+                setHomePage(false);
+                setFeedPage(false);
                 break;
             default:
                 break;
@@ -40,6 +47,9 @@ function AppHeader() {
     };
     const onProfileClick = () => {
         history.replace({ pathname: '/profile' });
+    };
+    const onLogoClick = () => {
+        history.replace({ pathname: '/' });
     };
 
     return(
@@ -72,7 +82,10 @@ function AppHeader() {
                             </li>
                         </ul>
                     </li>
-                    <li className={appHeaderStyles.menu_list_center}>
+                    <li
+                        className={appHeaderStyles.menu_list_center}
+                        onClick={onLogoClick}
+                    >
                         <Logo />
                     </li>
                     <li className={appHeaderStyles.menu_list_right}>

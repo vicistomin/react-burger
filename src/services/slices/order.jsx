@@ -2,15 +2,22 @@ import { createSlice } from '@reduxjs/toolkit'
 import { ORDER_API_URL } from "../constants";
 import { burgerConstructorSlice } from './burger-constructor';
 import { itemsSlice } from './items';
+import { setCookie, getCookie } from '../utils';
+import { refreshToken } from './user';
 
 export const placeOrder = (items) => {
   return dispatch => {
     dispatch(orderSlice.actions.request());
+
+    // show modal right from request start to show loader
+    dispatch(orderSlice.actions.openOrderModal());
+    
     // get new order ID from API:
     fetch(ORDER_API_URL, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        Authorization: getCookie('accessToken')
       },
       body: JSON.stringify({
         "ingredients": items
@@ -23,24 +30,79 @@ export const placeOrder = (items) => {
         return res.json();
         })
       .then((data) => {
-        if (data.success)
+        if (data.success) {
           dispatch(orderSlice.actions.success({
             name: data.name,
             number: data.order.number,
             success: data.success
           }))
+        }
+        // if accessToken has gone stale we're need to refresh it first
+        else if (data.message && data.message === 'jwt expired') {
+          dispatch(orderSlice.actions.request());
+          refreshToken()
+          .then((refresh_res) => {
+            if (!refresh_res.ok && refresh_res.status >= 500) {
+              throw Error(refresh_res.statusText);
+            }
+            return refresh_res.json();
+          })
+          .then((refresh_data) => {
+            if (refresh_data.success === true) {
+              setCookie('accessToken', refresh_data.accessToken, { path: '/' });
+              setCookie('refreshToken', refresh_data.refreshToken, { path: '/' });
+              dispatch(orderSlice.actions.request());
+              fetch(ORDER_API_URL, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: getCookie('accessToken')
+                },
+                body: JSON.stringify({
+                  "ingredients": items
+                })
+              })
+              .then(res => {
+                if (!res.ok && res.status >= 500) {
+                  throw Error(res.statusText);
+                  }
+                return res.json();
+                })
+              .then((data) => {
+                if (data.success) {
+                  dispatch(orderSlice.actions.success({
+                    name: data.name,
+                    number: data.order.number,
+                    success: data.success
+                  }))
+                }
+                else {
+                  throw Error(data.message);
+                }
+              })
+              .catch((error) => {
+                dispatch(orderSlice.actions.failed());
+                console.log(error);
+              })
+            }
+            else {
+              throw Error(refresh_data.message);
+            }
+          })
+          .catch((error) => {
+            dispatch(orderSlice.actions.failed());
+            console.log(error);
+          });
+        }
         else {
-          dispatch(orderSlice.actions.failed())
           throw Error(data.message);
         }
       })
       .catch((error) => {
+        dispatch(orderSlice.actions.failed());
         console.log(error);
       })
-      // show modal only after fetch is done so it won't show old data if it's open again:
-      // in case of error we'll show OrderDetail modal to user anyway to let him see the error message in it
-      .finally(() => {
-        dispatch(orderSlice.actions.openOrderModal())
+     .finally(() => {
         // clearing ordered ingredients from BurgerConstructor
         dispatch(burgerConstructorSlice.actions.setBunItem({}));
         dispatch(burgerConstructorSlice.actions.clearMiddleItems([]));
@@ -63,6 +125,7 @@ export const orderSlice = createSlice({
       state.orderRequest = true;
       state.orderFailed = false;
       state.orderSuccess = false;
+      state.orderData = {};
     },
     failed(state) {
       state.orderFailed = true;

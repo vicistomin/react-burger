@@ -6,7 +6,7 @@ import OrdersList from '../components/orders-list/orders-list';
 import FeedInfoPanel from '../components/feed-info-panel/feed-info-panel';
 import Loader from '../components/loader/loader';
 // import slices and their functions
-import { getFeed } from '../services/slices/feed';
+import { feedSlice, startFeed, stopFeed } from '../services/slices/feed';
 
 export const FeedPage = () => {
   const dispatch = useDispatch();
@@ -27,13 +27,29 @@ export const FeedPage = () => {
     state => state.feed
   );
 
-  // we need to have feed from API in store to render orders data
+  const {
+    wsConnected,
+    wsError
+  } = useSelector(
+    state => state.ws
+  );
+
+  // we need to have feed from websocket in store to render orders data
   useEffect(() => {
-    // won't call API if items are already in store
-    if (!feedSuccess) {
-      dispatch(getFeed());
-    }
-  }, [dispatch, feedSuccess]);
+    // open new websocket when the page is opened
+    dispatch(startFeed());
+    return () => {
+      // close the websocket when the page is closed
+      dispatch(stopFeed());
+    };  
+  }, []);
+
+  useEffect(() => {
+    if (wsConnected && orders.length > 0)
+      dispatch(feedSlice.actions.success());
+    else if (wsError)
+      dispatch(feedSlice.actions.failed());
+  }, [wsConnected, wsError, orders]);
 
   return(
     <>

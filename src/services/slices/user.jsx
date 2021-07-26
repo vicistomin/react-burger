@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { fakeUserData } from '../user-data';
 import { LOGIN_API_URL } from "../constants";
 import { REGISTER_API_URL } from "../constants";
 import { FORGOT_PASSWORD_API_URL } from "../constants";
@@ -7,8 +6,10 @@ import { RESET_PASSWORD_API_URL } from "../constants";
 import { LOGOUT_API_URL } from "../constants";
 import { TOKEN_API_URL } from "../constants";
 import { USER_API_URL } from "../constants";
-
+import { wsSlice } from './websocket';
+import { USER_ORDERS_WS_URL } from '../constants';
 import { getCookie, setCookie, deleteCookie } from '../utils';
+import { feedSlice } from './feed';
 
 export const getUser = () => {
   return dispatch => {
@@ -394,7 +395,6 @@ export const logout = (redirectCallback) => {
 
         dispatch(userSlice.actions.setAuthorization(false));
         dispatch(userSlice.actions.success());
-        redirectCallback();
       }
       else {
         throw Error(data.message);
@@ -419,12 +419,32 @@ export const refreshToken = () => {
   })
 }
 
+export const startHistory = () => {
+  return (dispatch) => {
+    dispatch(wsSlice.actions.wsConnectionStart({
+      url: USER_ORDERS_WS_URL,
+      token: getCookie('accessToken').replace('Bearer ', '')
+    }));
+    // saving user orders in feedSlice
+    dispatch(wsSlice.actions.wsSetDataDispatch(feedSlice.actions.setOrdersData));
+    dispatch(feedSlice.actions.request());
+  }
+}
+
+export const stopHistory = () => {
+  return (dispatch) => {
+    dispatch(wsSlice.actions.wsConnectionStop());
+  }
+}
+
+// TODO: get password hash from server
+const fakePassword = 123456;
+
 export const userSlice = createSlice({
   name: 'user',
   initialState: {
     user: {
-      password: fakeUserData.password,
-      orders: fakeUserData.orders
+      password: fakePassword,
     },
     userRequest: false,
     userFailed: false,
@@ -442,7 +462,7 @@ export const userSlice = createSlice({
       state.userRequest = false;
       state.userSuccess = false;
     },
-    success(state, action) {
+    success(state) {
       state.userSuccess = true;
       state.userRequest = false;
       state.userFailed = false;
@@ -465,24 +485,15 @@ export const userSlice = createSlice({
         email: action.payload
       }
     },
-    setOrders(state, action) {
-      state.user = {
-        ...state.user,
-        orders: action.payload
-      }
-    },
-    resetStatus(state, action) {
-      // state.userSuccess = false;
-      // state.userRequest = false;
-
+    resetStatus(state) {
       // resetting only errors
       state.userFailed = false;
     },
     resetUserData(state) {
       state.user.name = '';
       state.user.email = '';
-      state.user.password = fakeUserData.password;
-      state.user.orders = fakeUserData.orders;
+      // TODO: get password hash from server
+      state.user.password = fakePassword;
     },
     setAuthorization(state, action) {
       state.isAuthorized = action.payload;
