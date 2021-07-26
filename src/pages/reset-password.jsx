@@ -151,7 +151,7 @@ export const ResetPasswordPage = () => {
           <Form
             title='Восстановление пароля'
             actionName='Сохранить'
-            onClick={onResetPasswordClick}
+            onFormSubmit={onResetPasswordClick}
           >
             {/* TODO: find a way to trigger PasswordInput error status */}
             <div className={isPasswordEmpty ? 'password_error' : ''}>

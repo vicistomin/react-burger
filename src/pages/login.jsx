@@ -163,7 +163,7 @@ export const LoginPage = () => {
           <Form
             title='Вход'
             actionName='Войти'
-            onClick={onLoginClick}
+            onFormSubmit={onLoginClick}
           >
             <Input
               type={'email'}

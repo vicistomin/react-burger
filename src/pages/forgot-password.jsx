@@ -128,7 +128,7 @@ export const ForgotPasswordPage = () => {
           <Form
             title='Восстановление пароля'
             actionName='Восстановить'
-            onClick={onResetPasswordClick}
+            onFormSubmit={onResetPasswordClick}
           >
             <Input
               type={'email'}
