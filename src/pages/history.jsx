@@ -20,7 +20,6 @@ export const HistoryPage = () => {
     state => state.items
   );
   const {
-    user,
     userRequest,
     userSuccess,
     userFailed
