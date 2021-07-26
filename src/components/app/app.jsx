@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { Switch, Route, useLocation } from 'react-router-dom';
-import { getItems } from './services/slices/items';
+import { getItems } from '../../services/slices/items';
 import {
   HomePage,
   LoginPage,
@@ -16,11 +16,11 @@ import {
   IngredientPage,
   IngredientModalPage,
   NotFound404
-} from './pages';
-import { ProtectedRoute } from './components/protected-route';
-import { ProtectedResetRoute } from './components/protected-reset-route';
-import { ProtectedGuestRoute } from './components/protected-guest-route';
-import AppHeader from './components/app-header/app-header';
+} from '../../pages';
+import { ProtectedRoute } from '../protected-route';
+import { ProtectedResetRoute } from '../protected-reset-route';
+import { ProtectedGuestRoute } from '../protected-guest-route';
+import AppHeader from '../app-header/app-header';
 
 function App() {
   const dispatch = useDispatch();
