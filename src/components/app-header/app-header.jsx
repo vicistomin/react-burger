@@ -48,6 +48,9 @@ function AppHeader() {
     const onProfileClick = () => {
         history.replace({ pathname: '/profile' });
     };
+    const onLogoClick = () => {
+        history.replace({ pathname: '/' });
+    };
 
     return(
         <header>
@@ -79,7 +82,10 @@ function AppHeader() {
                             </li>
                         </ul>
                     </li>
-                    <li className={appHeaderStyles.menu_list_center}>
+                    <li
+                        className={appHeaderStyles.menu_list_center}
+                        onClick={onLogoClick}
+                    >
                         <Logo />
                     </li>
                     <li className={appHeaderStyles.menu_list_right}>
