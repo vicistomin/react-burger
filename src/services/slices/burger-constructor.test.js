@@ -5,12 +5,31 @@ import thunk from 'redux-thunk';
 
 const testBunItem = {
   _id: 123,
-  name: "Тестовая булка"
+  name: "Тестовая булка",
+  price: 100
+};
+
+const testBunItem2 = {
+  _id: 234,
+  name: "Тестовая булка 2",
+  price: 200
 };
 
 const testMiddleItem = {
+  _id: 345,
+  name: "Тестовый ингредиент 1",
+  price: 300
+};
+
+const testMiddleItem2 = {
   _id: 456,
-  name: "Тестовый ингредиент"
+  name: "Тестовый ингредиент 2",
+  price: 400
+};
+const testMiddleItem3 = {
+  _id: 567,
+  name: "Тестовый ингредиент 3",
+  price: 500
 };
 
 const initStore = {
@@ -31,8 +50,11 @@ const storeWithBun = {
 
 const {
   addMiddleItem,
+  moveMiddleItem,
+  deleteMiddleItem,
   clearMiddleItems,
-  setBunItem
+  setBunItem,
+  calcTotalPrice
 } = burgerConstructorSlice.actions
 
 describe('tests for burgerConstructorSlice reducers', () => {
@@ -53,7 +75,72 @@ describe('tests for burgerConstructorSlice reducers', () => {
       store.getState(),
       addMiddleItem(testMiddleItem)
     )) 
-    .toEqual(storeWithMiddleItem)
+    .toEqual({
+      ...initStore,
+      middleItems: [testMiddleItem]
+    })
+  })
+
+  it('should add another middle item', () => {
+    expect(burgerConstructorSlice.reducer(
+      {
+        ...initStore,
+        middleItems: [
+          testMiddleItem
+        ]
+      },
+      addMiddleItem(testMiddleItem2)
+    )) 
+    .toEqual({
+      ...initStore,
+      middleItems: [
+        testMiddleItem,
+        testMiddleItem2
+      ]
+    })
+  })
+
+  it('should add third middle item', () => {
+    expect(burgerConstructorSlice.reducer(
+      {
+        ...initStore,
+        middleItems: [
+          testMiddleItem,
+          testMiddleItem2
+        ]
+      },
+      addMiddleItem(testMiddleItem3)
+    )) 
+    .toEqual({
+      ...initStore,
+      middleItems: [
+        testMiddleItem,
+        testMiddleItem2,
+        testMiddleItem3
+      ]
+    })
+  })
+
+  it('should move first middle item to make it last', () => {
+    expect(burgerConstructorSlice.reducer(
+      {
+        ...initStore,
+        middleItems: [
+          testMiddleItem,
+          testMiddleItem2,
+          testMiddleItem3
+        ]
+      },
+      moveMiddleItem(0, 2)
+    )) 
+    .toEqual({
+      ...initStore,
+      middleItems: [
+        testMiddleItem,
+        testMiddleItem2,
+        testMiddleItem3
+      ]
+    })
   })
 
   it('should clear the middle items', () => {
@@ -69,7 +156,10 @@ describe('tests for burgerConstructorSlice reducers', () => {
       store.getState(),
       setBunItem(testBunItem)
     ))
-    .toEqual(storeWithBun)
+    .toEqual({
+      ...initStore,
+      bunItem: testBunItem
+    })
   })
 
   it('should remove the bun', () => {
@@ -78,5 +168,26 @@ describe('tests for burgerConstructorSlice reducers', () => {
       setBunItem({})
     ))
     .toEqual(initStore)
+  })
+
+  it('should calculate the total price', () => {
+    expect(burgerConstructorSlice.reducer(
+      {
+        ...initStore,
+        middleItems: [
+          testMiddleItem,
+          testMiddleItem2
+        ]
+      },
+      calcTotalPrice()
+    ))
+    .toEqual({
+      ...initStore,
+      middleItems: [
+        testMiddleItem,
+        testMiddleItem2
+      ],
+      totalPrice: 700
+    })
   })
 })
