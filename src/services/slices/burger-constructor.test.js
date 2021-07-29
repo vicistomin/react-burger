@@ -1,7 +1,4 @@
 import { burgerConstructorSlice } from "./burger-constructor";
-import configureMockStore from 'redux-mock-store'
-import rootReducer from './';
-import thunk from 'redux-thunk';
 
 const testBunItem = {
   _id: 123,
@@ -38,16 +35,6 @@ const initStore = {
   totalPrice: 0
 }
 
-const storeWithMiddleItem = {
-  ...initStore,
-  middleItems: [testMiddleItem]
-}
-
-const storeWithBun = {
-  ...initStore,
-  bunItem: testBunItem
-}
-
 const {
   addMiddleItem,
   moveMiddleItem,
@@ -57,13 +44,7 @@ const {
   calcTotalPrice
 } = burgerConstructorSlice.actions
 
-describe('tests for burgerConstructorSlice reducers', () => {
-
-  const mockStore = configureMockStore({
-    reducer: rootReducer,
-    middleware: [thunk]
-  })
-  const store = mockStore(initStore)
+describe('tests for burgerConstructorSlice', () => {
 
   it('should return the initial state', () => {
     expect(burgerConstructorSlice.reducer(undefined, {}))
@@ -72,7 +53,7 @@ describe('tests for burgerConstructorSlice reducers', () => {
 
   it('should add the middle item', () => {
     expect(burgerConstructorSlice.reducer(
-      store.getState(),
+      initStore,
       addMiddleItem(testMiddleItem)
     )) 
     .toEqual({
@@ -82,8 +63,7 @@ describe('tests for burgerConstructorSlice reducers', () => {
   })
 
   it('should add another middle item', () => {
-    expect(burgerConstructorSlice.reducer(
-      {
+    expect(burgerConstructorSlice.reducer({
         ...initStore,
         middleItems: [
           testMiddleItem
@@ -101,8 +81,7 @@ describe('tests for burgerConstructorSlice reducers', () => {
   })
 
   it('should add third middle item', () => {
-    expect(burgerConstructorSlice.reducer(
-      {
+    expect(burgerConstructorSlice.reducer({
         ...initStore,
         middleItems: [
           testMiddleItem,
@@ -122,8 +101,7 @@ describe('tests for burgerConstructorSlice reducers', () => {
   })
 
   it('should move first middle item to make it last', () => {
-    expect(burgerConstructorSlice.reducer(
-      {
+    expect(burgerConstructorSlice.reducer({
         ...initStore,
         middleItems: [
           testMiddleItem,
@@ -143,9 +121,35 @@ describe('tests for burgerConstructorSlice reducers', () => {
     })
   })
 
-  it('should clear the middle items', () => {
-    expect(burgerConstructorSlice.reducer(
-      store.getState(),
+  it('should remove the second middle item', () => {
+    expect(burgerConstructorSlice.reducer({
+        ...initStore,
+        middleItems: [
+          testMiddleItem,
+          testMiddleItem2,
+          testMiddleItem3
+        ]
+      },
+      deleteMiddleItem(1)
+    )) 
+    .toEqual({
+      ...initStore,
+      middleItems: [
+        testMiddleItem,
+        testMiddleItem3
+      ]
+    })
+  })
+
+  it('should clear all middle items', () => {
+    expect(burgerConstructorSlice.reducer({
+        ...initStore,
+        middleItems: [
+          testMiddleItem,          
+          testMiddleItem2,
+          testMiddleItem3
+        ]
+      },
       clearMiddleItems()
     )) 
     .toEqual(initStore)
@@ -153,7 +157,7 @@ describe('tests for burgerConstructorSlice reducers', () => {
 
   it('should add the bun', () => {
     expect(burgerConstructorSlice.reducer(
-      store.getState(),
+      initStore,
       setBunItem(testBunItem)
     ))
     .toEqual({
@@ -162,18 +166,33 @@ describe('tests for burgerConstructorSlice reducers', () => {
     })
   })
 
+  it('should replace the bun', () => {
+    expect(burgerConstructorSlice.reducer({
+        ...initStore,
+        bunItem: testBunItem
+      },
+      setBunItem(testBunItem2)
+    ))
+    .toEqual({
+      ...initStore,
+      bunItem: testBunItem2
+    })
+  })
+
   it('should remove the bun', () => {
-    expect(burgerConstructorSlice.reducer(
-      store.getState(),
+    expect(burgerConstructorSlice.reducer({
+        ...initStore,
+        bunItem: testBunItem
+      },
       setBunItem({})
     ))
     .toEqual(initStore)
   })
 
   it('should calculate the total price', () => {
-    expect(burgerConstructorSlice.reducer(
-      {
+    expect(burgerConstructorSlice.reducer({
         ...initStore,
+        bunItem: testBunItem,
         middleItems: [
           testMiddleItem,
           testMiddleItem2
@@ -183,11 +202,13 @@ describe('tests for burgerConstructorSlice reducers', () => {
     ))
     .toEqual({
       ...initStore,
+      bunItem: testBunItem,
       middleItems: [
         testMiddleItem,
         testMiddleItem2
       ],
-      totalPrice: 700
+      // 2x the bun price
+      totalPrice: 900
     })
   })
 })
