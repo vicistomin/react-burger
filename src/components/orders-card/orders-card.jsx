@@ -64,8 +64,11 @@ const OrdersCard = (props) => {
     items.find(item => item._id === item_id)
   ));
 
-  const orderedBun = orderedIngredients.find(item => item.type === 'bun');
-  const orderedMiddleItems = orderedIngredients.filter(item => item.type !== 'bun');
+  // skip if there empty or other falsy result instead of ingredient id
+  const filteredOrderedIngredients = orderedIngredients.filter(item => item);
+
+  const orderedBun = filteredOrderedIngredients.find(item => item.type === 'bun');
+  const orderedMiddleItems = filteredOrderedIngredients.filter(item => item.type !== 'bun');
 
   const renderIngredientIcons = useCallback(() => {
     let itemsToRender = orderedMiddleItems;
