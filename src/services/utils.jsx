@@ -1,7 +1,26 @@
+
+const getDaysFromToday = (dateTime) => {
+  const MILLISECONDS_PER_DAY = 1000 * 60 * 60 * 24;
+  const today = new Date(Date.now());
+
+  // discard the time and time-zone information.
+  const utcDateTime = Date.UTC (
+    dateTime.getFullYear(),
+    dateTime.getMonth(),
+    dateTime.getDate()
+  );
+  const utcToday = Date.UTC (
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate()
+  );
+
+  return Math.floor((utcToday - utcDateTime) / MILLISECONDS_PER_DAY);
+}
+
 export const formatDateTime = (time) => {
   const dateTime = new Date(time);
-  const today = new Date(Date.now()).getDate();
-  const daysFromToday = today - dateTime.getDate();
+  const daysFromToday = getDaysFromToday(dateTime);
 
   const getPluralDayForm = (n) => (
     (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)) ?
