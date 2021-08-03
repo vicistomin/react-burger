@@ -1,8 +1,10 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { useAppDispatch } from '../hooks'
 import { ITEMS_API_URL } from "../constants";
+import { IIngredient } from '../types';
 
 export const getItems = () => {
-  return dispatch => {
+  return (dispatch = useAppDispatch()) => {
     dispatch(itemsSlice.actions.request());
     // getting data from API
     fetch(ITEMS_API_URL)  
@@ -23,14 +25,23 @@ export const getItems = () => {
   }
 }
 
+interface itemsState {
+  items: Array<IIngredient>,
+  itemsRequest: boolean,
+  itemsFailed: boolean,
+  itemsSuccess: boolean,
+}
+
+const initialState: itemsState = {
+  items: [],
+  itemsRequest: false,
+  itemsFailed: false,
+  itemsSuccess: false,
+}
+
 export const itemsSlice = createSlice({
   name: 'items',
-  initialState: {
-    items: [],
-    itemsRequest: false,
-    itemsFailed: false,
-    itemsSuccess: false,
-  },
+  initialState,
   reducers: {
     request(state) {
       state.itemsRequest = true;
@@ -42,25 +53,25 @@ export const itemsSlice = createSlice({
       state.itemsRequest = false;
       state.itemsSuccess = false;
     },
-    success(state, action) {
+    success(state, action: PayloadAction<Array<IIngredient>>) {
       state.itemsSuccess = true;
       state.itemsRequest = false;
       state.itemsFailed = false;
       state.items = action.payload;
     },
-    increaseQuantityValue(state, action) {
+    increaseQuantityValue(state, action: PayloadAction<string>) {
       state.items = [...state.items].map(item =>
         item._id === action.payload ? {
           ...item,
-          __v: ++item.__v
+          __v: (item.__v || 0) + 1
         } : item
       );
     },
-    decreaseQuantityValue(state, action) {
+    decreaseQuantityValue(state, action: PayloadAction<string>) {
       state.items = [...state.items].map(item =>
         item._id === action.payload ? {
           ...item,
-          __v: --item.__v
+          __v: (item.__v || 1) - 1
         } : item
       );
     },

@@ -1,9 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-
-interface IIngredient {
-  name?: string,
-  price?: number
-}
+import { IIngredient } from '../types'
 
 interface burgerConstructorState {
   bunItem: IIngredient,

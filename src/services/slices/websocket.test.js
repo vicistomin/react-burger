@@ -1,17 +1,11 @@
 import { wsSlice } from "./websocket";
 
-const testDispatchFunction = () => {
-  console.log("testDispatchFunction")
-}
-
 const initStore = {
   wsConnected: false,
-  wsError: false,
-  saveDataDispatch: () => {}
+  wsError: false
 }
 
 const {
-  wsSetDataDispatch,
   wsConnectionStop,
   wsConnectionSuccess,
   wsConnectionError,
@@ -23,8 +17,7 @@ describe('tests for wsSlice', () => {
   it('should return the initial state', () => {
     expect(wsSlice.reducer(undefined, {}))
     .toEqual({
-      ...initStore,
-      saveDataDispatch: expect.any(Function)
+      ...initStore
     })
   })
 
@@ -68,16 +61,6 @@ describe('tests for wsSlice', () => {
     }, wsConnectionClosed()))
     .toEqual({
       ...initStore
-    })
-  })
-
-  it('should set the data dispatch function', () => {
-    expect(wsSlice.reducer({
-      ...initStore
-    }, wsSetDataDispatch(testDispatchFunction)))
-    .toEqual({
-      ...initStore,
-      saveDataDispatch: testDispatchFunction
     })
   })
 })

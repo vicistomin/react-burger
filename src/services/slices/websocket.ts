@@ -1,18 +1,20 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+interface wsState {
+  wsConnected: boolean,
+  wsError: boolean
+}
+
+const initialState: wsState = {
+  wsConnected: false,
+  wsError: false
+}
 
 export const wsSlice = createSlice({
   name: 'ws',
-  initialState: {
-    wsConnected: false,
-    wsError: false,
-    saveDataDispatch: () => {},
-  },
+  initialState,
   reducers: {
-    wsSetDataDispatch(state, action) {
-      state.saveDataDispatch = action.payload;
-    },
-
-    wsConnectionStart() {},
+    wsConnectionStart(state, action: PayloadAction<{url: string, token?: string}>) {},
 
     wsConnectionStop(state) {
       state.wsConnected = false;

@@ -1,4 +1,5 @@
 import { wsSlice } from '../slices/websocket';
+import { feedSlice } from '../slices/feed';
 import { setCookie } from '../utils';
 import { refreshToken } from '../slices/user';
 import { USER_ORDERS_WS_URL } from '../constants';
@@ -16,7 +17,7 @@ export const wsMiddleware = () => {
     let socket = null;
 
     return next => action => {
-      const { dispatch, getState } = store;
+      const { dispatch } = store;
       const { type, payload } = action;
 
       if (type === wsConnectionStart.type) {
@@ -76,16 +77,7 @@ export const wsMiddleware = () => {
             });
 
           }
-
-          // save data with provided dispatch function
-          // it may be function another slice, not only from feedSlice
-          let saveDataDispatch = getState().ws.saveDataDispatch;
-          if (saveDataDispatch) {
-            dispatch({
-              type: saveDataDispatch,
-              payload: restParsedData
-            });
-          }
+          dispatch(feedSlice.actions.setOrdersData(restParsedData));
         };
 
         socket.onclose = event => {

@@ -1,4 +1,6 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { useAppDispatch } from '../hooks'
+import { IUser } from '../types'
 import { LOGIN_API_URL } from "../constants";
 import { REGISTER_API_URL } from "../constants";
 import { FORGOT_PASSWORD_API_URL } from "../constants";
@@ -11,16 +13,21 @@ import { USER_ORDERS_WS_URL } from '../constants';
 import { getCookie, setCookie, deleteCookie } from '../utils';
 import { feedSlice } from './feed';
 
+type TRedirectCallback = () => void;
+
 export const getUser = () => {
-  return dispatch => {
+  return (dispatch = useAppDispatch()) => {
+    const accessToken: string = getCookie('accessToken') || '';
+
+    const userRequestHeaders: Headers = new Headers();
+    userRequestHeaders.append('Content-Type', 'application/json');
+    userRequestHeaders.append('Authorization', accessToken);
+
     dispatch(userSlice.actions.request());
     // get user data from the API
     fetch(USER_API_URL, {
       method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: getCookie('accessToken')
-      }
+      headers: userRequestHeaders
     })
     .then(res => {
       if (!res.ok && res.status >= 500) {
@@ -54,12 +61,13 @@ export const getUser = () => {
           if (refresh_data.success === true) {
             setCookie('accessToken', refresh_data.accessToken, { path: '/' });
             setCookie('refreshToken', refresh_data.refreshToken, { path: '/' });
+            
+            userRequestHeaders.delete('Authorization');
+            userRequestHeaders.append('Authorization', refresh_data.accessToken || '');
+            
             fetch(USER_API_URL, {
               method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: getCookie('accessToken'),
-              }
+              headers: userRequestHeaders
             })
             .then(res => {
               if (!res.ok && res.status >= 500) {
@@ -113,16 +121,19 @@ export const getUser = () => {
   }
 }
 
-export const setUser = (user) => {
-  return dispatch => {
+export const setUser = (user: IUser) => {
+  return (dispatch = useAppDispatch()) => {
+    const accessToken: string = getCookie('accessToken') || '';
+
+    const userRequestHeaders: Headers = new Headers();
+    userRequestHeaders.append('Content-Type', 'application/json');
+    userRequestHeaders.append('Authorization', accessToken);
+
     dispatch(userSlice.actions.request());
     // get user data from the API
     fetch(USER_API_URL, {
       method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: getCookie('accessToken')
-      },
+      headers: userRequestHeaders,
       body: JSON.stringify({
         "email": user.email,
         "password": user.password,
@@ -153,12 +164,13 @@ export const setUser = (user) => {
           if (refresh_data.success === true) {
             setCookie('accessToken', refresh_data.accessToken, { path: '/' });
             setCookie('refreshToken', refresh_data.refreshToken, { path: '/' });
+            
+            userRequestHeaders.delete('Authorization');
+            userRequestHeaders.append('Authorization', refresh_data.accessToken || '');
+            
             fetch(USER_API_URL, {
               method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: getCookie('accessToken'),
-              },
+              headers: userRequestHeaders,
               body: JSON.stringify({
                 "email": user.email,
                 "password": user.password,
@@ -206,8 +218,8 @@ export const setUser = (user) => {
   }
 }
 
-export const register = (user, redirectCallback) => {
-  return dispatch => {
+export const register = (user: IUser, redirectCallback: TRedirectCallback) => {
+  return (dispatch = useAppDispatch()) => {
     dispatch(userSlice.actions.request());
     // send user data to the API
     fetch(REGISTER_API_URL, {
@@ -251,8 +263,8 @@ export const register = (user, redirectCallback) => {
   }
 }
 
-export const login = (user, redirectCallback) => {
-  return dispatch => {
+export const login = (user: IUser, redirectCallback: TRedirectCallback) => {
+  return (dispatch = useAppDispatch()) => {
     dispatch(userSlice.actions.request());
     // send user data to the API
     fetch(LOGIN_API_URL, {
@@ -295,8 +307,11 @@ export const login = (user, redirectCallback) => {
   }
 }
 
-export const forgotPassword = (email, redirectCallback) => {
-  return dispatch => {
+export const forgotPassword = (
+  email: string,
+  redirectCallback: TRedirectCallback
+) => {
+  return (dispatch = useAppDispatch()) => {
     dispatch(userSlice.actions.request());
     // send user data to the API
     fetch(FORGOT_PASSWORD_API_URL, {
@@ -330,8 +345,12 @@ export const forgotPassword = (email, redirectCallback) => {
   }
 }
 
-export const resetPassword = (code, password, redirectCallback) => {
-  return dispatch => {
+export const resetPassword = (
+  code: string,
+  password: string,
+  redirectCallback: TRedirectCallback
+) => {
+  return (dispatch = useAppDispatch()) => {
     dispatch(userSlice.actions.request());
     // send user data to the API
     fetch(RESET_PASSWORD_API_URL, {
@@ -366,10 +385,8 @@ export const resetPassword = (code, password, redirectCallback) => {
   }
 }
 
-export const logout = (redirectCallback) => {
-  const refreshToken = getCookie('refreshToken');
-
-  return dispatch => {
+export const logout = () => {
+  return (dispatch = useAppDispatch()) => {
     dispatch(userSlice.actions.request());
     fetch(LOGOUT_API_URL, {
       method: 'POST',
@@ -377,7 +394,7 @@ export const logout = (redirectCallback) => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        "token": refreshToken
+        "token": getCookie('refreshToken')
       })
     })
     .then(res => {
@@ -420,37 +437,46 @@ export const refreshToken = () => {
 }
 
 export const startHistory = () => {
-  return (dispatch) => {
+  return (dispatch = useAppDispatch()) => {
     dispatch(wsSlice.actions.wsConnectionStart({
       url: USER_ORDERS_WS_URL,
-      token: getCookie('accessToken').replace('Bearer ', '')
+      token: (getCookie('accessToken') || '').replace('Bearer ', '')
     }));
     // saving user orders in feedSlice
-    dispatch(wsSlice.actions.wsSetDataDispatch(feedSlice.actions.setOrdersData));
     dispatch(feedSlice.actions.request());
   }
 }
 
 export const stopHistory = () => {
-  return (dispatch) => {
+  return (dispatch = useAppDispatch()) => {
     dispatch(wsSlice.actions.wsConnectionStop());
   }
 }
 
 // TODO: get password hash from server
-const fakePassword = 123456;
+const fakePassword: string = '123456';
+
+interface userState {
+  user: IUser,
+  userRequest: boolean,
+  userFailed: boolean,
+  userSuccess: boolean,
+  isAuthorized: boolean
+}
+
+const initialState: userState = {
+  user: {
+    password: fakePassword,
+  },
+  userRequest: false,
+  userFailed: false,
+  userSuccess: false,
+  isAuthorized: false
+}
 
 export const userSlice = createSlice({
   name: 'user',
-  initialState: {
-    user: {
-      password: fakePassword,
-    },
-    userRequest: false,
-    userFailed: false,
-    userSuccess: false,
-    isAuthorized: false
-  },
+  initialState,
   reducers: {
     request(state) {
       state.userRequest = true;
@@ -467,19 +493,19 @@ export const userSlice = createSlice({
       state.userRequest = false;
       state.userFailed = false;
     },
-    setName(state, action) {
+    setName(state, action: PayloadAction<string>) {
       state.user = {
         ...state.user,
         name: action.payload
         }
     },
-    setPassword(state, action) {
+    setPassword(state, action: PayloadAction<string>) {
       state.user = {
         ...state.user,
         password: action.payload
         }
     },
-    setEmail(state, action) {
+    setEmail(state, action: PayloadAction<string>) {
       state.user = {
         ...state.user,
         email: action.payload
@@ -495,7 +521,7 @@ export const userSlice = createSlice({
       // TODO: get password hash from server
       state.user.password = fakePassword;
     },
-    setAuthorization(state, action) {
+    setAuthorization(state, action: PayloadAction<boolean>) {
       state.isAuthorized = action.payload;
     },
     checkAuthorization(state) {
