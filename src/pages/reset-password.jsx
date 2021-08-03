@@ -1,5 +1,6 @@
 import styles from './reset-password.module.css';
-import { useSelector, useDispatch } from "react-redux";
+// importing typed hooks for Redux Toolkit
+import { useAppSelector, useAppDispatch } from '../services/hooks';
 import { useState, useRef, useCallback, useEffect } from 'react';
 // importing components from project
 import Form from '../components/form/form';
@@ -11,13 +12,13 @@ import { resetPassword, userSlice } from '../services/slices/user';
 import { useHistory } from 'react-router-dom';
 
 export const ResetPasswordPage = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const {
     userRequest,
     userSuccess,
     userFailed
-  } = useSelector(
+  } = useAppSelector(
     state => state.user
   );
   const { resetStatus } = userSlice.actions;

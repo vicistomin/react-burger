@@ -1,4 +1,5 @@
-import { useSelector, useDispatch } from "react-redux";
+// importing typed hooks for Redux Toolkit
+import { useAppSelector, useAppDispatch } from '../../services/hooks';
 import sidebarStyles from './sidebar.module.css';
 // importing components from project
 import SidebarLink from '../sidebar-link/sidebar-link';
@@ -9,9 +10,9 @@ import { useHistory } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
 function Sidebar() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const { userRequest } = useSelector(state => state.user);
+  const { userRequest } = useAppSelector(state => state.user);
   const { resetStatus } = userSlice.actions;
   
   // reset status and errors on page load

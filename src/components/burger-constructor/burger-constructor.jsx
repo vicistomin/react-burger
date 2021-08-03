@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+// importing typed hooks for Redux Toolkit
+import { useAppSelector, useAppDispatch } from '../../services/hooks';
 import { useDrop } from 'react-dnd';
 import burgerConstructorStyles from './burger-constructor.module.css';
 // importing components from library
@@ -12,11 +13,11 @@ import { itemsSlice } from '../../services/slices/items';
 import { useHistory } from 'react-router-dom';
 
 function BurgerConstructor() {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const { increaseQuantityValue, decreaseQuantityValue } = itemsSlice.actions;
     const { setBunItem, calcTotalPrice } = burgerConstructorSlice.actions
-    const { bunItem, middleItems, totalPrice } = useSelector(state => state.burgerConstructor);
-    const { isAuthorized } = useSelector(state => state.user);
+    const { bunItem, middleItems, totalPrice } = useAppSelector(state => state.burgerConstructor);
+    const { isAuthorized } = useAppSelector(state => state.user);
 
     const history = useHistory();
 

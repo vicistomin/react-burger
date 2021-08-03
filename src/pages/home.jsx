@@ -5,7 +5,8 @@ import BurgerIngredients from '../components/burger-ingredients/burger-ingredien
 import Modal from '../components/modal/modal';
 import OrderDetails from '../components/order-details/order-details';
 import Loader from '../components/loader/loader';
-import { useSelector, useDispatch } from "react-redux";
+// importing typed hooks for Redux Toolkit
+import { useAppSelector, useAppDispatch } from '../services/hooks';
 import { useEffect } from "react";
 // import slices and their functions
 import { orderSlice } from '../services/slices/order';
@@ -14,7 +15,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 
 function HomePage() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { closeOrderModal } = orderSlice.actions;
   const { checkAuthorization } = userSlice.actions;
 
@@ -22,13 +23,13 @@ function HomePage() {
     itemsRequest,
     itemsSuccess,
     itemsFailed
-  } = useSelector(
+  } = useAppSelector(
     state => state.items
   );
 
   const {
     isOrderModalOpen
-  } = useSelector(
+  } = useAppSelector(
     state => state.order
   );
 

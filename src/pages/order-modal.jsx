@@ -1,5 +1,6 @@
 import { useEffect, useCallback } from 'react';
-import { useSelector, useDispatch } from "react-redux";
+// importing typed hooks for Redux Toolkit
+import { useAppSelector, useAppDispatch } from '../services/hooks';
 import { useParams, useHistory } from 'react-router-dom';
 // importing components from project
 import Modal from '../components/modal/modal';
@@ -10,13 +11,13 @@ import { feedSlice } from '../services/slices/feed';
 import { itemsSlice } from '../services/slices/items';
 
 export const OrderModalPage = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   
   const {
     itemsRequest,
     itemsSuccess,
     itemsFailed
-  } = useSelector(
+  } = useAppSelector(
     state => state.items
   );
   const {
@@ -24,14 +25,14 @@ export const OrderModalPage = () => {
     feedRequest,
     feedSuccess,
     feedFailed
-  } = useSelector(
+  } = useAppSelector(
     state => state.feed
   );
 
   const {
     wsConnected,
     wsError
-  } = useSelector(
+  } = useAppSelector(
     state => state.ws
   );
 

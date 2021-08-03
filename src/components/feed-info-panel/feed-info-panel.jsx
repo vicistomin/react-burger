@@ -1,4 +1,5 @@
-import { useSelector } from "react-redux";
+// importing typed hooks for Redux Toolkit
+import { useAppSelector } from '../../services/hooks';
 import feedInfoPanelStyles from './feed-info-panel.module.css';
 import { useCallback } from 'react';
 
@@ -8,7 +9,7 @@ const FeedInfoPanel = () => {
     orders,
     ordersTotal,
     ordersTotalToday
-  } = useSelector(
+  } = useAppSelector(
     state => state.feed
   );
 

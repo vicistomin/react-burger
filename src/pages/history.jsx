@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
-import { useSelector, useDispatch } from "react-redux";
+// importing typed hooks for Redux Toolkit
+import { useAppSelector, useAppDispatch } from '../services/hooks';
 import styles from './history.module.css';
 // importing components from project
 import Sidebar from '../components/sidebar/sidebar';
@@ -10,20 +11,20 @@ import { feedSlice } from '../services/slices/feed';
 import { getUser, userSlice, startHistory, stopHistory } from '../services/slices/user';
 
 export const HistoryPage = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const {
     itemsRequest,
     itemsSuccess,
     itemsFailed
-  } = useSelector(
+  } = useAppSelector(
     state => state.items
   );
   const {
     userRequest,
     userSuccess,
     userFailed
-  } = useSelector(
+  } = useAppSelector(
     state => state.user
   );
   const {
@@ -31,7 +32,7 @@ export const HistoryPage = () => {
     feedRequest,
     feedSuccess,
     feedFailed
-  } = useSelector(
+  } = useAppSelector(
     state => state.feed
   );
   const {
@@ -41,7 +42,7 @@ export const HistoryPage = () => {
   const {
     wsConnected,
     wsError
-  } = useSelector(
+  } = useAppSelector(
     state => state.ws
   );
 

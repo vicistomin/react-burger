@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+// importing typed hooks for Redux Toolkit
+import { useAppSelector} from '../../services/hooks';
 import { useInView } from 'react-intersection-observer';
 import burgerIngredientsStyles from './burger-ingredients.module.css';
 // importing components from project
@@ -9,7 +10,7 @@ import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 
 function BurgerIngredients() {
     const [current, setCurrent] = useState('bun')
-    const { items } = useSelector(state => state.items);
+    const { items } = useAppSelector(state => state.items);
 
     const setTab = (tabName) => {
         setCurrent(tabName);

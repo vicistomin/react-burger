@@ -1,6 +1,7 @@
 import orderDetailsStyles from './order-details.module.css';
 import orderAcceptedImage from '../../images/order-accepted.gif'
-import { useSelector } from "react-redux";
+// importing typed hooks for Redux Toolkit
+import { useAppSelector } from '../../services/hooks';
 import Loader from '../loader/loader';
 
 function OrderDetails() {
@@ -9,7 +10,7 @@ function OrderDetails() {
         orderRequest,
         orderSuccess,
         orderFailed
-      } = useSelector(
+      } = useAppSelector(
         state => state.order
       );
 

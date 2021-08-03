@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from "react-redux";
+// importing typed hooks for Redux Toolkit
+import { useAppSelector, useAppDispatch } from '../services/hooks';
 import { useParams, useLocation  } from 'react-router-dom';
 // importing components from project
 import Loader from '../components/loader/loader';
@@ -9,7 +10,7 @@ import { feedSlice, startFeed, stopFeed } from '../services/slices/feed';
 import { startHistory, stopHistory } from '../services/slices/user';
 
 export const OrderPage = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   // for user profile page we should open different websocket with auth token
   // useRouteMatch for some reason returning always null here
   const location = useLocation();
@@ -19,7 +20,7 @@ export const OrderPage = () => {
     itemsRequest,
     itemsSuccess,
     itemsFailed
-  } = useSelector(
+  } = useAppSelector(
     state => state.items
   );
   const {
@@ -27,14 +28,14 @@ export const OrderPage = () => {
     feedRequest,
     feedSuccess,
     feedFailed
-  } = useSelector(
+  } = useAppSelector(
     state => state.feed
   );
 
   const {
     wsConnected,
     wsError
-  } = useSelector(
+  } = useAppSelector(
     state => state.ws
   );
 

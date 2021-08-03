@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
-import { useSelector, useDispatch } from "react-redux";
+// importing typed hooks for Redux Toolkit
+import { useAppSelector, useAppDispatch } from '../services/hooks';
 // importing components from project
 import Form from '../components/form/form';
 import Loader from '../components/loader/loader';
@@ -10,13 +11,13 @@ import { register, userSlice } from '../services/slices/user';
 import { useHistory } from 'react-router-dom';
 
 export const RegisterPage = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const {
     userRequest,
     userSuccess,
     userFailed
-  } = useSelector(
+  } = useAppSelector(
     state => state.user
   );
   const { resetStatus } = userSlice.actions;

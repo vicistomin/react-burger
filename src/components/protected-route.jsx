@@ -1,15 +1,16 @@
 import { Redirect, Route } from 'react-router-dom';
-import { useSelector, useDispatch } from "react-redux";
+// importing typed hooks for Redux Toolkit
+import { useAppSelector, useAppDispatch } from '../services/hooks';
 import { useEffect } from "react";
 // import slices and their functions
 import { userSlice } from '../services/slices/user';
 
 export function ProtectedRoute({ children, ...rest }) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const {
     isAuthorized
-  } = useSelector(
+  } = useAppSelector(
     state => state.user
   );
 

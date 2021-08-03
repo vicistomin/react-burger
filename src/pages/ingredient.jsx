@@ -1,4 +1,5 @@
-import { useSelector } from 'react-redux';
+// importing typed hooks for Redux Toolkit
+import { useAppSelector } from '../services/hooks';
 import { useParams } from 'react-router-dom';
 // importing components from project
 import IngredientDetails from '../components/ingredient-details/ingredient-details';
@@ -10,7 +11,7 @@ export const IngredientPage = () => {
     itemsRequest,
     itemsSuccess,
     itemsFailed
-  } = useSelector(
+  } = useAppSelector(
     state => state.items
   );
 

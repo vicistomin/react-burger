@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+// importing typed hooks for Redux Toolkit
+import { useAppDispatch } from '../../services/hooks';
 import { useDrag, useDrop } from 'react-dnd';
 import PropTypes from 'prop-types';
 import draggableConstructorElementStyles from './draggable-constructor-element.module.css';
@@ -9,7 +10,7 @@ import { burgerConstructorSlice } from '../../services/slices/burger-constructor
 import { itemsSlice } from '../../services/slices/items';
 
 function DraggableConstructorElement({ item, index }) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { decreaseQuantityValue } = itemsSlice.actions;
   const { moveMiddleItem, deleteMiddleItem } = burgerConstructorSlice.actions
 

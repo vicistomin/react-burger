@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
-import { useSelector } from "react-redux";
+// importing typed hooks for Redux Toolkit
+import { useAppSelector } from '../../services/hooks';
 import orderDetailedViewStyles from './order-detailed-view.module.css';
 // importing components from library
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -11,7 +12,7 @@ const OrderDetailedView = ({ order, isOrderModal=false }) => {
 
   const {
     items
-  } = useSelector(
+  } = useAppSelector(
     state => state.items
   );
 

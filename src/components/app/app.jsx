@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
-import { useSelector, useDispatch } from "react-redux";
+// importing typed hooks for Redux Toolkit
+import { useAppSelector, useAppDispatch } from '../../services/hooks';
 import { Switch, Route, useLocation } from 'react-router-dom';
 import { getItems } from '../../services/slices/items';
 import {
@@ -23,14 +24,14 @@ import { ProtectedGuestRoute } from '../protected-guest-route';
 import AppHeader from '../app-header/app-header';
 
 function App() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   let location = useLocation();
   let background = location.state && location.state.background;
 
   const {
     itemsSuccess,
-  } = useSelector(
+  } = useAppSelector(
     state => state.items
   );
 

@@ -1,5 +1,6 @@
 import { memo } from 'react';
-import { useDispatch } from 'react-redux';
+// importing typed hooks for Redux Toolkit
+import { useAppDispatch } from '../../services/hooks';
 import { useDrag } from 'react-dnd';
 import PropTypes from 'prop-types';
 import burgerIngredientsCardStyles from './burger-ingredients-card.module.css';
@@ -11,7 +12,7 @@ import { itemsSlice } from '../../services/slices/items';
 import { useHistory } from 'react-router-dom';
 
 const BurgerIngredientsCard = memo((props) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const { increaseQuantityValue } = itemsSlice.actions;
     const { addMiddleItem } = burgerConstructorSlice.actions
     

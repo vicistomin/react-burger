@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-import { useSelector, useDispatch } from "react-redux";
+// importing typed hooks for Redux Toolkit
+import { useAppSelector, useAppDispatch } from '../services/hooks';
 import styles from './profile.module.css';
 // importing components from project
 import Form from '../components/form/form';
@@ -10,14 +11,14 @@ import { Input, EmailInput, Button } from '@ya.praktikum/react-developer-burger-
 import { getUser, setUser, userSlice } from '../services/slices/user';
 
 export const ProfilePage = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const {
     user,
     userRequest,
     userSuccess,
     userFailed
-  } = useSelector(
+  } = useAppSelector(
     state => state.user
   );
 

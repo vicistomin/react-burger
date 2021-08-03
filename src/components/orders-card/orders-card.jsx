@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
-import { useSelector } from "react-redux";
+// importing typed hooks for Redux Toolkit
+import { useAppSelector } from '../../services/hooks';
 import ordersCardStyles from './orders-card.module.css';
 // importing components from library
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -13,7 +14,7 @@ const OrdersCard = (props) => {
 
   const {
     items
-  } = useSelector(
+  } = useAppSelector(
     state => state.items
   );
 

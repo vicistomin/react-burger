@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
-import { useSelector, useDispatch } from "react-redux";
+// importing typed hooks for Redux Toolkit
+import { useAppSelector, useAppDispatch } from '../services/hooks';
 import styles from './feed.module.css';
 // importing components from project
 import OrdersList from '../components/orders-list/orders-list';
@@ -9,13 +10,13 @@ import Loader from '../components/loader/loader';
 import { feedSlice, startFeed, stopFeed } from '../services/slices/feed';
 
 export const FeedPage = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const {
     itemsRequest,
     itemsSuccess,
     itemsFailed
-  } = useSelector(
+  } = useAppSelector(
     state => state.items
   );
   const {
@@ -23,14 +24,14 @@ export const FeedPage = () => {
     feedRequest,
     feedSuccess,
     feedFailed
-  } = useSelector(
+  } = useAppSelector(
     state => state.feed
   );
 
   const {
     wsConnected,
     wsError
-  } = useSelector(
+  } = useAppSelector(
     state => state.ws
   );
 
