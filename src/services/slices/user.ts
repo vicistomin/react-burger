@@ -525,8 +525,8 @@ export const userSlice = createSlice({
       state.isAuthorized = action.payload;
     },
     checkAuthorization(state) {
-      state.isAuthorized = ((getCookie('accessToken') !== undefined) &&
-        (getCookie('refreshToken') !== undefined));
+      state.isAuthorized = ((getCookie('accessToken') !== '') &&
+        (getCookie('refreshToken') !== ''));
     }
   }
 }) 

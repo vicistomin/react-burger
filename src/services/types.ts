@@ -28,3 +28,9 @@ export interface IUser {
   password?: string,
   email?: string
 }
+
+export interface ICookieProps {
+  [name: string]: string | number | boolean | Date | undefined,
+  expires?: Date | number | string;
+  path?: string
+}
