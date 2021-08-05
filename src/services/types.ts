@@ -23,6 +23,13 @@ export interface IOrder {
   ingredients?: Array<IIngredient>
 }
 
+export interface INewOrder {
+  id?: number,
+  name?: string,
+  number?: number,
+  success?: boolean
+}
+
 export interface IUser {
   name?: string,
   password?: string,

@@ -1,12 +1,14 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { useAppDispatch } from '../hooks'
+import { IIngredient, INewOrder } from '../types'
 import { ORDER_API_URL } from "../constants";
 import { burgerConstructorSlice } from './burger-constructor';
 import { itemsSlice } from './items';
 import { setCookie, getCookie } from '../utils';
 import { refreshToken } from './user';
 
-export const placeOrder = (items) => {
-  return dispatch => {
+export const placeOrder = (items: Array<IIngredient>) => {
+  return (dispatch = useAppDispatch()) => {
     dispatch(orderSlice.actions.request());
 
     // show modal right from request start to show loader
@@ -105,21 +107,31 @@ export const placeOrder = (items) => {
      .finally(() => {
         // clearing ordered ingredients from BurgerConstructor
         dispatch(burgerConstructorSlice.actions.setBunItem({}));
-        dispatch(burgerConstructorSlice.actions.clearMiddleItems([]));
-        dispatch(itemsSlice.actions.clearValues([]));
+        dispatch(burgerConstructorSlice.actions.clearMiddleItems());
+        dispatch(itemsSlice.actions.clearValues());
       })
   }
 }
 
+interface orderState {
+  orderData: INewOrder,
+  orderRequest: boolean,
+  orderFailed: boolean,
+  orderSuccess: boolean,
+  isOrderModalOpen: boolean,
+}
+
+const initialState: orderState = {
+  orderData: {},
+  orderRequest: false,
+  orderFailed: false,
+  orderSuccess: false,
+  isOrderModalOpen: false,
+}
+
 export const orderSlice = createSlice({
   name: 'order',
-  initialState: {
-    orderData: {},
-    orderRequest: false,
-    orderFailed: false,
-    orderSuccess: false,
-    isOrderModalOpen: false,
-  },
+  initialState,
   reducers: {
     request(state) {
       state.orderRequest = true;
@@ -135,7 +147,7 @@ export const orderSlice = createSlice({
         success: false
       }
     },
-    success(state, action) {
+    success(state, action: PayloadAction<INewOrder>) {
       state.orderSuccess = true;
       state.orderRequest = false;
       state.orderFailed = false;
