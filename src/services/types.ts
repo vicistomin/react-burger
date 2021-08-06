@@ -1,6 +1,8 @@
+import { Location } from 'history'
+
 export interface IIngredient {
   _id?: string,
-  type?: string,
+  type?: 'bun' | 'main' | 'sauce',
   name?: string,
   image?: string,
   price?: number,
@@ -40,4 +42,8 @@ export interface ICookieProps {
   [name: string]: string | number | boolean | Date | undefined,
   expires?: Date | number | string;
   path?: string
+}
+
+export interface ILocation extends Location {
+  background?: any;
 }

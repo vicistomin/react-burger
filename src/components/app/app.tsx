@@ -1,7 +1,8 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 // importing typed hooks for Redux Toolkit
 import { useAppSelector, useAppDispatch } from '../../services/hooks';
 import { Switch, Route, useLocation } from 'react-router-dom';
+import { ILocation } from '../../services/types'
 import { getItems } from '../../services/slices/items';
 import {
   HomePage,
@@ -23,10 +24,10 @@ import { ProtectedResetRoute } from '../protected-reset-route';
 import { ProtectedGuestRoute } from '../protected-guest-route';
 import AppHeader from '../app-header/app-header';
 
-function App() {
+const App: React.FC = () => {
   const dispatch = useAppDispatch();
 
-  let location = useLocation();
+  let location = useLocation<ILocation>();
   let background = location.state && location.state.background;
 
   const {

@@ -1,20 +1,20 @@
 import styles from './home.module.css';
 // importing components from project
-import BurgerConstructor from '../components/burger-constructor/burger-constructor.jsx';
+import BurgerConstructor from '../components/burger-constructor/burger-constructor';
 import BurgerIngredients from '../components/burger-ingredients/burger-ingredients';
 import Modal from '../components/modal/modal';
 import OrderDetails from '../components/order-details/order-details';
 import Loader from '../components/loader/loader';
 // importing typed hooks for Redux Toolkit
 import { useAppSelector, useAppDispatch } from '../services/hooks';
-import { useEffect } from "react";
+import { FC, useEffect } from "react";
 // import slices and their functions
 import { orderSlice } from '../services/slices/order';
 import { userSlice } from '../services/slices/user';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 
-function HomePage() {
+const HomePage: FC = () => {
   const dispatch = useAppDispatch();
   const { closeOrderModal } = orderSlice.actions;
   const { checkAuthorization } = userSlice.actions;

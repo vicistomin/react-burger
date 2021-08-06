@@ -5,7 +5,12 @@ import { wsMiddleware } from './middleware';
 
 export const store = configureStore({
   reducer: rootReducer,
-  middleware: [thunk, wsMiddleware()],
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware()
+      .prepend(
+        thunk,
+        wsMiddleware()
+      ),
   devTools: process.env.NODE_ENV !== 'production',
   }); 
 
