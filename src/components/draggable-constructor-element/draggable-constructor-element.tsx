@@ -1,22 +1,30 @@
-import { useRef, useEffect, useState } from 'react';
+import { FC, useRef, useEffect, useState } from 'react';
 // importing typed hooks for Redux Toolkit
 import { useAppDispatch } from '../../services/hooks';
 import { useDrag, useDrop } from 'react-dnd';
-import PropTypes from 'prop-types';
 import draggableConstructorElementStyles from './draggable-constructor-element.module.css';
 // importing components from library
 import { ConstructorElement, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { burgerConstructorSlice } from '../../services/slices/burger-constructor';
 import { itemsSlice } from '../../services/slices/items';
+import { IIngredient } from '../../services/types';
 
-function DraggableConstructorElement({ item, index }) {
+interface IDraggedItem {
+  item: IIngredient,
+  index: number
+}
+
+const DraggableConstructorElement: FC<IDraggedItem> = ({
+  item,
+  index
+}) => {
   const dispatch = useAppDispatch();
   const { decreaseQuantityValue } = itemsSlice.actions;
   const { moveMiddleItem, deleteMiddleItem } = burgerConstructorSlice.actions
 
-  const dndItemRef = useRef();
-  const [isItemHigher, setIsItemHigher] = useState(false);
-  const [isItemLower, setIsItemLower] = useState(false);
+  const dndItemRef = useRef<HTMLLIElement>(null);
+  const [isItemHigher, setIsItemHigher] = useState<boolean>(false);
+  const [isItemLower, setIsItemLower] = useState<boolean>(false);
 
   const [{targetId, isItemHover, offset}, dropItemTarget] = useDrop({
       accept: 'sortedIngredient',
@@ -39,28 +47,28 @@ function DraggableConstructorElement({ item, index }) {
       }),
       end(item, monitor) {
         // reorder only, not for new ingredients
-        if(monitor.didDrop()) {
+        if(monitor.didDrop() && monitor.getDropResult<IDraggedItem>() !== null) {            
           dispatch(moveMiddleItem({
             oldIndex: index,
-            newIndex: monitor.getDropResult().index
+            newIndex: monitor.getDropResult<IDraggedItem>()?.index || 0
           }));
         }
       }
   });
 
-  const handleItemDelete = (itemId, index) => {   
+  const handleItemDelete = (itemId: string, index: number) => {   
     dispatch(deleteMiddleItem(index));
     dispatch(decreaseQuantityValue(itemId));
-};
+  };
 
-useEffect(() => {
-  if(!!offset) {
-    setIsItemHigher(offset.y < 0);
-    setIsItemLower(offset.y > 0);    
-  }
-}, [offset]);
+  useEffect(() => {
+    if(!!offset) {
+      setIsItemHigher(offset.y < 0);
+      setIsItemLower(offset.y > 0);    
+    }
+  }, [offset]);
 
-dragItemSource(dropItemTarget(dndItemRef))
+  dragItemSource(dropItemTarget(dndItemRef))
 
   return (
       <>
@@ -81,28 +89,22 @@ dragItemSource(dropItemTarget(dndItemRef))
             <span className={draggableConstructorElementStyles.drag_icon}>
                 <DragIcon type='primary' />
             </span>
-            <ConstructorElement 
-                text={item.name}
-                thumbnail={item.image}
-                price={item.price}
-                handleClose={() => 
-                    handleItemDelete(item._id, index)
-                }
-            />
+            {
+              !!item.name &&
+              !!item.image &&
+              !!item.price &&
+              <ConstructorElement 
+                  text={item.name}
+                  thumbnail={item.image}
+                  price={item.price}
+                  handleClose={() => 
+                    !!item._id && handleItemDelete(item._id, index)
+                  }
+              />
+            }
         </li>
       </>
-  )
+  ) 
 }
 
 export default DraggableConstructorElement
-
-DraggableConstructorElement.propTypes = {
-  item: PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      _id: PropTypes.string.isRequired,
-      type: PropTypes.string.isRequired,
-      price: PropTypes.number.isRequired,
-      image: PropTypes.string.isRequired
-  }).isRequired,
-  index: PropTypes.number.isRequired
-};

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { FC, useState, useEffect } from 'react';
 // importing typed hooks for Redux Toolkit
 import { useAppSelector} from '../../services/hooks';
 import { useInView } from 'react-intersection-observer';
@@ -8,25 +8,31 @@ import BurgerIngredientsCategory from '../burger-ingredients-category/burger-ing
 // importing components from library
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 
-function BurgerIngredients() {
-    const [current, setCurrent] = useState('bun')
+interface IInviewOptions {
+    threshold: number,
+    trackVisibility: boolean,
+    delay: number
+}
+
+const BurgerIngredients: FC = () => {
+    const [current, setCurrent] = useState<string>('bun')
     const { items } = useAppSelector(state => state.items);
 
-    const setTab = (tabName) => {
+    const setTab = (tabName: string): void => {
         setCurrent(tabName);
-        document.getElementById(tabName).scrollIntoView({behavior:"smooth"})
+        document.getElementById(tabName)?.scrollIntoView({behavior:"smooth"})
     }
-    const handleBunTabClick = () => {
+    const handleBunTabClick = (): void => {
         setTab('bun');
     };
-    const handleSauceTabClick = () => {
+    const handleSauceTabClick = (): void => {
         setTab('sauce');
     };
-    const handleMainTabClick = () => {
+    const handleMainTabClick = (): void => {
         setTab('main');
     };
     
-    const inViewOptions = {
+    const inViewOptions: IInviewOptions = {
         threshold: 0,
         trackVisibility: true,
         delay: 100
@@ -56,18 +62,21 @@ function BurgerIngredients() {
                 <Tab 
                     active={current === 'bun'} 
                     onClick={handleBunTabClick}
+                    value='Булки'
                 >
                     Булки
                 </Tab>
                 <Tab 
                     active={current === 'sauce'} 
                     onClick={handleSauceTabClick}
+                    value='Соусы'
                 >
                     Соусы
                 </Tab>
                 <Tab 
                     active={current === 'main'} 
                     onClick={handleMainTabClick}
+                    value='Начинки'
                 >
                     Начинки
                 </Tab>

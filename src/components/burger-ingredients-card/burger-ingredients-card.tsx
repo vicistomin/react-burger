@@ -2,7 +2,6 @@ import { memo } from 'react';
 // importing typed hooks for Redux Toolkit
 import { useAppDispatch } from '../../services/hooks';
 import { useDrag } from 'react-dnd';
-import PropTypes from 'prop-types';
 import burgerIngredientsCardStyles from './burger-ingredients-card.module.css';
 // importing components from library
 import { Counter, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -10,8 +9,10 @@ import { burgerConstructorSlice } from '../../services/slices/burger-constructor
 import { itemsSlice } from '../../services/slices/items';
 
 import { useHistory } from 'react-router-dom';
+import { IIngredient } from '../../services/types';
 
-const BurgerIngredientsCard = memo((props) => {
+const BurgerIngredientsCard = memo<IIngredient>(
+    ( item ) => {
     const dispatch = useAppDispatch();
     const { increaseQuantityValue } = itemsSlice.actions;
     const { addMiddleItem } = burgerConstructorSlice.actions
@@ -20,20 +21,20 @@ const BurgerIngredientsCard = memo((props) => {
 
     const handleIngredientClick = () => {
         history.replace({ 
-            pathname: `/ingredients/${props.item._id}`,
+            pathname: `/ingredients/${item._id}`,
             state: { background: history.location }
         });
     }
 
     const [{opacity}, dragRef] = useDrag({
-        type: props.item.type,
-        item: props.item,
+        type: item.type || '',
+        item: item,
         collect: monitor => ({
           opacity: monitor.isDragging() ? 0.5 : 1
         }),
         end(item, monitor) {
             // adding only new ingredients, not when reorder items in Constructor
-            if(monitor.didDrop() && item.type !== 'bun') {
+            if(monitor.didDrop() && item.type !== 'bun' && !!item._id) {
                 dispatch(addMiddleItem(item));
                 dispatch(increaseQuantityValue(item._id));
             }
@@ -48,28 +49,18 @@ const BurgerIngredientsCard = memo((props) => {
                 ref={dragRef}
                 style={{opacity}}
             >
-                {props.item.__v ? <Counter count={props.item.__v}/> : null}
-                <img src={props.item.image} alt={props.item.name} title={props.item.name} className="ml-4 mr-4"/>
+                {item.__v ? <Counter count={item.__v}/> : null}
+                <img src={item.image} alt={item.name} title={item.name} className="ml-4 mr-4"/>
                     <div className={'flex_row mt-1 mb-1 '}>
-                        <p className='pr-2 text text_type_digits-default'>{props.item.price}</p>
-                        <CurrencyIcon />
+                        <p className='pr-2 text text_type_digits-default'>{item.price}</p>
+                        <CurrencyIcon type='primary'/>
                     </div>
                 <p className={burgerIngredientsCardStyles.ingredient_name + ' text text_type_main-default'}>
-                    {props.item.name}
+                    {item.name}
                 </p>
             </div>
         </li>
     );
 });
-
-BurgerIngredientsCard.propTypes = {
-    item: PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        __v: PropTypes.number.isRequired,
-        type: PropTypes.string.isRequired,
-        price: PropTypes.number.isRequired,
-        image: PropTypes.string.isRequired
-    }).isRequired
-};
 
 export default BurgerIngredientsCard;

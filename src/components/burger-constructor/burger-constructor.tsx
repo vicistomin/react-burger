@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 // importing typed hooks for Redux Toolkit
 import { useAppSelector, useAppDispatch } from '../../services/hooks';
 import { useDrop } from 'react-dnd';
@@ -11,8 +11,9 @@ import { burgerConstructorSlice } from '../../services/slices/burger-constructor
 import { itemsSlice } from '../../services/slices/items';
 
 import { useHistory } from 'react-router-dom';
+import { IIngredient } from '../../services/types';
 
-function BurgerConstructor() {
+const BurgerConstructor: React.FC = () => {
     const dispatch = useAppDispatch();
     const { increaseQuantityValue, decreaseQuantityValue } = itemsSlice.actions;
     const { setBunItem, calcTotalPrice } = burgerConstructorSlice.actions
@@ -23,10 +24,13 @@ function BurgerConstructor() {
 
     const onOrderButtonClick = () => {
         if (isAuthorized) {
-            const items = [bunItem._id];
-            middleItems.map(item => items.push(item._id));
-            // get new order ID from API:
-            dispatch(placeOrder(items));
+            if (!!bunItem._id) {
+                const items:Array<string> = [bunItem._id];
+                middleItems.map(item => 
+                    item._id && items.push(item._id));
+                // get new order ID from API:
+                dispatch(placeOrder(items));
+            }
         }
         // redirect guests to login page
         else {
@@ -42,26 +46,30 @@ function BurgerConstructor() {
         dispatch(calcTotalPrice());
     }, [dispatch, bunItem, middleItems, calcTotalPrice]);
 
-    const handleBunItemDrop = (newBunItem) => {
+    const handleBunItemDrop = (newBunItem: IIngredient) => {
         dispatch(setBunItem(newBunItem));
-        dispatch(decreaseQuantityValue(bunItem._id));
-        dispatch(decreaseQuantityValue(bunItem._id));
-        dispatch(increaseQuantityValue(newBunItem._id));
-        dispatch(increaseQuantityValue(newBunItem._id));
+        if (!!bunItem._id) {
+            dispatch(decreaseQuantityValue(bunItem._id));
+            dispatch(decreaseQuantityValue(bunItem._id));
+        }
+        if (!!newBunItem._id) {
+            dispatch(increaseQuantityValue(newBunItem._id));
+            dispatch(increaseQuantityValue(newBunItem._id));
+        }
     };
 
     // Buns can be only be of one type
     // (user can't choose different buns for top and bottom)
     const [, dropTopBunTarget] = useDrop({
         accept: 'bun',
-        drop(newBunItem) {
+        drop(newBunItem: IIngredient) {
             handleBunItemDrop(newBunItem);
         }
       });
     
     const [, dropBottomBunTarget] = useDrop({
         accept: 'bun',
-        drop(newBunItem) {
+        drop(newBunItem: IIngredient) {
             handleBunItemDrop(newBunItem);
         }
       });
@@ -83,8 +91,8 @@ function BurgerConstructor() {
                             type='top'
                             isLocked={true}
                             text={bunItem.name + ' (верх)'}
-                            thumbnail={bunItem.image}
-                            price={bunItem.price}
+                            thumbnail={bunItem.image || ''}
+                            price={bunItem.price || 0}
                         />
                     ) : (
                         <div 
@@ -109,7 +117,7 @@ function BurgerConstructor() {
                                     item={item}
                                     index={index}
                                     // key should have random generated hash or timestamp added to '_id'
-                                    key={item._id+generateItemHash()}
+                                    key={(item._id || '')+generateItemHash()}
                                 />
                             ))}
                         </ul>
@@ -133,8 +141,8 @@ function BurgerConstructor() {
                             isLocked={true}
                             type='bottom'
                             text={bunItem.name + ' (низ)'}
-                            thumbnail={bunItem.image}
-                            price={bunItem.price}
+                            thumbnail={bunItem.image || ''}
+                            price={bunItem.price || 0}
                         />
                     ) : (
                         <div 
@@ -163,7 +171,7 @@ function BurgerConstructor() {
                 <Button 
                     type="primary"
                     size="medium"
-                    onClick={bunItem.name ? onOrderButtonClick : null}
+                    onClick={bunItem.name ? onOrderButtonClick : () => {}}
                 >
                         Оформить заказ
                 </Button>
