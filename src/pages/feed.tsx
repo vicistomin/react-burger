@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { FC, useEffect } from 'react';
 // importing typed hooks for Redux Toolkit
 import { useAppSelector, useAppDispatch } from '../services/hooks';
 import styles from './feed.module.css';
@@ -9,7 +9,7 @@ import Loader from '../components/loader/loader';
 // import slices and their functions
 import { feedSlice, startFeed, stopFeed } from '../services/slices/feed';
 
-export const FeedPage = () => {
+export const FeedPage: FC = () => {
   const dispatch = useAppDispatch();
 
   const {
@@ -52,7 +52,7 @@ export const FeedPage = () => {
       dispatch(feedSlice.actions.failed());
   }, [wsConnected, wsError, orders]);
 
-  return(
+  return (
     <>
       {
         (itemsRequest || feedRequest) && 
@@ -81,7 +81,7 @@ export const FeedPage = () => {
             </h1>
             <div className={styles.feed_container}>
               <div className={styles.feed_orders_container}>
-                <OrdersList 
+                <OrdersList
                   source='feed'
                   orders={orders}
                 />

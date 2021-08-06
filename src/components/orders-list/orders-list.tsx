@@ -1,18 +1,25 @@
+import { FC } from 'react';
 import PropTypes from 'prop-types';
 import ordersListStyles from './orders-list.module.css';
 // importing components from project
 import OrdersCard from '../orders-card/orders-card';
+import { IOrder } from '../../services/types';
 
-const OrdersList = (props) => {
+interface IOrdersListProps {
+  orders: Array<IOrder>,
+  source: string
+}
+
+const OrdersList: FC<IOrdersListProps> = ({ orders, source }) => {
   return (
     <>  
       {
-        (props.orders.length > 0) && 
+        (orders.length > 0) && 
         <ul className={ordersListStyles.orders_list}>
-          {props.orders.map((order) => (
+          {orders.map((order) => (
             <OrdersCard
               key={order._id}
-              source={props.source}
+              source={source}
               order={order}
             />
           ))}
@@ -29,6 +36,7 @@ const OrdersList = (props) => {
   );
 };
 
+/*
 OrdersList.propTypes = {
   source: PropTypes.string.isRequired,
   orders: PropTypes.arrayOf(
@@ -45,5 +53,6 @@ OrdersList.propTypes = {
     })
   ).isRequired
 };
+*/
 
 export default OrdersList;

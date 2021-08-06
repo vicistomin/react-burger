@@ -1,9 +1,10 @@
 // importing typed hooks for Redux Toolkit
 import { useAppSelector } from '../../services/hooks';
 import feedInfoPanelStyles from './feed-info-panel.module.css';
-import { useCallback } from 'react';
+import { FC, useCallback } from 'react';
+import { IOrder } from '../../services/types';
 
-const FeedInfoPanel = () => {
+const FeedInfoPanel: FC = () => {
 
   const {
     orders,
@@ -14,22 +15,28 @@ const FeedInfoPanel = () => {
   );
 
   // showing max 20 last completed or pending orders in list
-  const maxDisplayedOrders = 20;
+  const maxDisplayedOrders: number = 20;
 
   const renderCompletedOrders = useCallback(() => {
-    const completedOrders = orders.filter((order) => (
+    const completedOrders: Array<IOrder> = orders.filter((order) => (
       order.status === 'done'
     ));    
     return (
-      completedOrders.slice(0, maxDisplayedOrders).map((order) => (
-        <li
-          className='text text_type_digits-default'
-          key={order._id}
-        >
-          {/* display order number in 6-digit format filled with zeros */}
-          {order.number.toString().padStart(6, 0)}
-        </li>
-      ))
+      completedOrders.slice(0, maxDisplayedOrders).map((order) => {
+        if(!!order.number) 
+          return (
+            <li
+              className='text text_type_digits-default'
+              key={order._id}
+            >
+              {/* display order number in 6-digit format filled with zeros */}
+              {order.number.toString().padStart(6, '0')}
+            </li>
+          )
+        else
+          return null;
+        }
+      )
     )
   }, [orders]);
 
@@ -38,15 +45,21 @@ const FeedInfoPanel = () => {
       order.status === 'pending'
     ));    
     return (
-      pendingOrders.slice(0, maxDisplayedOrders).map((order) => (
-        <li
-          className='text text_type_digits-default'
-          key={order._id}
-        >
-          {/* display order number in 6-digit format filled with zeros */}
-          {order.number.toString().padStart(6, 0)}
-        </li>
-      ))
+      pendingOrders.slice(0, maxDisplayedOrders).map((order) => {
+        if(!!order.number) 
+          return (
+            <li
+              className='text text_type_digits-default'
+              key={order._id}
+            >
+              {/* display order number in 6-digit format filled with zeros */}
+              {order.number.toString().padStart(6, '0')}
+            </li>
+          )
+        else
+          return null;
+        }
+      )
     )
   }, [orders]);
 

@@ -1,13 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { useAppDispatch } from '../hooks'
-import { IIngredient, INewOrder } from '../types'
+import { INewOrder } from '../types'
 import { ORDER_API_URL } from "../constants";
 import { burgerConstructorSlice } from './burger-constructor';
 import { itemsSlice } from './items';
 import { setCookie, getCookie } from '../utils';
 import { refreshToken } from './user';
 
-export const placeOrder = (items: Array<IIngredient>) => {
+export const placeOrder = (items: Array<string>) => {
   return (dispatch = useAppDispatch()) => {
     dispatch(orderSlice.actions.request());
 
