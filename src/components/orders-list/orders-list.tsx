@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import PropTypes from 'prop-types';
 import ordersListStyles from './orders-list.module.css';
 // importing components from project
 import OrdersCard from '../orders-card/orders-card';
@@ -35,24 +34,5 @@ const OrdersList: FC<IOrdersListProps> = ({ orders, source }) => {
     </>
   );
 };
-
-/*
-OrdersList.propTypes = {
-  source: PropTypes.string.isRequired,
-  orders: PropTypes.arrayOf(
-    PropTypes.shape({
-      _id: PropTypes.string.isRequired,
-      createdAt: PropTypes.string.isRequired,
-      updatedAt: PropTypes.string.isRequired,
-      number: PropTypes.number.isRequired,
-      name: PropTypes.string.isRequired,
-      status: PropTypes.string.isRequired,
-      ingredients: PropTypes.arrayOf(
-        PropTypes.string.isRequired
-      ).isRequired
-    })
-  ).isRequired
-};
-*/
 
 export default OrdersList;
