@@ -1,6 +1,7 @@
+import { FC } from 'react';
 import styles from './not-found.module.css';
 
-export const NotFound404 = () => {
+export const NotFound404: FC = () => {
   return(
     <div className={styles.fullscreen_message}>
       <p className='text text_type_digits-large text_color_inactive'>
