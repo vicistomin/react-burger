@@ -5,16 +5,16 @@ import MenuItem from '../menu-item/menu-item';
 import { Logo, BurgerIcon, ListIcon, ProfileIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import { useHistory } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { FC, useState, useEffect } from 'react';
 
-function AppHeader() {
+const AppHeader: FC = () => {
     const history = useHistory();
 
-    const [isHomePage, setHomePage] = useState(false);
-    const [isFeedPage, setFeedPage] = useState(false);
-    const [isProfilePage, setProfilePage] = useState(false);
+    const [isHomePage, setHomePage] = useState<boolean>(false);
+    const [isFeedPage, setFeedPage] = useState<boolean>(false);
+    const [isProfilePage, setProfilePage] = useState<boolean>(false);
 
-    const currentUrl = history.location.pathname;
+    const currentUrl: string = history.location.pathname;
 
     useEffect(() => {
         switch (currentUrl) {

@@ -1,7 +1,8 @@
+import { FC } from 'react';
 import loaderStyles from './loader.module.css';
-import logo from '../../images/logo.png'
+import logo from '../../images/logo.png';
 
-function Loader(props) {
+const Loader: FC = () => {
   return(
     <div className={loaderStyles.loader}>
       <img src={logo} alt='' title ='' className={loaderStyles.spinner} />

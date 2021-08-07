@@ -1,7 +1,14 @@
-import PropTypes from 'prop-types';
+import { FC } from 'react';
 import menuItemStyles from './menu-item.module.css';
 
-function MenuItem(props) {
+interface IMenuItem {
+    active: boolean,
+    onClick: () => void,
+    text: string,
+    icon: JSX.Element
+}
+
+const MenuItem: FC<IMenuItem> = (props) => {
     return(
             <button className={
                 `${menuItemStyles.menu_list_item}
@@ -22,12 +29,5 @@ function MenuItem(props) {
             </button>
     );
 }
-
-MenuItem.propTypes = {
-    active: PropTypes.bool,
-    onClick: PropTypes.func.isRequired,
-    text: PropTypes.string.isRequired,
-    icon: PropTypes.element.isRequired
-};
 
 export default MenuItem;
