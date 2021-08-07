@@ -7,7 +7,7 @@ import { formatDateTime } from '../../services/utils'
 
 import { useHistory } from 'react-router-dom';
 import { FC, useCallback, useEffect, useState, memo } from 'react';
-import { IIngredient, IOrder } from '../../services/types';
+import { IOrder } from '../../services/types';
 
 interface IOrdersCardProps {
   order: IOrder,
