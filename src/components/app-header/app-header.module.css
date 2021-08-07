@@ -23,6 +23,7 @@
 .menu_list_center {
     composes: flex_row from global;
     flex-basis: 20%;
+    cursor: pointer;
 }
 
 .menu_list_right {
