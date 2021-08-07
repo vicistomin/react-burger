@@ -1,7 +1,9 @@
-import { Redirect, Route, useLocation } from 'react-router-dom';
+import { FC } from 'react';
+import { Redirect, Route, RouteProps, useLocation } from 'react-router-dom';
+import { ILocation } from '../services/types';
 
-export function ProtectedResetRoute({ children, ...rest }) {
-  const location = useLocation();
+export const ProtectedResetRoute: FC<RouteProps> = ({ children, ...rest }) => {
+  const location = useLocation<ILocation>();
 
   // guests can get to reset password only when they came from ForgotPassword page
   const { from } = location.state || { from: { pathname: '/' } }
@@ -9,7 +11,7 @@ export function ProtectedResetRoute({ children, ...rest }) {
     return (
       <Route
         {...rest}
-        render={({ location }) =>
+        render={() =>
           from === '/forgot-password' ? (
             children
           ) : (

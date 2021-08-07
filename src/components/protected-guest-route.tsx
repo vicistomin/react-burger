@@ -1,11 +1,12 @@
-import { Redirect, Route } from 'react-router-dom';
+import { Redirect, Route, RouteProps, useLocation } from 'react-router-dom';
 // importing typed hooks for Redux Toolkit
 import { useAppSelector, useAppDispatch } from '../services/hooks';
-import { useEffect } from "react";
+import { FC, useEffect } from 'react';
 // import slices and their functions
 import { userSlice } from '../services/slices/user';
+import { ILocation } from '../services/types';
 
-export function ProtectedGuestRoute({ children, ...rest }) {
+export const ProtectedGuestRoute: FC<RouteProps> = ({ children, ...rest }) => {
   const dispatch = useAppDispatch();
 
   const {
@@ -21,15 +22,17 @@ export function ProtectedGuestRoute({ children, ...rest }) {
     dispatch(checkAuthorization());
   }, []);
 
+  const location = useLocation<ILocation>();
+  
   // protect routes from authorized users
   return (
     <Route
       {...rest}
-      render={({ location }) =>
+      render={() =>
         isAuthorized ? (
           <Redirect
             // return to the page where user been before request
-            to={(location.state && location.state.from) || {pathname: "/profile"}}
+            to={(!!location.state && location.state.from) || {pathname: "/profile"}}
           />
         ) : (
           children

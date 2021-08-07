@@ -1,11 +1,11 @@
-import { Redirect, Route } from 'react-router-dom';
+import { Redirect, Route, RouteProps } from 'react-router-dom';
 // importing typed hooks for Redux Toolkit
 import { useAppSelector, useAppDispatch } from '../services/hooks';
-import { useEffect } from "react";
+import { FC, useEffect } from "react";
 // import slices and their functions
 import { userSlice } from '../services/slices/user';
 
-export function ProtectedRoute({ children, ...rest }) {
+export const ProtectedRoute: FC<RouteProps> = ({ children, ...rest }) => {
   const dispatch = useAppDispatch();
 
   const {

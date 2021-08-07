@@ -40,10 +40,11 @@ export interface IUser {
 
 export interface ICookieProps {
   [name: string]: string | number | boolean | Date | undefined,
-  expires?: Date | number | string;
+  expires?: Date | number | string,
   path?: string
 }
 
 export interface ILocation extends Location {
-  background?: any;
+  background?: any,
+  from?: any
 }
