@@ -70,6 +70,7 @@ const Sidebar: FC = () => {
         <SidebarLink
           text={'Выход'}
           onClick={onLogoutClick}
+          active={false}
         />
       </ul>
       <p className='text text_type_main-default text_color_inactive mt-20'>
