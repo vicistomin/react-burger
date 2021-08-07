@@ -21,18 +21,17 @@ export const wsSlice = createSlice({
       state.wsError = false;
     },
 
-    wsConnectionSuccess(state, action: PayloadAction<Event>) {
+    wsConnectionSuccess(state) {
       state.wsConnected = true;
       state.wsError = false;
-      
     },
 
-    wsConnectionError(state, action: PayloadAction<Event>) {
+    wsConnectionError(state) {
       state.wsConnected = false;
       state.wsError = true;
     },
 
-    wsConnectionClosed(state, action: PayloadAction<Event>) {
+    wsConnectionClosed(state) {
       state.wsConnected = false;
       state.wsError = false;
     }

@@ -38,11 +38,11 @@ export const wsMiddleware = () => {
 
       if (socket) {
         socket.onopen = event => {
-          dispatch(wsConnectionSuccess(event));
+          dispatch(wsConnectionSuccess());
         };
 
         socket.onerror = event => {
-          dispatch(wsConnectionError(event));
+          dispatch(wsConnectionError());
         };
 
         socket.onmessage = event => {
@@ -73,7 +73,7 @@ export const wsMiddleware = () => {
               }
             })
             .catch((error) => {
-              dispatch(wsConnectionError(event));
+              dispatch(wsConnectionError());
               console.log(error);
             });
 
@@ -82,7 +82,7 @@ export const wsMiddleware = () => {
         };
 
         socket.onclose = event => {
-          dispatch(wsConnectionClosed(event));
+          dispatch(wsConnectionClosed());
         };
       }
 
