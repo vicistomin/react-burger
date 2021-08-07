@@ -7,9 +7,9 @@ import SidebarLink from '../sidebar-link/sidebar-link';
 import { logout, userSlice } from '../../services/slices/user';
 
 import { useHistory } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { FC, useState, useEffect } from 'react';
 
-function Sidebar() {
+const Sidebar: FC = () => {
   const dispatch = useAppDispatch();
 
   const { userRequest } = useAppSelector(state => state.user);
@@ -22,10 +22,10 @@ function Sidebar() {
   
   const history = useHistory();
 
-  const [isProfilePage, setProfilePage] = useState(false);
-  const [isHistoryPage, setHistoryPage] = useState(false);
+  const [isProfilePage, setProfilePage] = useState<boolean>(false);
+  const [isHistoryPage, setHistoryPage] = useState<boolean>(false);
 
-  const currentUrl = history.location.pathname;
+  const currentUrl: string = history.location.pathname;
     
   useEffect(() => {
     switch (currentUrl) {
@@ -40,14 +40,14 @@ function Sidebar() {
     }
   }, [currentUrl]);
 
-  const onProfileClick = () => {
+  const onProfileClick = (): void => {
     history.replace({ pathname: '/profile' });
   };
-  const onHistoryClick = () => {
+  const onHistoryClick = (): void => {
     history.replace({ pathname: '/profile/orders' });
   };
 
-  const onLogoutClick = () => {
+  const onLogoutClick = (): void => {
     // won't call API if user data is already in process
     if (!userRequest) {
       dispatch(logout());

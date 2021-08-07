@@ -1,9 +1,15 @@
-import PropTypes from 'prop-types';
+import { FC } from 'react';
 import formStyles from './form.module.css';
 // importing components from library
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
 
-function Form(props) {
+interface IForm {
+  title: string,
+  actionName: string,
+  onFormSubmit: () => {}
+}
+
+const Form: FC<IForm> = (props) => {
   return(
     <form
       className={formStyles.form_container}
@@ -25,11 +31,5 @@ function Form(props) {
     </form>
   );
 }
-
-Form.propTypes = {
-  title: PropTypes.string,
-  actionName: PropTypes.string,
-  onFormSubmit: PropTypes.func
-};
 
 export default Form;

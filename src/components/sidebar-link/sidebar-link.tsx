@@ -1,7 +1,13 @@
-import PropTypes from 'prop-types';
+import { FC } from 'react';
 import sidebarLinkStyles from './sidebar-link.module.css';
 
-function SidebarLink(props) {
+interface ISidebarLink {
+  active: boolean,
+  onClick: () => void,
+  text: string
+}
+
+const SidebarLink: FC<ISidebarLink> = (props) => {
   return(
     <li className={sidebarLinkStyles.sidebar_list_item}>
       <button className={
@@ -17,11 +23,5 @@ function SidebarLink(props) {
     </li>
   );
 }
-
-SidebarLink.propTypes = {
-  active: PropTypes.bool,
-  onClick: PropTypes.func.isRequired,
-  text: PropTypes.string.isRequired
-};
 
 export default SidebarLink;
