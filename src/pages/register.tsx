@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { FC, useState, useRef, useCallback, useEffect, ChangeEvent, FormEvent } from 'react';
 // importing typed hooks for Redux Toolkit
 import { useAppSelector, useAppDispatch } from '../services/hooks';
 // importing components from project
@@ -8,9 +8,10 @@ import { Input, PasswordInput, Button } from '@ya.praktikum/react-developer-burg
 // import slices and their functions
 import { register, userSlice } from '../services/slices/user';
 
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
+import { ILocation } from '../services/types';
 
-export const RegisterPage = () => {
+export const RegisterPage: FC = () => {
   const dispatch = useAppDispatch();
 
   const {
@@ -23,8 +24,9 @@ export const RegisterPage = () => {
   const { resetStatus } = userSlice.actions;
 
   const history = useHistory();
+  const location = useLocation<ILocation>();
 
-  const resetError = () => {
+  const resetError = (): void => {
     dispatch(resetStatus());
   }  
 
@@ -33,19 +35,19 @@ export const RegisterPage = () => {
     resetError();
   }, [])
 
-  const [nameValue, setNameValue] = useState('');
-  const [isNameEmpty, setNameEmpty] = useState(false);
-  const [emailValue, setEmailValue] = useState('');
-  const [isEmailValid, setEmailValid] = useState(true);
-  const [passwordValue, setPasswordValue] = useState('');
-  const [isPasswordEmpty, setPasswordEmpty] = useState(false);
+  const [nameValue, setNameValue] = useState<string>('');
+  const [isNameEmpty, setNameEmpty] = useState<boolean>(false);
+  const [emailValue, setEmailValue] = useState<string>('');
+  const [isEmailValid, setEmailValid] = useState<boolean>(true);
+  const [passwordValue, setPasswordValue] = useState<string>('');
+  const [isPasswordEmpty, setPasswordEmpty] = useState<boolean>(false);
 
-  const nameInputRef = useRef(null);
-  const emailInputRef = useRef(null);
+  const nameInputRef = useRef<HTMLInputElement>(null);
+  const emailInputRef = useRef<HTMLInputElement>(null);
 
-  const emailRegExp = /.+@.+\.[A-Za-z]+$/;
+  const emailRegExp: RegExp = /.+@.+\.[A-Za-z]+$/;
 
-  const onNameChange = e => {
+  const onNameChange = (e: ChangeEvent<HTMLInputElement>):void => {
     // hide the error message if user is writing something in the name field
     if (e.target.value.length > 0) {
       setNameEmpty(false);
@@ -53,7 +55,7 @@ export const RegisterPage = () => {
     setNameValue(e.target.value);
   };
 
-  const onEmailChange = e => {
+  const onEmailChange = (e: ChangeEvent<HTMLInputElement>):void => {
     // hide the error message if user writed correct email in the field
     if (emailRegExp.test(e.target.value)) {
       setEmailValid(true);
@@ -61,7 +63,7 @@ export const RegisterPage = () => {
     setEmailValue(e.target.value);
   };
   
-  const onPasswordChange = e => {
+  const onPasswordChange = (e: ChangeEvent<HTMLInputElement>):void => {
     // TODO: find a way to trigger PasswordInput error status
     if (e.target.value.length !== 0) {
       setPasswordEmpty(false);
@@ -71,10 +73,16 @@ export const RegisterPage = () => {
 
   // TODO: move form/inputs validation function to separate file in /utils?
 
+  interface IFormFields {
+    email: boolean,
+    password: boolean,
+    name: boolean
+  }
+
   const validateForm = useCallback(() => {
     // TODO: check is better be done when focus is out of input, before the form submit action
     
-    const validFields = {
+    const validFields: IFormFields = {
       email: false,
       password: false,
       name: false
@@ -115,16 +123,16 @@ export const RegisterPage = () => {
     }
   }, [emailValue, passwordValue, nameValue]);
 
-  const redirectOnSuccess = () => {
+  const redirectOnSuccess = (): void => {
     // redirecting to the page which unauthed user tried to reach
     // in other cases redirect to HomePage
-    const { from } = history.location.state || { from: { pathname: "/" } };
+    const { from } = location.state || { from: { pathname: "/" } };
     history.replace(from);
   }
 
-  const onRegisterClick = useCallback((e) => {
+  const onRegisterClick = useCallback((e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const isFormCorrect = validateForm();
+    const isFormCorrect: boolean = validateForm();
     if(!isFormCorrect) {
       return;
     }
@@ -141,7 +149,7 @@ export const RegisterPage = () => {
     }
   }, [emailValue, nameValue, passwordValue, userRequest]);
 
-  const onLoginClick = () => {
+  const onLoginClick = (): void => {
     history.replace({ pathname: '/login' });
   }
 

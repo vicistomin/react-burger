@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { FC, useState, useRef, useCallback, useEffect, ChangeEvent, FormEvent } from 'react';
 // importing typed hooks for Redux Toolkit
 import { useAppSelector, useAppDispatch } from '../services/hooks';
 // importing components from project
@@ -10,7 +10,7 @@ import { forgotPassword, userSlice } from '../services/slices/user';
 
 import { useHistory } from 'react-router-dom';
 
-export const ForgotPasswordPage = () => {
+export const ForgotPasswordPage: FC = () => {
   const dispatch = useAppDispatch();
 
   const {
@@ -24,7 +24,7 @@ export const ForgotPasswordPage = () => {
 
   const history = useHistory();
 
-  const resetError = () => {
+  const resetError = (): void => {
     dispatch(resetStatus());
   }  
 
@@ -33,14 +33,14 @@ export const ForgotPasswordPage = () => {
     resetError();
   }, [])
 
-  const [emailValue, setEmailValue] = useState('');
-  const [isEmailValid, setEmailValid] = useState(true);
+  const [emailValue, setEmailValue] = useState<string>('');
+  const [isEmailValid, setEmailValid] = useState<boolean>(true);
 
-  const emailInputRef = useRef(null);
+  const emailInputRef = useRef<HTMLInputElement>(null);
 
-  const emailRegExp = /.+@.+\.[A-Za-z]+$/;
+  const emailRegExp: RegExp = /.+@.+\.[A-Za-z]+$/;
 
-  const onEmailChange = e => {
+  const onEmailChange = (e: ChangeEvent<HTMLInputElement>):void => {
     // hide the error message if user writed correct email in the field
     if (emailRegExp.test(e.target.value)) {
       setEmailValid(true);
@@ -50,10 +50,14 @@ export const ForgotPasswordPage = () => {
 
   // TODO: move form/inputs validation function to separate file in /utils?
 
-  const validateForm = () => {
+  interface IFormFields {
+    email: boolean
+  }
+
+  const validateForm = (): boolean => {
     // TODO: check is better be done when focus is out of input, before the form submit action
     
-    const validFields = {
+    const validFields:IFormFields = {
       email: false
     }
 
@@ -73,16 +77,16 @@ export const ForgotPasswordPage = () => {
     }
   }
 
-  const redirectOnSuccess = () => {
+  const redirectOnSuccess = (): void => {
     history.replace({ 
       pathname: '/reset-password',
       state: { from: '/forgot-password' }
     });
   }
 
-  const onResetPasswordClick = useCallback((e) => {
+  const onResetPasswordClick = useCallback((e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const isFormCorrect = validateForm();
+    const isFormCorrect: boolean = validateForm();
     if(!isFormCorrect) {
       return;
     }
@@ -95,7 +99,7 @@ export const ForgotPasswordPage = () => {
     }
   }, [emailValue, userRequest]);
 
-  const onLoginClick = () => {
+  const onLoginClick = (): void => {
     history.replace({ pathname: '/login' });
   }
 

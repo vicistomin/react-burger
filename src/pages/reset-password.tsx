@@ -1,7 +1,7 @@
 import styles from './reset-password.module.css';
 // importing typed hooks for Redux Toolkit
 import { useAppSelector, useAppDispatch } from '../services/hooks';
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { FC, useState, useRef, useCallback, useEffect, ChangeEvent, FormEvent } from 'react';
 // importing components from project
 import Form from '../components/form/form';
 import Loader from '../components/loader/loader';
@@ -11,7 +11,7 @@ import { resetPassword, userSlice } from '../services/slices/user';
 
 import { useHistory } from 'react-router-dom';
 
-export const ResetPasswordPage = () => {
+export const ResetPasswordPage: FC = () => {
   const dispatch = useAppDispatch();
 
   const {
@@ -25,7 +25,7 @@ export const ResetPasswordPage = () => {
 
   const history = useHistory();
 
-  const resetError = () => {
+  const resetError = (): void => {
     dispatch(resetStatus());
   }  
 
@@ -34,14 +34,14 @@ export const ResetPasswordPage = () => {
     resetError();
   }, [])
   
-  const [passwordValue, setPasswordValue] = useState('');
-  const [isPasswordEmpty, setPasswordEmpty] = useState(false);
-  const [codeValue, setCodeValue] = useState('');
-  const [isCodeEmpty, setCodeEmpty] = useState(false);
+  const [passwordValue, setPasswordValue] = useState<string>('');
+  const [isPasswordEmpty, setPasswordEmpty] = useState<boolean>(false);
+  const [codeValue, setCodeValue] = useState<string>('');
+  const [isCodeEmpty, setCodeEmpty] = useState<boolean>(false);
 
-  const codeInputRef = useRef(null);
+  const codeInputRef = useRef<HTMLInputElement>(null);
 
-  const onCodeChange = e => {
+  const onCodeChange = (e: ChangeEvent<HTMLInputElement>):void => {
     // hide the error message if user is writing something in the code field
     if (e.target.value.length > 0) {
       setCodeEmpty(false);
@@ -49,7 +49,7 @@ export const ResetPasswordPage = () => {
     setCodeValue(e.target.value);
   };
 
-  const onPasswordChange = e => {
+  const onPasswordChange = (e: ChangeEvent<HTMLInputElement>):void => {
     // TODO: find a way to trigger PasswordInput error status
     if (e.target.value.length !== 0) {
       setPasswordEmpty(false);
@@ -58,11 +58,16 @@ export const ResetPasswordPage = () => {
   };
 
   // TODO: move form/inputs validation function to separate file in /utils?
+  
+  interface IFormFields {
+    password: boolean
+    code: boolean
+  }
 
-  const validateForm = useCallback(() => {
+  const validateForm = useCallback((): boolean => {
     // TODO: check is better be done when focus is out of input, before the form submit action
     
-    const validFields = {
+    const validFields: IFormFields = {
       password: false,
       code: false
     }
@@ -94,13 +99,13 @@ export const ResetPasswordPage = () => {
     }
   }, [codeValue, passwordValue]);
 
-  const redirectOnSuccess = () => {
+  const redirectOnSuccess = (): void => {
     history.replace({ pathname: '/login' });
   }
 
-  const onResetPasswordClick = useCallback((e) => {
+  const onResetPasswordClick = useCallback((e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const isFormCorrect = validateForm();
+    const isFormCorrect: boolean = validateForm();
     if(!isFormCorrect) {
       return;
     }
@@ -117,7 +122,7 @@ export const ResetPasswordPage = () => {
     }
   }, [codeValue, passwordValue, userRequest]);
 
-  const onLoginClick = () => {
+  const onLoginClick = (): void => {
     history.replace({ pathname: '/login' });
   }
 

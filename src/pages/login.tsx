@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { FC, useState, useRef, useCallback, useEffect, ChangeEvent, FormEvent } from 'react';
 // importing typed hooks for Redux Toolkit
 import { useAppSelector, useAppDispatch } from '../services/hooks';
 // importing components from project
@@ -9,8 +9,9 @@ import { Input, PasswordInput, Button } from '@ya.praktikum/react-developer-burg
 import { login, userSlice } from '../services/slices/user';
 
 import { useHistory, useLocation } from 'react-router-dom';
+import { ILocation } from '../services/types';
 
-export const LoginPage = () => {
+export const LoginPage: FC = () => {
   const dispatch = useAppDispatch();
 
  const {
@@ -23,9 +24,9 @@ export const LoginPage = () => {
   const { resetStatus } = userSlice.actions;
    
   const history = useHistory();
-  const location = useLocation();
+  const location = useLocation<ILocation>();
 
-  const resetError = () => {
+  const resetError = (): void => {
     dispatch(resetStatus());
   }  
 
@@ -35,16 +36,16 @@ export const LoginPage = () => {
   }, [])
 
   // TODO: rewrite form input vars to 'form' object fields
-  const [emailValue, setEmailValue] = useState('');
-  const [isEmailValid, setEmailValid] = useState(true);
-  const [passwordValue, setPasswordValue] = useState('');
-  const [isPasswordEmpty, setPasswordEmpty] = useState(false);
+  const [emailValue, setEmailValue] = useState<string>('');
+  const [isEmailValid, setEmailValid] = useState<boolean>(true);
+  const [passwordValue, setPasswordValue] = useState<string>('');
+  const [isPasswordEmpty, setPasswordEmpty] = useState<boolean>(false);
 
-  const emailInputRef = useRef(null);
+  const emailInputRef = useRef<HTMLInputElement>(null);
 
-  const emailRegExp = /.+@.+\.[A-Za-z]+$/;
+  const emailRegExp: RegExp = /.+@.+\.[A-Za-z]+$/;
 
-  const onEmailChange = e => {
+  const onEmailChange = (e: ChangeEvent<HTMLInputElement>):void => {
     // hide the error message if user writed correct email in the field
     if (emailRegExp.test(e.target.value)) {
       setEmailValid(true);
@@ -52,7 +53,7 @@ export const LoginPage = () => {
     setEmailValue(e.target.value);
   };
   
-  const onPasswordChange = e => {
+  const onPasswordChange = (e: ChangeEvent<HTMLInputElement>):void => {
     // TODO: find a way to trigger PasswordInput error status
     if (e.target.value.length !== 0) {
       setPasswordEmpty(false);
@@ -62,10 +63,15 @@ export const LoginPage = () => {
 
   // TODO: move form/inputs validation function to separate file in /utils?
 
-  const validateForm = useCallback(() => {
+  interface IFormFields {
+    email: boolean,
+    password: boolean
+  }
+
+  const validateForm = useCallback((): boolean => {
     // TODO: check is better be done when focus is out of input, before the form submit action
   
-    const validFields = {
+    const validFields: IFormFields = {
       email: false,
       password: false
     }
@@ -101,36 +107,36 @@ export const LoginPage = () => {
   // (after userSuccess will be set)
   // Async/await didn't worked in this case for some reason.
   // Maybe CreateAsyncThunk should be used in userSlice?
-  const redirectOnSuccess = () => {
+  const redirectOnSuccess = (): void => {
     // redirecting to the page which unauthed user tried to reach
     // in other cases redirect to HomePage
     const { from } = location.state || { from: { pathname: "/" } };
     history.replace(from);
   }
 
-  const onLoginClick = useCallback((e) => {
-    e.preventDefault();
-    const isFormCorrect = validateForm();
-    if(!isFormCorrect) {
-      return;
-    }
-    else {
-      // if form fields are correct then start login action
-      // won't call API if user data is already in process
-      if (!userRequest) {
-        dispatch(login({
-          email: emailValue,
-          password: passwordValue
-        }, redirectOnSuccess));
+  const onLoginClick = useCallback((e: FormEvent<HTMLFormElement>): void => {
+      e.preventDefault();
+      const isFormCorrect: boolean = validateForm();
+      if(!isFormCorrect) {
+        return;
+      }
+      else {
+        // if form fields are correct then start login action
+        // won't call API if user data is already in process
+        if (!userRequest) {
+          dispatch(login({
+            email: emailValue,
+            password: passwordValue
+          }, redirectOnSuccess));
       }
     }
   }, [emailValue, passwordValue, userRequest]);
 
-  const onRegisterClick = () => {
+  const onRegisterClick = (): void => {
     history.replace({ pathname: '/register' });
   }
 
-  const onForgotPasswordClick = () => {
+  const onForgotPasswordClick = (): void => {
     history.replace({ pathname: '/forgot-password' });
   }
 
