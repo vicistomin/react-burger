@@ -2,7 +2,7 @@ import { FC } from 'react';
 import ingredientDetailsStyles from './ingredient-details.module.css';
 import { IIngredient } from '../../services/types';
 
-const IngredientDetails: FC<IIngredient> = (item) => {
+const IngredientDetails: FC<{ item: IIngredient }> = ({ item }) => {
     return(
         <div className={ingredientDetailsStyles.ingredient_details_container}>
              <img 

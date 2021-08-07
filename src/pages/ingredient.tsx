@@ -42,9 +42,9 @@ export const IngredientPage: FC = () => {
           <p className="text text_type_main-large">
             Детали ингредиента
           </p>
-          <IngredientDetails>
-            {items.find((item) => item._id === currentIngredientId)}
-          </IngredientDetails>
+          <IngredientDetails
+            item={items.find((item) => item._id === currentIngredientId) || {}}
+          />
         </div>
       )}
   </>

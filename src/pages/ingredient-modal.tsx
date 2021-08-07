@@ -78,9 +78,9 @@ export const IngredientModalPage: FC = () => {
             header='Детали ингредиента'
             closeModal={closeModal}
           >
-            <IngredientDetails>
-              {currentItem} 
-            </IngredientDetails>
+            <IngredientDetails
+              item={currentItem} 
+            />
           </Modal> 
       )}
   </>
