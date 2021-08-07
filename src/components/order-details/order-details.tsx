@@ -3,8 +3,9 @@ import orderAcceptedImage from '../../images/order-accepted.gif'
 // importing typed hooks for Redux Toolkit
 import { useAppSelector } from '../../services/hooks';
 import Loader from '../loader/loader';
+import { FC } from 'react';
 
-function OrderDetails() {
+const OrderDetails: FC = () => {
     const {
         orderData,
         orderRequest,

@@ -1,16 +1,17 @@
-import PropTypes from 'prop-types';
+import { FC } from 'react';
 import ingredientDetailsStyles from './ingredient-details.module.css';
+import { IIngredient } from '../../services/types';
 
-function IngredientDetails(props) {
+const IngredientDetails: FC<IIngredient> = (item) => {
     return(
         <div className={ingredientDetailsStyles.ingredient_details_container}>
              <img 
-                src={props.item.image_large}
-                alt={props.item.name}
-                title={props.item.name}
+                src={item.image_large}
+                alt={item.name}
+                title={item.name}
             />           
             <h4 className='text text_type_main-medium mt-4 mb-8'>
-                {props.item.name}
+                {item.name}
             </h4>
             <ul className={ingredientDetailsStyles.ingredient_nutrition_list}>
                 <li className={ingredientDetailsStyles.ingredient_nutrition_list_item}>
@@ -18,7 +19,7 @@ function IngredientDetails(props) {
                         Калории, ккал
                     </p>
                     <p className="text text_type_digits-default text_color_inactive">
-                        {props.item.calories}
+                        {item.calories}
                     </p>
                 </li>
                 <li className={ingredientDetailsStyles.ingredient_nutrition_list_item}>
@@ -26,7 +27,7 @@ function IngredientDetails(props) {
                         Белки, г
                     </p>
                     <p className="text text_type_digits-default text_color_inactive">
-                        {props.item.proteins}
+                        {item.proteins}
                     </p>
                 </li>
                 <li className={ingredientDetailsStyles.ingredient_nutrition_list_item}>
@@ -34,7 +35,7 @@ function IngredientDetails(props) {
                         Жиры, г
                     </p>
                     <p className="text text_type_digits-default text_color_inactive">
-                        {props.item.fat}
+                        {item.fat}
                     </p>
                 </li>
                 <li className={ingredientDetailsStyles.ingredient_nutrition_list_item}>
@@ -42,23 +43,12 @@ function IngredientDetails(props) {
                         Углеводы, г
                     </p>
                     <p className="text text_type_digits-default text_color_inactive">
-                        {props.item.carbohydrates}
+                        {item.carbohydrates}
                     </p>
                 </li>
             </ul>
         </div>
     );
 }
-
-IngredientDetails.propTypes = {
-    item: PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        image_large: PropTypes.string.isRequired,
-        calories: PropTypes.number.isRequired,
-        proteins: PropTypes.number.isRequired,
-        fat: PropTypes.number.isRequired,
-        carbohydrates: PropTypes.number.isRequired
-    }).isRequired
-};
 
 export default IngredientDetails;
