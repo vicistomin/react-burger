@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { FC, useState, useRef, useEffect, ChangeEvent, FocusEvent } from 'react';
 // importing typed hooks for Redux Toolkit
 import { useAppSelector, useAppDispatch } from '../services/hooks';
 import styles from './profile.module.css';
@@ -10,7 +10,7 @@ import { Input, EmailInput, Button } from '@ya.praktikum/react-developer-burger-
 // import slices and their functions
 import { getUser, setUser, userSlice } from '../services/slices/user';
 
-export const ProfilePage = () => {
+export const ProfilePage: FC = () => {
   const dispatch = useAppDispatch();
 
   const {
@@ -26,11 +26,11 @@ export const ProfilePage = () => {
     resetStatus
   } = userSlice.actions
 
-  const [nameValue, setNameValue] = useState('')
-  const [emailValue, setEmailValue] = useState('')
-  const [passwordValue, setPasswordValue] = useState('')
+  const [nameValue, setNameValue] = useState<string>('')
+  const [emailValue, setEmailValue] = useState<string>('')
+  const [passwordValue, setPasswordValue] = useState<string>('')
 
-  const resetError = () => {
+  const resetError = (): void => {
     dispatch(resetStatus());
   }  
 
@@ -46,23 +46,23 @@ export const ProfilePage = () => {
   }, [])
 
   useEffect(() => {
-    setNameValue(user.name);
-    setEmailValue(user.email);
-    setPasswordValue(user.password);
+    setNameValue(user.name || '');
+    setEmailValue(user.email || '');
+    setPasswordValue(user.password || '');
   }, [user]);
 
    // TODO: create EditableInput component and move there all this checks and handlers 
-  const [isNameInputDisabled, setNameInputDisabled] = useState(true)
-  const [isNameInputEmpty, setNameInputEmpty] = useState(false)
-  const [isPasswordInputDisabled, setPasswordInputDisabled] = useState(true)
-  const [isPasswordInputEmpty, setPasswordInputEmpty] = useState(false)
+  const [isNameInputDisabled, setNameInputDisabled] = useState<boolean>(true)
+  const [isNameInputEmpty, setNameInputEmpty] = useState<boolean>(false)
+  const [isPasswordInputDisabled, setPasswordInputDisabled] = useState<boolean>(true)
+  const [isPasswordInputEmpty, setPasswordInputEmpty] = useState<boolean>(false)
   
-  const [hasFormChanged, setFormChanged] = useState(false)
+  const [hasFormChanged, setFormChanged] = useState<boolean>(false)
 
-  const nameInputRef = useRef(null)
-  const passwordInputRef = useRef(null)
+  const nameInputRef = useRef<HTMLInputElement>(null)
+  const passwordInputRef = useRef<HTMLInputElement>(null)
 
-  const onNameChange = e => {
+  const onNameChange = (e: ChangeEvent<HTMLInputElement>):void => {
     // hide the error message if user is writing something in the name field
     if (e.target.value.length > 0) {
       setNameInputEmpty(false);
@@ -71,7 +71,7 @@ export const ProfilePage = () => {
     setFormChanged(true);
   };
 
-  const onPasswordChange = e => {
+  const onPasswordChange = (e: ChangeEvent<HTMLInputElement>):void => {
     // hide the error message if user is writing something in the password field
     if (e.target.value.length > 0) {
       setPasswordInputEmpty(false);
@@ -80,23 +80,23 @@ export const ProfilePage = () => {
     setFormChanged(true);
   };
 
-  const onEmailChange = e => {
+  const onEmailChange = (e: ChangeEvent<HTMLInputElement>):void => {
     // hide the error message if user is writing something in the password field
     setEmailValue(e.target.value);
     setFormChanged(true);
   };
 
-  const onNameIconClick = () => {
-    nameInputRef.current.focus();
+  const onNameIconClick = (): void => {
+    nameInputRef.current?.focus();
     setNameInputDisabled(false);
   }
 
-  const onPasswordIconClick = () => {
-    passwordInputRef.current.focus();
+  const onPasswordIconClick = (): void => {
+    passwordInputRef.current?.focus();
     setPasswordInputDisabled(false);
   }
 
-  const onNameInputBlur = e => {
+  const onNameInputBlur = (e: FocusEvent<HTMLInputElement>): void => {
     // show the error message if the name field is blank
     if (e.target.value.length === 0) {
       setNameInputEmpty(true);
@@ -104,7 +104,7 @@ export const ProfilePage = () => {
     setNameInputDisabled(true);
   }
 
-  const onPasswordInputBlur = e => {
+  const onPasswordInputBlur = (e: FocusEvent<HTMLInputElement>): void => {
     // show the error message if the password field is blank
     if (e.target.value.length === 0) {
       setPasswordInputEmpty(true);
@@ -112,8 +112,7 @@ export const ProfilePage = () => {
     setPasswordInputDisabled(true);
   }
 
-  const onSubmitChanges = (e) => {
-    e.preventDefault();
+  const onSubmitChanges = (): void => {
     // won't call API if user data is already in process
     if (!userRequest) {
       dispatch(setUser({
@@ -125,11 +124,10 @@ export const ProfilePage = () => {
     setFormChanged(false);
   }
 
-  const onCancelChanges = (e) => {
-    e.preventDefault();
-    setNameValue(user.name);
-    setEmailValue(user.email);
-    setPasswordValue(user.password);
+  const onCancelChanges = (): void => {
+    setNameValue(user.name || '');
+    setEmailValue(user.email || '');
+    setPasswordValue(user.password || '');
     setFormChanged(false);
   }
 

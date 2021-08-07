@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { FC, useEffect } from 'react';
 // importing typed hooks for Redux Toolkit
 import { useAppSelector, useAppDispatch } from '../services/hooks';
 import styles from './history.module.css';
@@ -10,7 +10,7 @@ import Loader from '../components/loader/loader';
 import { feedSlice } from '../services/slices/feed';
 import { getUser, userSlice, startHistory, stopHistory } from '../services/slices/user';
 
-export const HistoryPage = () => {
+export const HistoryPage: FC = () => {
   const dispatch = useAppDispatch();
 
   const {

@@ -1,12 +1,12 @@
-import { FC } from 'react';
+import { FC, FormEventHandler } from 'react';
 import formStyles from './form.module.css';
 // importing components from library
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
 
 interface IForm {
-  title: string,
-  actionName: string,
-  onFormSubmit: () => {}
+  title?: string,
+  actionName?: string,
+  onFormSubmit?: FormEventHandler<HTMLFormElement>
 }
 
 const Form: FC<IForm> = (props) => {
