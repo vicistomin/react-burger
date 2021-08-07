@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { FC, useEffect, useCallback } from 'react';
 // importing typed hooks for Redux Toolkit
 import { useAppSelector, useAppDispatch } from '../services/hooks';
 import { useParams, useHistory } from 'react-router-dom';
@@ -8,8 +8,9 @@ import IngredientDetails from '../components/ingredient-details/ingredient-detai
 import Loader from '../components/loader/loader';
 // import slices and their functions
 import { itemsSlice } from '../services/slices/items';
+import { IIngredient } from '../services/types';
 
-export const IngredientModalPage = () => {
+export const IngredientModalPage: FC = () => {
   const dispatch = useAppDispatch();
   
   const {
@@ -25,8 +26,8 @@ export const IngredientModalPage = () => {
 
   let history = useHistory();
 
-  const currentItemId = useParams().id;
-  const currentItem = items.find((item) => item._id === currentItemId);
+  const currentItemId: string = useParams<{ id: string }>().id;
+  const currentItem: IIngredient = items.find((item) => item._id === currentItemId) || {};
 
   const replaceState = useCallback(() => {
     // hiding the content on page before the reload starts
@@ -39,7 +40,7 @@ export const IngredientModalPage = () => {
   }, [history]);
 
   // return to HomePage if modal is closed
-  const closeModal = () => {
+  const closeModal = (): void => {
     history.replace({
       pathname: `/`
     });
@@ -75,8 +76,11 @@ export const IngredientModalPage = () => {
         !itemsRequest && (
           <Modal 
             header='Детали ингредиента'
-            closeModal={closeModal} >
-              <IngredientDetails item={currentItem} />
+            closeModal={closeModal}
+          >
+            <IngredientDetails>
+              {currentItem} 
+            </IngredientDetails>
           </Modal> 
       )}
   </>

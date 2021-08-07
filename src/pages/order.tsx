@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 // importing typed hooks for Redux Toolkit
 import { useAppSelector, useAppDispatch } from '../services/hooks';
 import { useParams, useLocation  } from 'react-router-dom';
@@ -8,13 +8,14 @@ import OrderDetailedView from '../components/order-detailed-view/order-detailed-
 // import slices and their functions
 import { feedSlice, startFeed, stopFeed } from '../services/slices/feed';
 import { startHistory, stopHistory } from '../services/slices/user';
+import { IOrder } from '../services/types';
 
-export const OrderPage = () => {
+export const OrderPage: FC = () => {
   const dispatch = useAppDispatch();
   // for user profile page we should open different websocket with auth token
   // useRouteMatch for some reason returning always null here
   const location = useLocation();
-  const isFeedPage = location.pathname.split('/')[1] === 'feed';
+  const isFeedPage: boolean = location.pathname.split('/')[1] === 'feed';
   
   const {
     itemsRequest,
@@ -39,7 +40,7 @@ export const OrderPage = () => {
     state => state.ws
   );
 
-    const [currentOrder, setCurrentOrder] = useState({});
+  const [currentOrder, setCurrentOrder] = useState<IOrder>({});
 
   // we need to have feed from websocket in store to render orders data
   useEffect(() => {
@@ -57,11 +58,11 @@ export const OrderPage = () => {
     };  
   }, []);
 
-  const currentOrderId = useParams().id;
+  const currentOrderId:string = useParams<{ id: string }>().id;
 
   useEffect(() => {
-    if (orders.length > 0 && wsConnected) {
-      setCurrentOrder(orders.find(order => order._id === currentOrderId))
+    if (!!orders && orders.length > 0 && wsConnected) {
+      setCurrentOrder(orders.find(order => order._id === currentOrderId) || {})
       dispatch(feedSlice.actions.success());
     }
     else if (wsError)

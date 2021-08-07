@@ -10,10 +10,10 @@ const modalRoot = document.getElementById('modal-root') as HTMLElement;
 
 interface IModal {
     children: JSX.Element,
-    header: string,
+    header: string | null,
     closeModal: () => void,
-    isFancyCloseIcon: boolean,
-    isOrderModal: boolean
+    isFancyCloseIcon?: boolean,
+    isOrderModal?: boolean
 }
 
 const Modal: FC<IModal> = ({

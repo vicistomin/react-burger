@@ -4,8 +4,9 @@ import { useParams } from 'react-router-dom';
 // importing components from project
 import IngredientDetails from '../components/ingredient-details/ingredient-details';
 import Loader from '../components/loader/loader';
+import { FC } from 'react';
 
-export const IngredientPage = () => {
+export const IngredientPage: FC = () => {
   const {
     items,
     itemsRequest,
@@ -15,7 +16,7 @@ export const IngredientPage = () => {
     state => state.items
   );
 
-  const currentIngredientId = useParams().id;
+  const currentIngredientId:string = useParams<{ id: string }>().id;
 
   return (
     <>
@@ -41,9 +42,9 @@ export const IngredientPage = () => {
           <p className="text text_type_main-large">
             Детали ингредиента
           </p>
-          <IngredientDetails
-            item={items.find((item) => item._id === currentIngredientId)}
-          />
+          <IngredientDetails>
+            {items.find((item) => item._id === currentIngredientId)}
+          </IngredientDetails>
         </div>
       )}
   </>

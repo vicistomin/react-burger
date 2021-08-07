@@ -1,7 +1,7 @@
-import { useEffect, useCallback } from 'react';
+import { FC, useEffect, useCallback } from 'react';
 // importing typed hooks for Redux Toolkit
 import { useAppSelector, useAppDispatch } from '../services/hooks';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useHistory, useLocation } from 'react-router-dom';
 // importing components from project
 import Modal from '../components/modal/modal';
 import Loader from '../components/loader/loader';
@@ -9,8 +9,9 @@ import OrderDetailedView from '../components/order-detailed-view/order-detailed-
 // import slices and their functions
 import { feedSlice } from '../services/slices/feed';
 import { itemsSlice } from '../services/slices/items';
+import { ILocation, IOrder } from '../services/types';
 
-export const OrderModalPage = () => {
+export const OrderModalPage: FC = () => {
   const dispatch = useAppDispatch();
   
   const {
@@ -39,6 +40,7 @@ export const OrderModalPage = () => {
   const { request } = itemsSlice.actions;
 
   let history = useHistory();
+  const location = useLocation<ILocation>();
 
   useEffect(() => {
     if (wsConnected)
@@ -49,8 +51,8 @@ export const OrderModalPage = () => {
       dispatch(feedSlice.actions.request());
   }, [wsConnected, wsError]);
 
-  const currentOrderId = useParams().id;
-  const currentOrder = orders.find(order => order._id === currentOrderId);
+  const currentOrderId: string = useParams<{ id: string }>().id;
+  const currentOrder: IOrder = orders.find(order => order._id === currentOrderId) || {};
 
   const replaceState = useCallback(() => {
     // hiding the content on page before the reload starts
@@ -63,9 +65,9 @@ export const OrderModalPage = () => {
   }, [history]);
 
   // return to parent page if modal is closed
-  const closeModal = () => {
+  const closeModal = (): void => {
     history.replace({
-      pathname: history.location.state.background.pathname
+      pathname: location.state.background.pathname
     });
   }
 
@@ -98,7 +100,7 @@ export const OrderModalPage = () => {
         (!itemsFailed || !feedFailed) && 
         (!itemsRequest || !feedRequest) && (
           <Modal
-            header={`#${currentOrder.number.toString().padStart(6, 0)}`}
+            header={`#${currentOrder.number?.toString().padStart(6, '0')}`}
             isOrderModal={true}
             closeModal={closeModal} >
             <OrderDetailedView
