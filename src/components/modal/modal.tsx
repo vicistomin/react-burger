@@ -1,5 +1,4 @@
-import PropTypes from 'prop-types';
-import { useEffect } from 'react';
+import { FC, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import modalStyles from './modal.module.css';
 // importing components from project
@@ -7,12 +6,26 @@ import ModalOverlay from '../modal-overlay/modal-overlay';
 // importing components from library
 import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 
-const modalRoot = document.getElementById('modal-root');
+const modalRoot = document.getElementById('modal-root') as HTMLElement;
 
-function Modal({ children, header, closeModal, isFancyCloseIcon=false, isOrderModal=false }) {
+interface IModal {
+    children: JSX.Element,
+    header: string,
+    closeModal: () => void,
+    isFancyCloseIcon: boolean,
+    isOrderModal: boolean
+}
+
+const Modal: FC<IModal> = ({
+    children,
+    header,
+    closeModal,
+    isFancyCloseIcon=false,
+    isOrderModal=false
+}) => {
     
     // closing modals with the "Esc" key:
-    const handleEscKey = (e) => {
+    const handleEscKey = (e: KeyboardEvent): void => {
         if (e.key === 'Escape') 
             closeModal();
         e.stopImmediatePropagation();
@@ -41,7 +54,7 @@ function Modal({ children, header, closeModal, isFancyCloseIcon=false, isOrderMo
                 </h3>
                 {/* adding box-shadow only in OrderDetailsModal (as in Figma) */}
                 <span className={ `${modalStyles.close_icon} ${isFancyCloseIcon ? modalStyles.fancy_icon : null}` } >
-                    <CloseIcon onClick={closeModal} />
+                    <CloseIcon onClick={closeModal} type='primary' />
                 </span>
                 {children}
             </div>
@@ -49,12 +62,5 @@ function Modal({ children, header, closeModal, isFancyCloseIcon=false, isOrderMo
         modalRoot
     );
 }
-
-Modal.propTypes = {
-    children: PropTypes.element.isRequired,
-    header: PropTypes.string,
-    closeModal: PropTypes.func.isRequired,
-    fancyCloseIcon: PropTypes.bool
-};
 
 export default Modal;

@@ -1,7 +1,11 @@
-import PropTypes from 'prop-types';
+import { FC } from 'react';
 import modalOverlayStyles from './modal-overlay.module.css';
 
-function ModalOverlay({ closeModal }) {
+interface IModalOverlay {
+    closeModal: () => void
+}
+
+const ModalOverlay: FC<IModalOverlay> = ({ closeModal }) => {
     return(
             <div 
                 className={modalOverlayStyles.modal_overlay}
@@ -9,9 +13,5 @@ function ModalOverlay({ closeModal }) {
             </div>
     );
 }
-
-ModalOverlay.propTypes = {
-    closeModal: PropTypes.func.isRequired
-};
 
 export default ModalOverlay;
