@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 // importing typed hooks for Redux Toolkit
 import { useAppSelector } from '../../services/hooks';
 import orderDetailedViewStyles from './order-detailed-view.module.css';
@@ -6,18 +5,27 @@ import orderDetailedViewStyles from './order-detailed-view.module.css';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { formatDateTime } from '../../services/utils'
 
-import { useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
+import { IOrder, IIngredient } from '../../services/types';
+// import classNames from '../../../declarations/*.css';
 
-const OrderDetailedView = ({ order, isOrderModal=false }) => {
+interface IOrderDetailedView {
+  order: IOrder,
+  isOrderModal?: boolean
+}
 
+type TOrderStatus = 'Создан' | 'Готовится' | 'Выполнен' | 'Отменён' | '';
+
+const OrderDetailedView: FC<IOrderDetailedView> = ({ order, isOrderModal=false }) => {
   const {
     items
   } = useAppSelector(
     state => state.items
   );
 
-  const [orderStatusName, setOrderStatusName] = useState('');
-  const [orderStatusClass, setOrderStatusClass] = useState(null);
+  const [orderStatusName, setOrderStatusName] = useState<TOrderStatus>('');
+  // const [orderStatusClass, setOrderStatusClass] = useState<typeof classNames>({});
+  const [orderStatusClass, setOrderStatusClass] = useState<string>('');
   
   // defining the order status text and class based on status string from server
   useEffect(() => {
@@ -47,37 +55,55 @@ const OrderDetailedView = ({ order, isOrderModal=false }) => {
   }, [order.status]);
 
   // parsing data and time to specific format as in Figma
-  const getOrderDateTime = useCallback(() => (
-    formatDateTime(order.createdAt)
+  const getOrderDateTime = useCallback(():string => (
+    !!order.createdAt ? formatDateTime(order.createdAt) : ''
   ), [order.createdAt]);
 
-  const orderedIngredients = order.ingredients.map(item_id => (
-    items.find(item => item._id === item_id)
-  ));
+  const orderedIngredients: Array<IIngredient> = !!order.ingredients ? (
+    order.ingredients.map(item_id => (
+      items.find(item => item?._id === item_id)
+    ) || {})
+  ) : []
 
-  const orderedBun = orderedIngredients.find(item => item.type === 'bun');
-  const orderedMiddleItems = orderedIngredients.filter(item => item.type !== 'bun');
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const orderedBun: IIngredient = orderedIngredients.find(
+    item => item.type === 'bun'
+  ) || {};
+
+  const orderedMiddleItems: Array<IIngredient> = orderedIngredients.filter(
+    item => item.type !== 'bun'
+  );
     
-  const renderIngredientIcons = useCallback(() => {
-    let itemsToRender = orderedMiddleItems;
+  const renderIngredientIcons = useCallback((): Array<IIngredient> => {
+    let itemsToRender: Array<IIngredient> = orderedMiddleItems;
     // adding bun in the first place
     itemsToRender.splice(0, 0, orderedBun);
 
-    const uniqueCountedItems = itemsToRender
-      .map((item) => {
-        return {count: 1, ...item}
-      })
-      .reduce((a, b) => {
-        a[b._id] = 
-          {
-            ...b,
-            // counting buns twice
-            count: ( a[b._id] ? a[b._id].count : 0) + (b.type === 'bun' ? 2 : 1),
-          }
-        return a
-      }, {})
+    type TCountedItem = IIngredient & { count?: number };
  
-    let renderedItems = [];
+    type TUniqueCountedItems = {
+      [_id: string]: TCountedItem
+    }
+
+    const countedItems: Array<TCountedItem> = itemsToRender?.map((item) => {
+      return { count: 1, ...item }
+    });
+
+    const uniqueCountedItems:TUniqueCountedItems = countedItems.reduce<TUniqueCountedItems>(
+      (a:any, b:TCountedItem) => {
+        if (!!b._id) {
+          a[b._id] = 
+            {
+              ...b,
+              // counting buns twice
+              count: ( !!a[b._id] ? a[b._id].count : 0) + (b.type === 'bun' ? 2 : 1),
+            }
+          return a
+        }
+        else return null
+      }, {});
+
+    let renderedItems: Array<JSX.Element> = [];
     for (let item_id in uniqueCountedItems) {
       renderedItems.push(
         <li
@@ -104,7 +130,7 @@ const OrderDetailedView = ({ order, isOrderModal=false }) => {
             <p className='text text_type_digits-default'>
               {`${uniqueCountedItems[item_id].count} x ${uniqueCountedItems[item_id].price}`}
             </p>
-            <CurrencyIcon />
+            <CurrencyIcon type='primary'/>
           </span>
         </li>
       )
@@ -112,18 +138,18 @@ const OrderDetailedView = ({ order, isOrderModal=false }) => {
     return renderedItems;
   }, [orderedMiddleItems, orderedBun]);
 
-  const calculateOrderPrice = useCallback(() => {
-    const orderIngredients = order.ingredients.map(item_id => {
-      let orderedItems = items.find(item => item._id === item_id)
+  const calculateOrderPrice = useCallback((): number => {
+    const orderIngredients: Array<IIngredient> = order.ingredients?.map(item_id => {
+      let orderedItem: IIngredient = items.find(item => item._id === item_id) || {};
       return ({
-        price: orderedItems.price,
-        type: orderedItems.type
+        price: orderedItem.price,
+        type: orderedItem.type
       })
-    });
+    }) || [];
     // select only 1st bun in a case when there are 2 buns in the order (there shouldn't be)
-    const bunPrice = orderIngredients.find(item => item.type === 'bun').price;
+    const bunPrice: number = orderIngredients.find(item => item.type === 'bun')?.price || 0;
     return(bunPrice * 2 + orderIngredients.reduce((acc, p) => (
-      acc + (p.type !== 'bun' ? p.price : 0)), 0)
+      acc + (p.type !== 'bun' ? (p.price || 0) : 0)), 0)
     );
   }, [items, order.ingredients]);
 
@@ -135,7 +161,7 @@ const OrderDetailedView = ({ order, isOrderModal=false }) => {
           ' text text_type_digits-default'
         }>
         {/* display order number in 6-digit format filled with zeros */}
-        {`#${order.number.toString().padStart(6, 0)}`}
+        {`#${order.number?.toString().padStart(6, '0')}`}
       </p>
       }
       <p className={'mt-10 mb-3 text text_type_main-medium'}>
@@ -158,26 +184,11 @@ const OrderDetailedView = ({ order, isOrderModal=false }) => {
         </p>  
         <div className={'flex_row ml-6'}>
           <p className='text text_type_digits-default'>{calculateOrderPrice()}</p>
-          <CurrencyIcon />
+          <CurrencyIcon type='primary'/>
         </div>
       </div>
     </div>
   );
-};
-
-OrderDetailedView.propTypes = {
-  order: PropTypes.shape({
-    _id: PropTypes.string.isRequired,
-    createdAt: PropTypes.string.isRequired,
-    updatedAt: PropTypes.string.isRequired,
-    number: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
-    status: PropTypes.string.isRequired,
-    ingredients: PropTypes.arrayOf(
-      PropTypes.string.isRequired
-    ).isRequired
-  }).isRequired,
-  isOrderModal: PropTypes.bool
 };
 
 export default OrderDetailedView;
