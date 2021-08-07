@@ -117,7 +117,7 @@ const OrdersCard: FC<IOrdersCardProps> = ({ order, source }) => {
                 ' text text_type_main-default'
               }>
                 {!!itemsToRender && !!itemsToRender.length
-                  ? `+{itemsToRender.length - ingredientsToShow}`
+                  ? `+${itemsToRender.length - ingredientsToShow}`
                   : null
                 }
               </p>
