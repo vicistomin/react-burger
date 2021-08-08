@@ -33,7 +33,7 @@ const {
   clearValues
 } = itemsSlice.actions
 
-describe('tests for burgerConstructorSlice', () => {
+describe('tests for itemsSlice', () => {
 
   it('should return the initial state', () => {
     expect(itemsSlice.reducer(undefined, {}))

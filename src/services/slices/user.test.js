@@ -4,7 +4,7 @@ const testName = 'Test Name';
 const testPassword = '123456';
 const testEmail = 'test@mail.com';
 
-const fakePassword = 123456;
+const fakePassword = '123456';
 
 const initStore = {
   user: {
