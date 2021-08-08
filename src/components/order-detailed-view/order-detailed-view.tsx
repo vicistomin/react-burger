@@ -75,7 +75,7 @@ const OrderDetailedView: FC<IOrderDetailedView> = ({ order, isOrderModal=false }
   );
     
   const renderIngredientIcons = useCallback((): Array<IIngredient> => {
-    let itemsToRender: Array<IIngredient> = orderedMiddleItems;
+    const itemsToRender: Array<IIngredient> = orderedMiddleItems;
     // adding bun in the first place
     itemsToRender.splice(0, 0, orderedBun);
 
@@ -103,7 +103,7 @@ const OrderDetailedView: FC<IOrderDetailedView> = ({ order, isOrderModal=false }
         else return null
       }, {});
 
-    let renderedItems: Array<JSX.Element> = [];
+    const renderedItems: Array<JSX.Element> = [];
     for (let item_id in uniqueCountedItems) {
       renderedItems.push(
         <li
@@ -140,7 +140,7 @@ const OrderDetailedView: FC<IOrderDetailedView> = ({ order, isOrderModal=false }
 
   const calculateOrderPrice = useCallback((): number => {
     const orderIngredients: Array<IIngredient> = order.ingredients?.map(item_id => {
-      let orderedItem: IIngredient = items.find(item => item._id === item_id) || {};
+      const orderedItem: IIngredient = items.find(item => item._id === item_id) || {};
       return ({
         price: orderedItem.price,
         type: orderedItem.type

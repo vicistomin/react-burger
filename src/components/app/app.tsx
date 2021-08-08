@@ -27,8 +27,8 @@ import AppHeader from '../app-header/app-header';
 const App: React.FC = () => {
   const dispatch = useAppDispatch();
 
-  let location = useLocation<ILocation>();
-  let background = location.state && location.state.background;
+  const location = useLocation<ILocation>();
+  const background = location.state && location.state.background;
 
   const {
     itemsSuccess,

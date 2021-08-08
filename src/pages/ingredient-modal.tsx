@@ -24,7 +24,7 @@ export const IngredientModalPage: FC = () => {
 
   const { request } = itemsSlice.actions;
 
-  let history = useHistory();
+  const history = useHistory();
 
   const currentItemId: string = useParams<{ id: string }>().id;
   const currentItem: IIngredient = items.find((item) => item._id === currentItemId) || {};

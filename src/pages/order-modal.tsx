@@ -39,7 +39,7 @@ export const OrderModalPage: FC = () => {
 
   const { request } = itemsSlice.actions;
 
-  let history = useHistory();
+  const history = useHistory();
   const location = useLocation<ILocation>();
 
   useEffect(() => {

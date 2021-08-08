@@ -59,8 +59,6 @@ export function setCookie(
   value: string | number | boolean,
   props: ICookieProps = {}
 ): void {
-  // props: ICookieProps = props || {};
-  // let expiration: sr = props.expires;
   if (typeof props.expires == 'number' && props.expires) {
     const d = new Date();
     d.setTime(d.getTime() + props.expires * 1000);
@@ -69,7 +67,7 @@ export function setCookie(
   if (props.expires instanceof Date && props.expires) {
     props.expires = props.expires.toUTCString();
   }
-  let cookieValue: string = encodeURIComponent(value);
+  const cookieValue: string = encodeURIComponent(value);
   let updatedCookie: string = name + '=' + cookieValue;
   let propName: keyof ICookieProps;
   for (propName in props) {

@@ -83,7 +83,7 @@ const OrdersCard: FC<IOrdersCardProps> = ({ order, source }) => {
       item && item.type !== 'bun');
 
   const renderIngredientIcons = useCallback(() => {
-    let itemsToRender = orderedMiddleItems;
+    const itemsToRender = orderedMiddleItems;
     // adding bun in the first place
     itemsToRender && itemsToRender.splice(0, 0, orderedBun);
 
