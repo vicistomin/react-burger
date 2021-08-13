@@ -14,7 +14,8 @@ import { store } from './services/store';
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter>
+      {/* The basename property is used for correct routing in Github Pages */}
+      <BrowserRouter basename="/react-burger">
         <App />
       </BrowserRouter>
     </Provider>
