@@ -1,8 +1,8 @@
-#This is my educational frontend project on React
+# This is my educational frontend project on React
 
 Test it on [Github Pages](https://vicistomin.github.io/react-burger)!
 
-##Technology used in project
+## Technology used in project
 * React 17 with functional components and hooks
 * CSS Modules
 * Redux with Toolkit using thunk, slices and custom middleware
@@ -17,7 +17,7 @@ Test it on [Github Pages](https://vicistomin.github.io/react-burger)!
 * [React Developer Burger UI components library](https://yandex-praktikum.github.io/react-developer-burger-ui-components/docs/) (by Yandex) was used in this project
 * Backend API used is this project was gracefully provided by Yandex
 
-##Project functionality
+## Project functionality
 * Interactive burger constructor with drag-n-drop for adding and reordering of ingredients
 * Order placement (only for authorized users)
 * Two feeds with places orders: for all users and for authorized user only (orders history)
@@ -30,8 +30,11 @@ Test it on [Github Pages](https://vicistomin.github.io/react-burger)!
 * Modals can be closed with the 'X' button, click outside modal or with 'Esc' key
 * 404 page
 
-##Test user credentials
-login: 123@123.t
-password: 123123
+## Test user credentials
 
+Login: 123@123.t
+
+Password: 123123
+
+## 
 This project was created during the education in Yandex.Praktikum on "React Developer" course and bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
