@@ -86,9 +86,14 @@ export const HistoryPage: FC = () => {
             (itemsFailed || userFailed || feedFailed) && 
             (!itemsRequest || !userRequest || !feedRequest) && 
             (!itemsSuccess || !userSuccess || !feedSuccess) && (
-              <h2 className='ml-30 text text_type_main-large text_color_inactive'>
-                Ошибка загрузки
-              </h2>
+              <div className='mt-30 flex_column'>
+                <h2 className='text text_type_main-large text_color_inactive'>
+                  Ошибка загрузки
+                </h2>
+                <p className='pt-3 text text_type_main-default text_color_inactive'>
+                  Пожалуйста, попробуйте отключить AdBlock на этом сайте
+                </p>
+              </div>
           )}
           {
             (itemsSuccess && userSuccess && feedSuccess) && 
