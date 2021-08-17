@@ -64,9 +64,14 @@ export const FeedPage: FC = () => {
         (itemsFailed || feedFailed) && 
         (!itemsRequest || !feedRequest) && 
         (!itemsSuccess || !feedSuccess) && (
-          <h2 className='fullscreen_message text text_type_main-large text_color_inactive'>
-            Ошибка загрузки
-          </h2>
+          <div className='fullscreen_message'>
+            <h2 className='text text_type_main-large text_color_inactive'>
+              Ошибка загрузки
+            </h2>
+            <p className='pt-3 text text_type_main-default text_color_inactive'>
+              Пожалуйста, попробуйте отключить AdBlock на этом сайте
+            </p>
+          </div>
       )}
       {
         (itemsSuccess && feedSuccess) && 
