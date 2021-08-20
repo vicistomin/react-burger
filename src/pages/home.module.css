@@ -1,3 +1,5 @@
+@value mobile from '../breakpoints.module.css';
+
 .container {
     composes: flex_row from global;
     align-items: flex-start;
@@ -5,4 +7,14 @@
 
 .container_left, .container_right {
     flex-basis: 600px;
+}
+
+@media (mobile) {
+    .container_right {
+        display: none;
+    }
+
+    .container_left {
+        flex-basis: 100%;
+    }
 }

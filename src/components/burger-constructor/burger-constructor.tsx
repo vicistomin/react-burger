@@ -12,6 +12,7 @@ import { itemsSlice } from '../../services/slices/items';
 
 import { useHistory } from 'react-router-dom';
 import { IIngredient } from '../../services/types';
+import { useMediaQuery } from 'react-responsive'
 
 const BurgerConstructor: React.FC = () => {
     const dispatch = useAppDispatch();
@@ -22,7 +23,7 @@ const BurgerConstructor: React.FC = () => {
 
     const history = useHistory();
 
-    const onOrderButtonClick = () => {
+    const onOrderButtonClick = (): void => {
         if (isAuthorized) {
             if (!!bunItem._id) {
                 const items:Array<string> = [bunItem._id];
@@ -78,7 +79,7 @@ const BurgerConstructor: React.FC = () => {
         accept: ['sauce', 'main']
       });
 
-    const generateItemHash = () => (
+    const generateItemHash = (): number => (
         Math.floor(Math.random() * 10000)
     );
 

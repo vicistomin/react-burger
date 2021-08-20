@@ -1,3 +1,5 @@
+@value mobile from '../../breakpoints.module.css';
+
 .burger_constructor_list {
     composes: flex_column from global;
     gap: 10px;
@@ -54,4 +56,14 @@
 
 .disabled {
     opacity: 0.5;
+}
+
+@media (mobile) {
+    .container_right {
+        display: none;
+    }
+
+    .container_left {
+        flex-basis: 100%;
+    }
 }
